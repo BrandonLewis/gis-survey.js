@@ -1,0 +1,41 @@
+{
+  "name": "gis-survey.js",
+  "version": "1.0.0",
+  "description": "Mapping and surveying tools module for GIS and RTK surveying",
+  "main": "dist/gis-survey.js",
+  "module": "dist/gis-survey.esm.js",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint 'src/**/*.js'",
+    "docs": "jsdoc -c jsdoc.config.json",
+    "prepublishOnly": "npm run lint && npm run build"
+  },
+  "keywords": [
+    "gis",
+    "survey",
+    "mapping",
+    "geospatial",
+    "3d",
+    "rtk"
+  ],
+  "author": "",
+  "license": "MIT",
+  "homepage": "https://github.com/BrandonLewis/gis-survey.js",
+  "peerDependencies": {
+    "gnss.js": "^1.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.5",
+    "eslint": "^9.26.0",
+    "jsdoc": "^4.0.4",
+    "jsdoc-to-markdown": "^8.0.3",
+    "rollup": "^4.13.0"
+  },
+  "type": "module"
+}

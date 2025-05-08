@@ -1,0 +1,397 @@
+<\!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Integrated gnss.js and gis-survey.js Example</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .map-container {
+      flex: 1;
+      min-width: 600px;
+      height: 500px;
+      margin-right: 1rem;
+    }
+    .controls {
+      flex: 0 0 300px;
+    }
+    .tool-group {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background-color: #f5f5f5;
+      border-radius: 4px;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin: 0.25rem;
+      cursor: pointer;
+    }
+    #map {
+      width: 100%;
+      height: 100%;
+      background-color: #e0e0e0;
+    }
+    .status {
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      border-radius: 4px;
+    }
+    .status.connected {
+      background-color: #e8f5e9;
+    }
+    .status.disconnected {
+      background-color: #f5f5f5;
+    }
+    .status.error {
+      background-color: #ffebee;
+    }
+    .coordinates {
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      background-color: #e0f7fa;
+      border-radius: 4px;
+    }
+    .rtk-fixed {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+    .rtk-float {
+      background-color: #fff9c4;
+      color: #f57f17;
+    }
+    .no-fix {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+  </style>
+</head>
+<body>
+  <h1>Integrated gnss.js and gis-survey.js Example</h1>
+  
+  <div class="container">
+    <div class="map-container">
+      <div id="map"></div>
+    </div>
+    
+    <div class="controls">
+      <div class="tool-group">
+        <h3>GNSS Connection</h3>
+        <div id="connection-status" class="status disconnected">Disconnected</div>
+        <button id="connect-bluetooth">Connect Bluetooth</button>
+        <button id="connect-serial">Connect Serial</button>
+        <button id="disconnect-device">Disconnect</button>
+      </div>
+      
+      <div class="tool-group">
+        <h3>NTRIP Connection</h3>
+        <div id="ntrip-status" class="status disconnected">Disconnected</div>
+        <button id="connect-ntrip">Connect NTRIP</button>
+        <button id="disconnect-ntrip">Disconnect NTRIP</button>
+      </div>
+      
+      <div class="tool-group">
+        <h3>Position</h3>
+        <div id="position-status" class="coordinates">
+          No position data
+        </div>
+      </div>
+      
+      <div class="tool-group">
+        <h3>Survey Tools</h3>
+        <button id="capture-point">Capture Point</button>
+        <button id="start-line">Start Line</button>
+        <button id="start-polygon">Start Polygon</button>
+        <button id="measure-distance">Measure Distance</button>
+      </div>
+      
+      <div class="tool-group">
+        <h3>Features</h3>
+        <ul id="feature-list">
+          <li>No features yet</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=geometry"></script>
+  <script type="module">
+    // Import both modules
+    import { GnssModule } from '../gnss.js/dist/gnss.esm.js';
+    import { createSurvey } from '../gis-survey.js/dist/gis-survey.esm.js';
+    
+    // UI Elements
+    const connectionStatusEl = document.getElementById('connection-status');
+    const ntripStatusEl = document.getElementById('ntrip-status');
+    const positionStatusEl = document.getElementById('position-status');
+    const featureListEl = document.getElementById('feature-list');
+    
+    // Initialize Google Maps
+    const mapElement = document.getElementById('map');
+    const map = new google.maps.Map(mapElement, {
+      center: { lat: 40.7128, lng: -74.0060 },
+      zoom: 12
+    });
+    
+    // Initialize GNSS module
+    const gnss = new GnssModule({
+      debugSettings: {
+        info: true,
+        debug: true,
+        errors: true
+      }
+    });
+    
+    // Initialize survey module
+    let survey;
+    
+    async function init() {
+      try {
+        survey = await createSurvey(map, 'google', {
+          enable3D: true
+        });
+        
+        console.log('Survey initialized:', survey);
+        
+        // Connect GNSS module to survey
+        if (typeof survey.connectGnssModule === 'function') {
+          survey.connectGnssModule(gnss);
+          console.log('GNSS module connected to survey');
+        }
+        
+        // Set up GNSS event handlers
+        setupGnssEvents();
+        
+        // Set up button handlers
+        setupButtonHandlers();
+      } catch (error) {
+        console.error('Error initializing:', error);
+      }
+    }
+    
+    function setupGnssEvents() {
+      // Position updates
+      gnss.on('position', (position) => {
+        updatePositionDisplay(position);
+        
+        // Center map on position if available
+        if (position && position.latitude && position.longitude) {
+          map.setCenter({
+            lat: position.latitude,
+            lng: position.longitude
+          });
+        }
+      });
+      
+      // Connection status
+      gnss.on('connection:connected', (data) => {
+        connectionStatusEl.textContent = `Connected via ${data.method}`;
+        connectionStatusEl.className = 'status connected';
+      });
+      
+      gnss.on('connection:disconnected', () => {
+        connectionStatusEl.textContent = 'Disconnected';
+        connectionStatusEl.className = 'status disconnected';
+      });
+      
+      gnss.on('connection:error', (data) => {
+        connectionStatusEl.textContent = `Error: ${data.message}`;
+        connectionStatusEl.className = 'status error';
+      });
+      
+      // NTRIP status
+      gnss.on('ntrip:connected', (data) => {
+        ntripStatusEl.textContent = `Connected to ${data.mountpoint}`;
+        ntripStatusEl.className = 'status connected';
+      });
+      
+      gnss.on('ntrip:disconnected', () => {
+        ntripStatusEl.textContent = 'Disconnected';
+        ntripStatusEl.className = 'status disconnected';
+      });
+      
+      gnss.on('ntrip:error', (data) => {
+        ntripStatusEl.textContent = `Error: ${data.message}`;
+        ntripStatusEl.className = 'status error';
+      });
+    }
+    
+    function updatePositionDisplay(position) {
+      if (\!position) {
+        positionStatusEl.textContent = 'No position data';
+        return;
+      }
+      
+      let fixClass = 'no-fix';
+      let fixText = 'No Fix';
+      
+      if (position.quality === 4) {
+        fixClass = 'rtk-fixed';
+        fixText = 'RTK Fixed';
+      } else if (position.quality === 5) {
+        fixClass = 'rtk-float';
+        fixText = 'RTK Float';
+      } else if (position.quality === 1) {
+        fixClass = '';
+        fixText = 'GPS';
+      } else if (position.quality === 2) {
+        fixClass = '';
+        fixText = 'DGPS';
+      }
+      
+      positionStatusEl.innerHTML = `
+        <div class="${fixClass}">Fix: ${fixText}</div>
+        <div>Lat: ${position.latitude.toFixed(6)}</div>
+        <div>Lng: ${position.longitude.toFixed(6)}</div>
+        <div>Alt: ${position.altitude ? position.altitude.toFixed(2) + 'm' : 'N/A'}</div>
+        <div>Satellites: ${position.satellites || 0}</div>
+      `;
+    }
+    
+    function setupButtonHandlers() {
+      // GNSS connection
+      document.getElementById('connect-bluetooth').addEventListener('click', async () => {
+        try {
+          await gnss.connectBluetooth();
+        } catch (error) {
+          console.error('Error connecting via Bluetooth:', error);
+        }
+      });
+      
+      document.getElementById('connect-serial').addEventListener('click', async () => {
+        try {
+          await gnss.connectSerial();
+        } catch (error) {
+          console.error('Error connecting via Serial:', error);
+        }
+      });
+      
+      document.getElementById('disconnect-device').addEventListener('click', async () => {
+        try {
+          await gnss.disconnectDevice();
+        } catch (error) {
+          console.error('Error disconnecting device:', error);
+        }
+      });
+      
+      // NTRIP connection
+      document.getElementById('connect-ntrip').addEventListener('click', async () => {
+        try {
+          const host = prompt('NTRIP Host:', 'rtk2go.com');
+          const port = prompt('NTRIP Port:', '2101');
+          const mountpoint = prompt('NTRIP Mountpoint:');
+          const username = prompt('NTRIP Username (optional):');
+          const password = prompt('NTRIP Password (optional):');
+          
+          if (\!host || \!mountpoint) {
+            alert('Host and mountpoint are required');
+            return;
+          }
+          
+          await gnss.connectNtrip({
+            host,
+            port: parseInt(port, 10),
+            mountpoint,
+            username,
+            password
+          });
+        } catch (error) {
+          console.error('Error connecting to NTRIP:', error);
+        }
+      });
+      
+      document.getElementById('disconnect-ntrip').addEventListener('click', async () => {
+        try {
+          await gnss.disconnectNtrip();
+        } catch (error) {
+          console.error('Error disconnecting from NTRIP:', error);
+        }
+      });
+      
+      // Survey tools
+      document.getElementById('capture-point').addEventListener('click', () => {
+        if (\!survey || \!survey.tools) {
+          console.error('Survey not initialized');
+          return;
+        }
+        
+        const position = gnss.getPosition();
+        if (\!position) {
+          alert('No position available');
+          return;
+        }
+        
+        console.log('Capturing point at position:', position);
+        
+        // In a real implementation, this would create a point feature at the current position
+        if (survey.features && typeof survey.features.createPoint === 'function') {
+          survey.features.createPoint({
+            lat: position.latitude,
+            lng: position.longitude,
+            elevation: position.altitude || 0
+          }, {
+            name: `Point captured at ${new Date().toLocaleTimeString()}`,
+            style: {
+              color: position.quality >= 4 ? '#4CAF50' : '#FFC107',
+              size: 8
+            }
+          });
+        }
+      });
+      
+      document.getElementById('start-line').addEventListener('click', () => {
+        if (\!survey || \!survey.tools) {
+          console.error('Survey not initialized');
+          return;
+        }
+        
+        console.log('Starting line tool');
+        
+        // In a real implementation, this would activate the line drawing tool
+        if (survey.tools.drawing && typeof survey.tools.drawing.activate === 'function') {
+          survey.tools.drawing.activate({ mode: 'line' });
+        }
+      });
+      
+      document.getElementById('start-polygon').addEventListener('click', () => {
+        if (\!survey || \!survey.tools) {
+          console.error('Survey not initialized');
+          return;
+        }
+        
+        console.log('Starting polygon tool');
+        
+        // In a real implementation, this would activate the polygon drawing tool
+        if (survey.tools.drawing && typeof survey.tools.drawing.activate === 'function') {
+          survey.tools.drawing.activate({ mode: 'polygon' });
+        }
+      });
+      
+      document.getElementById('measure-distance').addEventListener('click', () => {
+        if (\!survey || \!survey.tools) {
+          console.error('Survey not initialized');
+          return;
+        }
+        
+        console.log('Starting distance measurement tool');
+        
+        // In a real implementation, this would activate the measurement tool
+        if (survey.tools.measurement && typeof survey.tools.measurement.activate === 'function') {
+          survey.tools.measurement.activate({ mode: 'distance' });
+        }
+      });
+    }
+    
+    // Initialize everything when the page loads
+    init();
+  </script>
+</body>
+</html>

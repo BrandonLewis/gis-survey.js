@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>gis-survey.js Basic Usage Example</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .map-container {
+      flex: 1;
+      min-width: 600px;
+      height: 500px;
+      margin-right: 1rem;
+    }
+    .controls {
+      flex: 0 0 300px;
+    }
+    .tool-group {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background-color: #f5f5f5;
+      border-radius: 4px;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin: 0.25rem;
+      cursor: pointer;
+    }
+    #map {
+      width: 100%;
+      height: 100%;
+      background-color: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+  <h1>gis-survey.js Basic Usage Example</h1>
+  
+  <div class="container">
+    <div class="map-container">
+      <div id="map"></div>
+    </div>
+    
+    <div class="controls">
+      <div class="tool-group">
+        <h3>Drawing Tools</h3>
+        <button id="point-tool">Point</button>
+        <button id="line-tool">Line</button>
+        <button id="polygon-tool">Polygon</button>
+      </div>
+      
+      <div class="tool-group">
+        <h3>Editing Tools</h3>
+        <button id="select-tool">Select</button>
+        <button id="edit-tool">Edit</button>
+        <button id="delete-tool">Delete</button>
+      </div>
+      
+      <div class="tool-group">
+        <h3>Measurement Tools</h3>
+        <button id="measure-distance">Measure Distance</button>
+        <button id="measure-area">Measure Area</button>
+      </div>
+      
+      <div class="tool-group">
+        <h3>GNSS Integration</h3>
+        <button id="connect-gnss">Connect GNSS</button>
+        <button id="capture-point">Capture Point at Position</button>
+      </div>
+      
+      <div class="tool-group">
+        <h3>Feature List</h3>
+        <ul id="feature-list">
+          <li>No features yet</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=geometry"></script>
+  <script type="module">
+    import { 
+      createSurvey, 
+      Coordinate, 
+      GeometryEngine, 
+      CoordinateUtils 
+    } from '../dist/gis-survey.esm.js';
+    
+    // Initialize Google Maps
+    const mapElement = document.getElementById('map');
+    const map = new google.maps.Map(mapElement, {
+      center: { lat: 40.7128, lng: -74.0060 },
+      zoom: 12
+    });
+    
+    // Initialize survey module with the map
+    let survey;
+    let activeTool = null;
+    
+    // Sample data for testing core functionality
+    const sampleCoordinates = [
+      new Coordinate(40.7128, -74.0060, 10),  // New York
+      new Coordinate(34.0522, -118.2437, 30), // Los Angeles
+      new Coordinate(41.8781, -87.6298, 15),  // Chicago
+      new Coordinate(37.7749, -122.4194, 25)  // San Francisco
+    ];
+    
+    // Markers to visualize coordinates
+    const markers = [];
+    
+    async function initSurvey() {
+      try {
+        survey = await createSurvey(map, 'google', {
+          enable3D: true
+        });
+        
+        console.log('Survey initialized with core functionality:', survey);
+        
+        // Test core functionality - Coordinate creation
+        const homeCoord = survey.geometry.createCoordinate(40.7128, -74.0060, 10);
+        console.log('Created coordinate:', homeCoord);
+        
+        // Test GeometryEngine distance calculation
+        const distanceAB = GeometryEngine.calculateDistance(
+          sampleCoordinates[0], 
+          sampleCoordinates[1],
+          { includeElevation: true }
+        );
+        console.log(`3D Distance from NY to LA: ${distanceAB.toFixed(2)} meters`);
+        
+        // Test GeometryEngine area calculation
+        const polygon = [
+          sampleCoordinates[0],
+          sampleCoordinates[1],
+          sampleCoordinates[2],
+          sampleCoordinates[3],
+          sampleCoordinates[0]  // Close the polygon
+        ];
+        
+        const area = GeometryEngine.calculateArea(polygon);
+        console.log(`Area of sample polygon: ${(area / 1000000).toFixed(2)} sq km`);
+        
+        // Add sample coordinates to the map
+        sampleCoordinates.forEach((coord, index) => {
+          const marker = new google.maps.Marker({
+            position: { lat: coord.lat, lng: coord.lng },
+            map: map,
+            title: `Sample Point ${index + 1}`,
+            label: String(index + 1)
+          });
+          markers.push(marker);
+        });
+        
+        // Draw the polygon
+        const polygonPath = sampleCoordinates.map(coord => ({ lat: coord.lat, lng: coord.lng }));
+        polygonPath.push(polygonPath[0]); // Close the polygon
+        
+        const mapPolygon = new google.maps.Polygon({
+          paths: polygonPath,
+          strokeColor: '#FF0000',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#FF0000',
+          fillOpacity: 0.35
+        });
+        mapPolygon.setMap(map);
+        
+        // Calculate the centroid
+        const centroid = GeometryEngine.calculateCentroid(sampleCoordinates);
+        console.log('Polygon centroid:', centroid);
+        
+        // Add centroid marker
+        const centroidMarker = new google.maps.Marker({
+          position: { lat: centroid.lat, lng: centroid.lng },
+          map: map,
+          title: 'Centroid',
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 10,
+            fillColor: '#4285F4',
+            fillOpacity: 1,
+            strokeColor: '#FFFFFF',
+            strokeWeight: 2
+          }
+        });
+        
+        // Set up bounds to show all markers
+        const bounds = new google.maps.LatLngBounds();
+        sampleCoordinates.forEach(coord => {
+          bounds.extend({ lat: coord.lat, lng: coord.lng });
+        });
+        map.fitBounds(bounds);
+        
+        // Set up tool buttons
+        document.getElementById('point-tool').addEventListener('click', () => {
+          activateTool('drawing', { mode: 'point' });
+        });
+        
+        document.getElementById('line-tool').addEventListener('click', () => {
+          activateTool('drawing', { mode: 'line' });
+        });
+        
+        document.getElementById('polygon-tool').addEventListener('click', () => {
+          activateTool('drawing', { mode: 'polygon' });
+        });
+        
+        document.getElementById('select-tool').addEventListener('click', () => {
+          activateTool('select');
+        });
+        
+        document.getElementById('edit-tool').addEventListener('click', () => {
+          activateTool('editing');
+        });
+        
+        document.getElementById('delete-tool').addEventListener('click', () => {
+          deleteSelectedFeatures();
+        });
+        
+        document.getElementById('measure-distance').addEventListener('click', () => {
+          measureDistanceBetweenSamplePoints();
+        });
+        
+        document.getElementById('measure-area').addEventListener('click', () => {
+          measurePolygonArea();
+        });
+        
+        document.getElementById('connect-gnss').addEventListener('click', () => {
+          connectGnss();
+        });
+        
+        document.getElementById('capture-point').addEventListener('click', () => {
+          capturePointAtPosition();
+        });
+        
+        // Update feature list
+        updateFeatureList();
+        
+      } catch (error) {
+        console.error('Error initializing survey:', error);
+      }
+    }
+    
+    function updateFeatureList() {
+      const featureList = document.getElementById('feature-list');
+      featureList.innerHTML = '';
+      
+      // Add sample points
+      sampleCoordinates.forEach((coord, index) => {
+        const li = document.createElement('li');
+        li.textContent = `Point ${index + 1}: ${coord.toCompactString()} (elev: ${coord.elevation}m)`;
+        featureList.appendChild(li);
+      });
+      
+      // Add polygon
+      const li = document.createElement('li');
+      li.textContent = `Polygon: Area = ${(GeometryEngine.calculateArea(sampleCoordinates) / 1000000).toFixed(2)} sq km`;
+      featureList.appendChild(li);
+    }
+    
+    function activateTool(toolName, options = {}) {
+      if (!survey || !survey.tools) {
+        console.error('Survey not initialized');
+        return;
+      }
+      
+      activeTool = toolName;
+      
+      // This would work with the real implementation
+      if (survey.tools.manager && typeof survey.tools.manager.activateTool === 'function') {
+        survey.tools.manager.activateTool(toolName, options);
+      }
+      
+      console.log(`Activated tool: ${toolName}`, options);
+    }
+    
+    function deleteSelectedFeatures() {
+      if (!survey) return;
+      
+      console.log('Delete selected features - not yet implemented');
+    }
+    
+    function measureDistanceBetweenSamplePoints() {
+      if (!survey) return;
+      
+      // Use the GeometryEngine to calculate distances between all points
+      let totalDistance = 0;
+      const distanceResults = [];
+      
+      for (let i = 0; i < sampleCoordinates.length - 1; i++) {
+        const from = sampleCoordinates[i];
+        const to = sampleCoordinates[i + 1];
+        
+        const distance = GeometryEngine.calculateDistance(from, to, { includeElevation: true });
+        totalDistance += distance;
+        
+        distanceResults.push(`Distance from point ${i+1} to ${i+2}: ${(distance / 1000).toFixed(2)} km`);
+      }
+      
+      // Complete the circuit for the polygon
+      const closingDistance = GeometryEngine.calculateDistance(
+        sampleCoordinates[sampleCoordinates.length - 1], 
+        sampleCoordinates[0], 
+        { includeElevation: true }
+      );
+      totalDistance += closingDistance;
+      distanceResults.push(`Distance from point ${sampleCoordinates.length} to 1: ${(closingDistance / 1000).toFixed(2)} km`);
+      distanceResults.push(`Total perimeter: ${(totalDistance / 1000).toFixed(2)} km`);
+      
+      // Display the results
+      alert(distanceResults.join('\\n'));
+    }
+    
+    function measurePolygonArea() {
+      if (!survey) return;
+      
+      // Use the GeometryEngine to calculate the area
+      const area = GeometryEngine.calculateArea(sampleCoordinates);
+      alert(`Polygon area: ${(area / 1000000).toFixed(2)} square kilometers`);
+    }
+    
+    function connectGnss() {
+      if (!survey) return;
+      
+      console.log('Connect GNSS - not yet implemented');
+      alert('GNSS integration would be implemented here. This would connect to the gnss.js module.');
+    }
+    
+    function capturePointAtPosition() {
+      if (!survey) return;
+      
+      // Create a random coordinate near the center of the map for demonstration
+      const center = map.getCenter();
+      const lat = center.lat() + (Math.random() - 0.5) * 0.1;
+      const lng = center.lng() + (Math.random() - 0.5) * 0.1;
+      
+      const newCoord = new Coordinate(lat, lng, Math.random() * 50);
+      sampleCoordinates.push(newCoord);
+      
+      // Add a marker for the new coordinate
+      const marker = new google.maps.Marker({
+        position: { lat: newCoord.lat, lng: newCoord.lng },
+        map: map,
+        title: `Captured Point ${sampleCoordinates.length}`,
+        label: String(sampleCoordinates.length),
+        animation: google.maps.Animation.DROP
+      });
+      markers.push(marker);
+      
+      // Update the feature list
+      updateFeatureList();
+      
+      alert(`Captured new point at ${newCoord.toCompactString()} with elevation ${newCoord.elevation.toFixed(2)}m`);
+    }
+    
+    // Initialize the survey when the page loads
+    initSurvey();
+  </script>
+</body>
+</html>
