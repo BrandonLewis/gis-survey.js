@@ -16,6 +16,7 @@ import { TransformerFactory } from './core/TransformerFactory.js';
 import { CoordinateTransformer } from './core/CoordinateTransformer.js';
 import { SimpleWGS84Transformer } from './core/SimpleWGS84Transformer.js';
 import { initializeCore } from './core/index.js';
+import { SimplifiedDrawingTool } from './tools/SimplifiedDrawingTool.js';
 
 /**
  * Initialize the survey module.
@@ -89,12 +90,18 @@ export async function createSurvey(mapInstance, mapType, options = {}) {
       }
     },
     
-    // Survey tools stubs
+    // Survey tools
     tools: {
       manager: null,
       measurement: null,
       offset: null,
-      drawing: null,
+      drawing: new SimplifiedDrawingTool({
+        map: mapInstance,
+        geometryEngine: GeometryEngine,
+        mode: 'point',
+        enable3D: options.enable3D || false,
+        continuousDrawing: options.continuousDrawing || true
+      }),
       editing: null,
       snapping: null
     },

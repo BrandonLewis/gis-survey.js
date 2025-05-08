@@ -47,6 +47,16 @@ survey.connectGnssModule(gnss);
 
 ## Development
 
+### API Keys and Environment Variables
+
+This project uses environment variables for configuration. Copy the example environment file to create your own:
+
+```bash
+cp .env.example .env
+```
+
+Then edit the `.env` file to add your Google Maps API key. This key will be automatically injected into the examples when using the development server.
+
 ### Building from Source
 
 ```bash

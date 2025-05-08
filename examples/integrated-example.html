@@ -1,4 +1,4 @@
-<\!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -72,6 +72,22 @@
       background-color: #ffebee;
       color: #c62828;
     }
+    .active-tool {
+      background-color: #4285F4;
+      color: white;
+    }
+    .feature-list-container {
+      margin-top: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    #status-message {
+      margin-top: 1rem;
+      padding: 0.5rem;
+      border-radius: 4px;
+      background-color: #f0f8ff;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -80,6 +96,7 @@
   <div class="container">
     <div class="map-container">
       <div id="map"></div>
+      <div id="status-message"></div>
     </div>
     
     <div class="controls">
@@ -108,31 +125,47 @@
       <div class="tool-group">
         <h3>Survey Tools</h3>
         <button id="capture-point">Capture Point</button>
-        <button id="start-line">Start Line</button>
-        <button id="start-polygon">Start Polygon</button>
+        <button id="point-tool">Draw Point</button>
+        <button id="line-tool">Draw Line</button>
+        <button id="polygon-tool">Draw Polygon</button>
+        <button id="stop-drawing">Stop Drawing</button>
+      </div>
+      
+      <div class="tool-group">
+        <h3>Measurement Tools</h3>
         <button id="measure-distance">Measure Distance</button>
+        <button id="measure-area">Measure Area</button>
       </div>
       
       <div class="tool-group">
         <h3>Features</h3>
-        <ul id="feature-list">
-          <li>No features yet</li>
-        </ul>
+        <div class="feature-list-container">
+          <ul id="feature-list">
+            <li>No features yet</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
 
   <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=geometry"></script>
   <script type="module">
-    // Import both modules
-    import { GnssModule } from '../gnss.js/dist/gnss.esm.js';
-    import { createSurvey } from '../gis-survey.js/dist/gis-survey.esm.js';
+    // Import modules
+    import { 
+      createSurvey,
+      Coordinate,
+      GeometryEngine
+    } from '../dist/gis-survey.esm.js';
+    
+    // Import the SimplifiedDrawingTool directly
+    import { SimplifiedDrawingTool } from '../src/tools/SimplifiedDrawingTool.js';
     
     // UI Elements
     const connectionStatusEl = document.getElementById('connection-status');
     const ntripStatusEl = document.getElementById('ntrip-status');
     const positionStatusEl = document.getElementById('position-status');
     const featureListEl = document.getElementById('feature-list');
+    const statusMessageEl = document.getElementById('status-message');
     
     // Initialize Google Maps
     const mapElement = document.getElementById('map');
@@ -141,91 +174,143 @@
       zoom: 12
     });
     
-    // Initialize GNSS module
-    const gnss = new GnssModule({
-      debugSettings: {
-        info: true,
-        debug: true,
-        errors: true
-      }
-    });
+    // Track user-created features
+    const userFeatures = {
+      points: [],
+      lines: [],
+      polygons: []
+    };
     
     // Initialize survey module
     let survey;
+    let drawingTool;
+    let activeTool = null;
+    
+    // For GNSS integration (mock implementation for example)
+    let mockGnssPosition = null;
+    const mockGnssPositionMarker = new google.maps.Marker({
+      map: map,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        fillColor: '#4285F4',
+        fillOpacity: 0.7,
+        strokeColor: '#FFFFFF',
+        strokeWeight: 2,
+        scale: 10
+      }
+    });
+    mockGnssPositionMarker.setVisible(false);
     
     async function init() {
       try {
+        // Initialize the survey module
         survey = await createSurvey(map, 'google', {
-          enable3D: true
+          enable3D: true,
+          continuousDrawing: true
         });
         
         console.log('Survey initialized:', survey);
         
-        // Connect GNSS module to survey
-        if (typeof survey.connectGnssModule === 'function') {
-          survey.connectGnssModule(gnss);
-          console.log('GNSS module connected to survey');
-        }
+        // Initialize the drawing tool
+        drawingTool = new SimplifiedDrawingTool({
+          map: map,
+          geometryEngine: GeometryEngine,
+          mode: 'point',
+          enable3D: true,
+          continuousDrawing: true
+        });
         
-        // Set up GNSS event handlers
-        setupGnssEvents();
+        // Add event listener for when features are created
+        drawingTool.on('featureCreated', handleFeatureCreated);
+        
+        // Set up simulated GNSS module
+        setupMockGnss();
         
         // Set up button handlers
         setupButtonHandlers();
+        
+        // Show initial status message
+        showStatusMessage('Click a tool to start drawing or capturing points');
+        
       } catch (error) {
         console.error('Error initializing:', error);
+        showStatusMessage('Error initializing survey tools', true);
       }
     }
     
-    function setupGnssEvents() {
-      // Position updates
-      gnss.on('position', (position) => {
-        updatePositionDisplay(position);
+    function showStatusMessage(message, isError = false) {
+      statusMessageEl.textContent = message;
+      statusMessageEl.style.display = 'block';
+      statusMessageEl.style.backgroundColor = isError ? '#ffebee' : '#f0f8ff';
+      
+      // Hide after 5 seconds if not an error
+      if (!isError) {
+        setTimeout(() => {
+          statusMessageEl.style.display = 'none';
+        }, 5000);
+      }
+    }
+    
+    function setupMockGnss() {
+      // For this example, we'll mock a GNSS position that moves slightly over time
+      // In a real implementation, this would come from the gnss.js library
+      
+      const centerLat = 40.7128;
+      const centerLng = -74.0060;
+      
+      // Start position simulation
+      mockGnssPosition = {
+        latitude: centerLat,
+        longitude: centerLng,
+        altitude: 10,
+        quality: 4, // RTK fixed
+        satellites: 12
+      };
+      
+      updatePositionDisplay(mockGnssPosition);
+      mockGnssPositionMarker.setPosition({
+        lat: mockGnssPosition.latitude,
+        lng: mockGnssPosition.longitude
+      });
+      mockGnssPositionMarker.setVisible(true);
+      
+      // Simulate position updates every 3 seconds
+      setInterval(() => {
+        // Slightly move the position
+        mockGnssPosition.latitude += (Math.random() - 0.5) * 0.0002;
+        mockGnssPosition.longitude += (Math.random() - 0.5) * 0.0002;
+        mockGnssPosition.altitude = 10 + Math.random() * 5;
         
-        // Center map on position if available
-        if (position && position.latitude && position.longitude) {
-          map.setCenter({
-            lat: position.latitude,
-            lng: position.longitude
-          });
+        // Occasionally change the fix quality to simulate real-world conditions
+        if (Math.random() < 0.1) {
+          mockGnssPosition.quality = 5; // RTK float
+        } else if (Math.random() < 0.05) {
+          mockGnssPosition.quality = 1; // GPS
+        } else {
+          mockGnssPosition.quality = 4; // RTK fixed
         }
-      });
+        
+        // Update the position display
+        updatePositionDisplay(mockGnssPosition);
+        
+        // Update the marker position
+        mockGnssPositionMarker.setPosition({
+          lat: mockGnssPosition.latitude,
+          lng: mockGnssPosition.longitude
+        });
+      }, 3000);
       
-      // Connection status
-      gnss.on('connection:connected', (data) => {
-        connectionStatusEl.textContent = `Connected via ${data.method}`;
-        connectionStatusEl.className = 'status connected';
-      });
+      // Simulate connection status
+      connectionStatusEl.textContent = 'Connected via Simulation';
+      connectionStatusEl.className = 'status connected';
       
-      gnss.on('connection:disconnected', () => {
-        connectionStatusEl.textContent = 'Disconnected';
-        connectionStatusEl.className = 'status disconnected';
-      });
-      
-      gnss.on('connection:error', (data) => {
-        connectionStatusEl.textContent = `Error: ${data.message}`;
-        connectionStatusEl.className = 'status error';
-      });
-      
-      // NTRIP status
-      gnss.on('ntrip:connected', (data) => {
-        ntripStatusEl.textContent = `Connected to ${data.mountpoint}`;
-        ntripStatusEl.className = 'status connected';
-      });
-      
-      gnss.on('ntrip:disconnected', () => {
-        ntripStatusEl.textContent = 'Disconnected';
-        ntripStatusEl.className = 'status disconnected';
-      });
-      
-      gnss.on('ntrip:error', (data) => {
-        ntripStatusEl.textContent = `Error: ${data.message}`;
-        ntripStatusEl.className = 'status error';
-      });
+      // Simulate NTRIP connection
+      ntripStatusEl.textContent = 'Connected to DEMO-MOUNTPOINT';
+      ntripStatusEl.className = 'status connected';
     }
     
     function updatePositionDisplay(position) {
-      if (\!position) {
+      if (!position) {
         positionStatusEl.textContent = 'No position data';
         return;
       }
@@ -256,137 +341,218 @@
       `;
     }
     
-    function setupButtonHandlers() {
-      // GNSS connection
-      document.getElementById('connect-bluetooth').addEventListener('click', async () => {
-        try {
-          await gnss.connectBluetooth();
-        } catch (error) {
-          console.error('Error connecting via Bluetooth:', error);
-        }
-      });
+    // Handle when a feature is created by the drawing tool
+    function handleFeatureCreated(event) {
+      console.log('Feature created:', event);
       
-      document.getElementById('connect-serial').addEventListener('click', async () => {
-        try {
-          await gnss.connectSerial();
-        } catch (error) {
-          console.error('Error connecting via Serial:', error);
-        }
-      });
-      
-      document.getElementById('disconnect-device').addEventListener('click', async () => {
-        try {
-          await gnss.disconnectDevice();
-        } catch (error) {
-          console.error('Error disconnecting device:', error);
-        }
-      });
-      
-      // NTRIP connection
-      document.getElementById('connect-ntrip').addEventListener('click', async () => {
-        try {
-          const host = prompt('NTRIP Host:', 'rtk2go.com');
-          const port = prompt('NTRIP Port:', '2101');
-          const mountpoint = prompt('NTRIP Mountpoint:');
-          const username = prompt('NTRIP Username (optional):');
-          const password = prompt('NTRIP Password (optional):');
-          
-          if (\!host || \!mountpoint) {
-            alert('Host and mountpoint are required');
-            return;
-          }
-          
-          await gnss.connectNtrip({
-            host,
-            port: parseInt(port, 10),
-            mountpoint,
-            username,
-            password
+      // Add the feature to our tracking object based on type
+      switch (event.type) {
+        case 'point':
+          userFeatures.points.push({
+            coordinate: event.coordinate,
+            marker: event.marker
           });
-        } catch (error) {
-          console.error('Error connecting to NTRIP:', error);
-        }
+          showStatusMessage(`Point created at ${event.coordinate.toCompactString()}`);
+          break;
+          
+        case 'line':
+          userFeatures.lines.push({
+            coordinates: event.coordinates,
+            polyline: event.polyline
+          });
+          const length = GeometryEngine.calculateLength(event.coordinates);
+          showStatusMessage(`Line created with ${event.coordinates.length} vertices. Length: ${(length / 1000).toFixed(2)} km`);
+          break;
+          
+        case 'polygon':
+          userFeatures.polygons.push({
+            coordinates: event.coordinates,
+            polygon: event.polygon
+          });
+          const area = GeometryEngine.calculateArea(event.coordinates);
+          showStatusMessage(`Polygon created with ${event.coordinates.length} vertices. Area: ${(area / 1000000).toFixed(2)} sq km`);
+          break;
+      }
+      
+      // Update the feature list
+      updateFeatureList();
+    }
+    
+    function updateFeatureList() {
+      const featureList = document.getElementById('feature-list');
+      featureList.innerHTML = '';
+      
+      if (userFeatures.points.length === 0 && 
+          userFeatures.lines.length === 0 && 
+          userFeatures.polygons.length === 0) {
+        const li = document.createElement('li');
+        li.textContent = 'No features yet';
+        featureList.appendChild(li);
+        return;
+      }
+      
+      // Add user created points
+      userFeatures.points.forEach((point, index) => {
+        const li = document.createElement('li');
+        li.textContent = `Point ${index + 1}: ${point.coordinate.toCompactString()}`;
+        featureList.appendChild(li);
       });
       
-      document.getElementById('disconnect-ntrip').addEventListener('click', async () => {
-        try {
-          await gnss.disconnectNtrip();
-        } catch (error) {
-          console.error('Error disconnecting from NTRIP:', error);
-        }
+      // Add user created lines
+      userFeatures.lines.forEach((line, index) => {
+        const li = document.createElement('li');
+        const length = GeometryEngine.calculateLength(line.coordinates);
+        li.textContent = `Line ${index + 1}: Length = ${(length / 1000).toFixed(2)} km (${line.coordinates.length} vertices)`;
+        featureList.appendChild(li);
+      });
+      
+      // Add user created polygons
+      userFeatures.polygons.forEach((polygon, index) => {
+        const li = document.createElement('li');
+        const area = GeometryEngine.calculateArea(polygon.coordinates);
+        li.textContent = `Polygon ${index + 1}: Area = ${(area / 1000000).toFixed(2)} sq km (${polygon.coordinates.length} vertices)`;
+        featureList.appendChild(li);
+      });
+    }
+    
+    function activateTool(mode) {
+      deactivateDrawing(); // First deactivate any active tool
+      
+      console.log(`Activating ${mode} drawing tool`);
+      drawingTool.activate({ mode: mode });
+      activeTool = 'drawing';
+      
+      // Provide visual feedback that drawing is active
+      const buttonId = `${mode}-tool`;
+      document.querySelectorAll('.tool-group button').forEach(button => {
+        button.classList.remove('active-tool');
+      });
+      document.getElementById(buttonId).classList.add('active-tool');
+      
+      // Show help message based on the mode
+      let helpMessage = '';
+      switch(mode) {
+        case 'point':
+          helpMessage = 'Click on the map to create a point';
+          break;
+        case 'line':
+          helpMessage = 'Click to add vertices. Double-click to complete the line';
+          break;
+        case 'polygon':
+          helpMessage = 'Click to add vertices. Double-click to complete the polygon';
+          break;
+      }
+      
+      showStatusMessage(helpMessage);
+    }
+    
+    function deactivateDrawing() {
+      if (drawingTool && drawingTool.isActive) {
+        drawingTool.deactivate();
+      }
+      
+      // Remove highlighting from all buttons
+      document.querySelectorAll('.tool-group button').forEach(button => {
+        button.classList.remove('active-tool');
+      });
+      
+      activeTool = null;
+    }
+    
+    function setupButtonHandlers() {
+      // GNSS connection buttons would be set up here in a real integration
+      document.getElementById('connect-bluetooth').addEventListener('click', () => {
+        showStatusMessage('This is a mock example. Bluetooth connection would be handled by gnss.js in a real implementation.');
+      });
+      
+      document.getElementById('connect-serial').addEventListener('click', () => {
+        showStatusMessage('This is a mock example. Serial connection would be handled by gnss.js in a real implementation.');
+      });
+      
+      document.getElementById('disconnect-device').addEventListener('click', () => {
+        showStatusMessage('This is a mock example. Device disconnection would be handled by gnss.js in a real implementation.');
+      });
+      
+      // NTRIP connection buttons
+      document.getElementById('connect-ntrip').addEventListener('click', () => {
+        showStatusMessage('This is a mock example. NTRIP connection would be handled by gnss.js in a real implementation.');
+      });
+      
+      document.getElementById('disconnect-ntrip').addEventListener('click', () => {
+        showStatusMessage('This is a mock example. NTRIP disconnection would be handled by gnss.js in a real implementation.');
       });
       
       // Survey tools
       document.getElementById('capture-point').addEventListener('click', () => {
-        if (\!survey || \!survey.tools) {
-          console.error('Survey not initialized');
+        if (!mockGnssPosition) {
+          showStatusMessage('No position available', true);
           return;
         }
         
-        const position = gnss.getPosition();
-        if (\!position) {
-          alert('No position available');
-          return;
-        }
+        console.log('Capturing point at position:', mockGnssPosition);
         
-        console.log('Capturing point at position:', position);
+        // Create a point at the current GNSS position
+        const coordinate = new Coordinate(
+          mockGnssPosition.latitude, 
+          mockGnssPosition.longitude, 
+          mockGnssPosition.altitude || 0
+        );
         
-        // In a real implementation, this would create a point feature at the current position
-        if (survey.features && typeof survey.features.createPoint === 'function') {
-          survey.features.createPoint({
-            lat: position.latitude,
-            lng: position.longitude,
-            elevation: position.altitude || 0
-          }, {
-            name: `Point captured at ${new Date().toLocaleTimeString()}`,
-            style: {
-              color: position.quality >= 4 ? '#4CAF50' : '#FFC107',
-              size: 8
-            }
-          });
-        }
+        // Create a marker for the point
+        const marker = new google.maps.Marker({
+          position: { 
+            lat: coordinate.lat, 
+            lng: coordinate.lng 
+          },
+          map: map,
+          title: `Captured Point (${coordinate.toCompactString()})`,
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            fillColor: mockGnssPosition.quality >= 4 ? '#4CAF50' : '#FFC107',
+            fillOpacity: 0.8,
+            strokeColor: '#FFFFFF',
+            strokeWeight: 2,
+            scale: 8
+          }
+        });
+        
+        // Add to user features
+        userFeatures.points.push({
+          coordinate: coordinate,
+          marker: marker
+        });
+        
+        // Update feature list
+        updateFeatureList();
+        
+        showStatusMessage(`Point captured at ${coordinate.toCompactString()}`);
       });
       
-      document.getElementById('start-line').addEventListener('click', () => {
-        if (\!survey || \!survey.tools) {
-          console.error('Survey not initialized');
-          return;
-        }
-        
-        console.log('Starting line tool');
-        
-        // In a real implementation, this would activate the line drawing tool
-        if (survey.tools.drawing && typeof survey.tools.drawing.activate === 'function') {
-          survey.tools.drawing.activate({ mode: 'line' });
-        }
+      // Drawing tools
+      document.getElementById('point-tool').addEventListener('click', () => {
+        activateTool('point');
       });
       
-      document.getElementById('start-polygon').addEventListener('click', () => {
-        if (\!survey || \!survey.tools) {
-          console.error('Survey not initialized');
-          return;
-        }
-        
-        console.log('Starting polygon tool');
-        
-        // In a real implementation, this would activate the polygon drawing tool
-        if (survey.tools.drawing && typeof survey.tools.drawing.activate === 'function') {
-          survey.tools.drawing.activate({ mode: 'polygon' });
-        }
+      document.getElementById('line-tool').addEventListener('click', () => {
+        activateTool('line');
       });
       
+      document.getElementById('polygon-tool').addEventListener('click', () => {
+        activateTool('polygon');
+      });
+      
+      document.getElementById('stop-drawing').addEventListener('click', () => {
+        deactivateDrawing();
+        showStatusMessage('Drawing stopped');
+      });
+      
+      // Measurement tools
       document.getElementById('measure-distance').addEventListener('click', () => {
-        if (\!survey || \!survey.tools) {
-          console.error('Survey not initialized');
-          return;
-        }
-        
-        console.log('Starting distance measurement tool');
-        
-        // In a real implementation, this would activate the measurement tool
-        if (survey.tools.measurement && typeof survey.tools.measurement.activate === 'function') {
-          survey.tools.measurement.activate({ mode: 'distance' });
-        }
+        showStatusMessage('Distance measurement tool would be implemented in a full version');
+      });
+      
+      document.getElementById('measure-area').addEventListener('click', () => {
+        showStatusMessage('Area measurement tool would be implemented in a full version');
       });
     }
     

@@ -40,6 +40,22 @@
       height: 100%;
       background-color: #e0e0e0;
     }
+    .active-tool {
+      background-color: #4285F4;
+      color: white;
+    }
+    .feature-list-container {
+      margin-top: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    #status-message {
+      margin-top: 1rem;
+      padding: 0.5rem;
+      border-radius: 4px;
+      background-color: #f0f8ff;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -48,6 +64,7 @@
   <div class="container">
     <div class="map-container">
       <div id="map"></div>
+      <div id="status-message"></div>
     </div>
     
     <div class="controls">
@@ -79,9 +96,11 @@
       
       <div class="tool-group">
         <h3>Feature List</h3>
-        <ul id="feature-list">
-          <li>No features yet</li>
-        </ul>
+        <div class="feature-list-container">
+          <ul id="feature-list">
+            <li>No features yet</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -95,6 +114,9 @@
       CoordinateUtils 
     } from '../dist/gis-survey.esm.js';
     
+    // We need to import the SimplifiedDrawingTool directly for this example
+    import { SimplifiedDrawingTool } from '../src/tools/SimplifiedDrawingTool.js';
+    
     // Initialize Google Maps
     const mapElement = document.getElementById('map');
     const map = new google.maps.Map(mapElement, {
@@ -104,7 +126,15 @@
     
     // Initialize survey module with the map
     let survey;
+    let drawingTool;
     let activeTool = null;
+    
+    // Track user-created features
+    const userFeatures = {
+      points: [],
+      lines: [],
+      polygons: []
+    };
     
     // Sample data for testing core functionality
     const sampleCoordinates = [
@@ -120,10 +150,23 @@
     async function initSurvey() {
       try {
         survey = await createSurvey(map, 'google', {
-          enable3D: true
+          enable3D: true,
+          continuousDrawing: true
         });
         
         console.log('Survey initialized with core functionality:', survey);
+        
+        // Initialize the drawing tool
+        drawingTool = new SimplifiedDrawingTool({
+          map: map,
+          geometryEngine: GeometryEngine,
+          mode: 'point',
+          enable3D: true,
+          continuousDrawing: true
+        });
+        
+        // Add event listener for when features are created
+        drawingTool.on('featureCreated', handleFeatureCreated);
         
         // Test core functionality - Coordinate creation
         const homeCoord = survey.geometry.createCoordinate(40.7128, -74.0060, 10);
@@ -202,23 +245,25 @@
         
         // Set up tool buttons
         document.getElementById('point-tool').addEventListener('click', () => {
-          activateTool('drawing', { mode: 'point' });
+          activateTool('point');
         });
         
         document.getElementById('line-tool').addEventListener('click', () => {
-          activateTool('drawing', { mode: 'line' });
+          activateTool('line');
         });
         
         document.getElementById('polygon-tool').addEventListener('click', () => {
-          activateTool('drawing', { mode: 'polygon' });
+          activateTool('polygon');
         });
         
         document.getElementById('select-tool').addEventListener('click', () => {
-          activateTool('select');
+          deactivateDrawing();
+          console.log('Select tool - not yet implemented');
         });
         
         document.getElementById('edit-tool').addEventListener('click', () => {
-          activateTool('editing');
+          deactivateDrawing();
+          console.log('Edit tool - not yet implemented');
         });
         
         document.getElementById('delete-tool').addEventListener('click', () => {
@@ -249,6 +294,54 @@
       }
     }
     
+    // Handle when a feature is created by the drawing tool
+    function handleFeatureCreated(event) {
+      console.log('Feature created:', event);
+      
+      // Add the feature to our tracking object based on type
+      switch (event.type) {
+        case 'point':
+          userFeatures.points.push({
+            coordinate: event.coordinate,
+            marker: event.marker
+          });
+          showStatusMessage(`Point created at ${event.coordinate.toCompactString()}`);
+          break;
+          
+        case 'line':
+          userFeatures.lines.push({
+            coordinates: event.coordinates,
+            polyline: event.polyline
+          });
+          const length = GeometryEngine.calculateLength(event.coordinates);
+          showStatusMessage(`Line created with ${event.coordinates.length} vertices. Length: ${(length / 1000).toFixed(2)} km`);
+          break;
+          
+        case 'polygon':
+          userFeatures.polygons.push({
+            coordinates: event.coordinates,
+            polygon: event.polygon
+          });
+          const area = GeometryEngine.calculateArea(event.coordinates);
+          showStatusMessage(`Polygon created with ${event.coordinates.length} vertices. Area: ${(area / 1000000).toFixed(2)} sq km`);
+          break;
+      }
+      
+      // Update the feature list
+      updateFeatureList();
+    }
+    
+    function showStatusMessage(message) {
+      const statusElement = document.getElementById('status-message');
+      statusElement.textContent = message;
+      statusElement.style.display = 'block';
+      
+      // Hide after 5 seconds
+      setTimeout(() => {
+        statusElement.style.display = 'none';
+      }, 5000);
+    }
+    
     function updateFeatureList() {
       const featureList = document.getElementById('feature-list');
       featureList.innerHTML = '';
@@ -256,36 +349,88 @@
       // Add sample points
       sampleCoordinates.forEach((coord, index) => {
         const li = document.createElement('li');
-        li.textContent = `Point ${index + 1}: ${coord.toCompactString()} (elev: ${coord.elevation}m)`;
+        li.textContent = `Sample Point ${index + 1}: ${coord.toCompactString()} (elev: ${coord.elevation}m)`;
         featureList.appendChild(li);
       });
       
-      // Add polygon
+      // Add sample polygon
       const li = document.createElement('li');
-      li.textContent = `Polygon: Area = ${(GeometryEngine.calculateArea(sampleCoordinates) / 1000000).toFixed(2)} sq km`;
+      li.textContent = `Sample Polygon: Area = ${(GeometryEngine.calculateArea(sampleCoordinates) / 1000000).toFixed(2)} sq km`;
       featureList.appendChild(li);
+      
+      // Add user created points
+      userFeatures.points.forEach((point, index) => {
+        const li = document.createElement('li');
+        li.textContent = `User Point ${index + 1}: ${point.coordinate.toCompactString()}`;
+        featureList.appendChild(li);
+      });
+      
+      // Add user created lines
+      userFeatures.lines.forEach((line, index) => {
+        const li = document.createElement('li');
+        const length = GeometryEngine.calculateLength(line.coordinates);
+        li.textContent = `User Line ${index + 1}: Length = ${(length / 1000).toFixed(2)} km (${line.coordinates.length} vertices)`;
+        featureList.appendChild(li);
+      });
+      
+      // Add user created polygons
+      userFeatures.polygons.forEach((polygon, index) => {
+        const li = document.createElement('li');
+        const area = GeometryEngine.calculateArea(polygon.coordinates);
+        li.textContent = `User Polygon ${index + 1}: Area = ${(area / 1000000).toFixed(2)} sq km (${polygon.coordinates.length} vertices)`;
+        featureList.appendChild(li);
+      });
     }
     
-    function activateTool(toolName, options = {}) {
-      if (!survey || !survey.tools) {
-        console.error('Survey not initialized');
-        return;
+    function activateTool(mode) {
+      deactivateDrawing(); // First deactivate any active tool
+      
+      console.log(`Activating ${mode} drawing tool`);
+      drawingTool.activate({ mode: mode });
+      activeTool = 'drawing';
+      
+      // Provide visual feedback that drawing is active
+      const buttonId = `${mode}-tool`;
+      document.querySelectorAll('.tool-group button').forEach(button => {
+        button.classList.remove('active-tool');
+      });
+      document.getElementById(buttonId).classList.add('active-tool');
+      
+      // Show help message based on the mode
+      let helpMessage = '';
+      switch(mode) {
+        case 'point':
+          helpMessage = 'Click on the map to create a point';
+          break;
+        case 'line':
+          helpMessage = 'Click to add vertices. Double-click to complete the line';
+          break;
+        case 'polygon':
+          helpMessage = 'Click to add vertices. Double-click to complete the polygon';
+          break;
       }
       
-      activeTool = toolName;
-      
-      // This would work with the real implementation
-      if (survey.tools.manager && typeof survey.tools.manager.activateTool === 'function') {
-        survey.tools.manager.activateTool(toolName, options);
+      showStatusMessage(helpMessage);
+    }
+    
+    function deactivateDrawing() {
+      if (drawingTool && drawingTool.isActive) {
+        drawingTool.deactivate();
       }
       
-      console.log(`Activated tool: ${toolName}`, options);
+      // Remove highlighting from all buttons
+      document.querySelectorAll('.tool-group button').forEach(button => {
+        button.classList.remove('active-tool');
+      });
+      
+      activeTool = null;
     }
     
     function deleteSelectedFeatures() {
       if (!survey) return;
       
       console.log('Delete selected features - not yet implemented');
+      alert('Delete functionality would be implemented here. This would allow you to select and delete features.');
     }
     
     function measureDistanceBetweenSamplePoints() {
@@ -316,7 +461,7 @@
       distanceResults.push(`Total perimeter: ${(totalDistance / 1000).toFixed(2)} km`);
       
       // Display the results
-      alert(distanceResults.join('\\n'));
+      alert(distanceResults.join('\n'));
     }
     
     function measurePolygonArea() {

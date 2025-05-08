@@ -14,7 +14,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint 'src/**/*.js'",
     "docs": "jsdoc -c jsdoc.config.json",
-    "prepublishOnly": "npm run lint && npm run build"
+    "prepublishOnly": "npm run lint && npm run build",
+    "serve": "node server.js"
   },
   "keywords": [
     "gis",
@@ -30,12 +31,23 @@
   "peerDependencies": {
     "gnss.js": "^1.0.0"
   },
+  "peerDependenciesMeta": {
+    "gnss.js": {
+      "optional": true
+    }
+  },
   "devDependencies": {
-    "@rollup/plugin-terser": "^0.4.5",
+    "@eslint/config-array": "^0.20.0",
+    "@eslint/object-schema": "^2.1.6",
+    "@rollup/plugin-terser": "^0.4.4",
+    "dotenv": "^16.4.5",
     "eslint": "^9.26.0",
+    "glob": "^10.4.1",
     "jsdoc": "^4.0.4",
-    "jsdoc-to-markdown": "^8.0.3",
-    "rollup": "^4.13.0"
+    "jsdoc-to-markdown": "^9.1.1",
+    "lru-cache": "^10.2.0",
+    "rimraf": "^5.0.5",
+    "rollup": "^4.40.2"
   },
   "type": "module"
 }
