@@ -111,19 +111,19 @@ export class Coordinate {
       
       // Extract latitude (try different common property names)
       let lat = obj.lat !== undefined ? obj.lat : 
-                obj.latitude !== undefined ? obj.latitude :
-                obj.y !== undefined ? obj.y : 0;
+        obj.latitude !== undefined ? obj.latitude :
+          obj.y !== undefined ? obj.y : 0;
       
       // Extract longitude (try different common property names)
       let lng = obj.lng !== undefined ? obj.lng : 
-                obj.longitude !== undefined ? obj.longitude :
-                obj.x !== undefined ? obj.x : 0;
+        obj.longitude !== undefined ? obj.longitude :
+          obj.x !== undefined ? obj.x : 0;
       
       // Extract elevation (try different common property names)
-      let elevation = obj.elevation !== undefined ? obj.elevation : 
-                      obj.altitude !== undefined ? obj.altitude :
-                      obj.alt !== undefined ? obj.alt :
-                      obj.z !== undefined ? obj.z : 0;
+      const elevation = obj.elevation !== undefined ? obj.elevation : 
+        obj.altitude !== undefined ? obj.altitude :
+          obj.alt !== undefined ? obj.alt :
+            obj.z !== undefined ? obj.z : 0;
       
       // Handle Google Maps-specific LatLng objects
       if (typeof obj.lat === 'function' && typeof obj.lng === 'function') {
@@ -143,7 +143,7 @@ export class Coordinate {
         lng,
         elevation,
         obj.heightReference || 'ellipsoidal',
-        obj.projection || 'WGS84'
+        obj.projection || 'WGS84',
       );
     } catch (error) {
       console.error('Error in Coordinate.fromObject:', error);
@@ -278,7 +278,7 @@ export class Coordinate {
     
     const φ3 = Math.atan2(
       Math.sin(φ1) + Math.sin(φ2),
-      Math.sqrt((Math.cos(φ1) + Bx) * (Math.cos(φ1) + Bx) + By * By)
+      Math.sqrt((Math.cos(φ1) + Bx) * (Math.cos(φ1) + Bx) + By * By),
     );
     
     const λ3 = λ1 + Math.atan2(By, Math.cos(φ1) + Bx);
@@ -291,7 +291,7 @@ export class Coordinate {
       λ3 * 180 / Math.PI,
       midElevation,
       this.heightReference,
-      this.projection
+      this.projection,
     );
   }
   
@@ -305,7 +305,7 @@ export class Coordinate {
       this.lng,
       this.elevation,
       this.heightReference,
-      this.projection
+      this.projection,
     );
   }
   
@@ -319,7 +319,7 @@ export class Coordinate {
       lng: this.lng,
       elevation: this.elevation,
       heightReference: this.heightReference,
-      projection: this.projection
+      projection: this.projection,
     };
   }
   
@@ -335,7 +335,7 @@ export class Coordinate {
     
     return {
       type: 'Point',
-      coordinates: [wgs84Coord.lng, wgs84Coord.lat, wgs84Coord.elevation]
+      coordinates: [wgs84Coord.lng, wgs84Coord.lat, wgs84Coord.elevation],
     };
   }
   

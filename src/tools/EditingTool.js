@@ -47,30 +47,30 @@ export class EditingTool extends ToolBase {
         size: 8,
         color: '#3388FF',
         outlineWidth: 1,
-        outlineColor: 'white'
+        outlineColor: 'white',
       },
       selectedVertexSymbol: {
         type: 'circle',
         size: 10,
         color: '#FF5733',
         outlineWidth: 2,
-        outlineColor: 'white'
+        outlineColor: 'white',
       },
       insertionVertexSymbol: {
         type: 'circle',
         size: 6,
         color: 'rgba(51, 136, 255, 0.5)',
         outlineWidth: 1,
-        outlineColor: '#3388FF'
+        outlineColor: '#3388FF',
       },
       lineSymbol: Object.assign({}, this.manager.settings.defaultLineSymbol, {
         width: 4,
-        color: '#3388FF'
+        color: '#3388FF',
       }),
       polygonSymbol: Object.assign({}, this.manager.settings.defaultPolygonSymbol, {
         outlineWidth: 3,
-        outlineColor: '#3388FF'
-      })
+        outlineColor: '#3388FF',
+      }),
     }, options);
     
     // Initialize internal state
@@ -86,7 +86,7 @@ export class EditingTool extends ToolBase {
       operationMode: 'none', // none, move, add, delete
       operationComplete: false,
       draggedDistance: 0,
-      snapTargets: []
+      snapTargets: [],
     };
     
     // Bind event handlers to maintain 'this' context
@@ -148,7 +148,7 @@ export class EditingTool extends ToolBase {
     // Emit activation event
     this.emit('activated', {
       enable3D: this.options.enable3D,
-      targetFeature: this.workingData.targetFeature
+      targetFeature: this.workingData.targetFeature,
     });
   }
   
@@ -249,7 +249,7 @@ export class EditingTool extends ToolBase {
         // Emit event
         this.emit('featureMoveStarted', {
           feature: this.workingData.targetFeature,
-          coordinate: coordinate
+          coordinate: coordinate,
         });
         
         return;
@@ -380,7 +380,7 @@ export class EditingTool extends ToolBase {
         this.emit('vertexMoveStarted', {
           feature: this.workingData.targetFeature,
           vertexIndex: vertex.vertexIndex,
-          coordinate: coordinate
+          coordinate: coordinate,
         });
         
         return;
@@ -405,7 +405,7 @@ export class EditingTool extends ToolBase {
         // Emit event
         this.emit('featureMoveStarted', {
           feature: this.workingData.targetFeature,
-          coordinate: coordinate
+          coordinate: coordinate,
         });
       }
     }
@@ -438,13 +438,13 @@ export class EditingTool extends ToolBase {
           this.emit('vertexMoveCompleted', {
             feature: this.workingData.targetFeature,
             vertexIndex: this.workingData.selectedVertex.vertexIndex,
-            coordinate: event.coordinate
+            coordinate: event.coordinate,
           });
         } else if (this.workingData.operationMode === 'move') {
           // Emit event
           this.emit('featureMoveCompleted', {
             feature: this.workingData.targetFeature,
-            coordinate: event.coordinate
+            coordinate: event.coordinate,
           });
         }
         
@@ -526,7 +526,7 @@ export class EditingTool extends ToolBase {
     this.workingData.originalFeature = {
       id: feature.id,
       type: feature.type,
-      data: feature.toGeoJSON()
+      data: feature.toGeoJSON(),
     };
     
     // Set as target feature
@@ -546,7 +546,7 @@ export class EditingTool extends ToolBase {
     // Emit event
     this.emit('editingStarted', {
       feature: feature,
-      featureType: feature.type
+      featureType: feature.type,
     });
   }
   
@@ -576,7 +576,7 @@ export class EditingTool extends ToolBase {
     
     // Emit event
     this.emit('editingStopped', {
-      feature: feature
+      feature: feature,
     });
   }
   
@@ -594,17 +594,17 @@ export class EditingTool extends ToolBase {
     
     // Apply appropriate style based on feature type
     switch (this.workingData.targetFeature.type) {
-      case 'point':
-        // For points, we don't change the style
-        break;
+    case 'point':
+      // For points, we don't change the style
+      break;
         
-      case 'line':
-        this.workingData.targetFeature.setStyle(this.options.lineSymbol);
-        break;
+    case 'line':
+      this.workingData.targetFeature.setStyle(this.options.lineSymbol);
+      break;
         
-      case 'polygon':
-        this.workingData.targetFeature.setStyle(this.options.polygonSymbol);
-        break;
+    case 'polygon':
+      this.workingData.targetFeature.setStyle(this.options.polygonSymbol);
+      break;
     }
   }
   
@@ -638,49 +638,49 @@ export class EditingTool extends ToolBase {
     
     // Create vertices based on feature type
     switch (this.workingData.targetFeature.type) {
-      case 'point':
-        // For points, create a single vertex
-        const coordinate = this.workingData.targetFeature.getCoordinate();
-        vertices.push(this._createVertexFeature(coordinate, 0));
-        break;
+    case 'point':
+      // For points, create a single vertex
+      const coordinate = this.workingData.targetFeature.getCoordinate();
+      vertices.push(this._createVertexFeature(coordinate, 0));
+      break;
         
-      case 'line':
-        // For lines, create vertices for each point
-        const lineCoordinates = this.workingData.targetFeature.getCoordinates();
-        vertices = lineCoordinates.map((coord, index) => 
-          this._createVertexFeature(coord, index)
-        );
+    case 'line':
+      // For lines, create vertices for each point
+      const lineCoordinates = this.workingData.targetFeature.getCoordinates();
+      vertices = lineCoordinates.map((coord, index) => 
+        this._createVertexFeature(coord, index),
+      );
         
+      // Create insertion vertices for potential new points
+      if (this.options.allowVertexAddition) {
+        this._createInsertionVertices(lineCoordinates);
+      }
+      break;
+        
+    case 'polygon':
+      // For polygons, create vertices for each point in each ring
+      const rings = this.workingData.targetFeature.getRings();
+      let vertexIndex = 0;
+        
+      rings.forEach((ring, ringIndex) => {
+        // Don't create a vertex for the closing point (it's the same as the first)
+        const ringVertices = ring.slice(0, -1).map((coord, pointIndex) => {
+          const vertex = this._createVertexFeature(coord, vertexIndex, {
+            ringIndex: ringIndex,
+            pointIndex: pointIndex,
+          });
+          vertexIndex++;
+          return vertex;
+        });
+          
+        vertices = vertices.concat(ringVertices);
+          
         // Create insertion vertices for potential new points
         if (this.options.allowVertexAddition) {
-          this._createInsertionVertices(lineCoordinates);
+          this._createInsertionVertices(ring, ringIndex);
         }
-        break;
-        
-      case 'polygon':
-        // For polygons, create vertices for each point in each ring
-        const rings = this.workingData.targetFeature.getRings();
-        let vertexIndex = 0;
-        
-        rings.forEach((ring, ringIndex) => {
-          // Don't create a vertex for the closing point (it's the same as the first)
-          const ringVertices = ring.slice(0, -1).map((coord, pointIndex) => {
-            const vertex = this._createVertexFeature(coord, vertexIndex, {
-              ringIndex: ringIndex,
-              pointIndex: pointIndex
-            });
-            vertexIndex++;
-            return vertex;
-          });
-          
-          vertices = vertices.concat(ringVertices);
-          
-          // Create insertion vertices for potential new points
-          if (this.options.allowVertexAddition) {
-            this._createInsertionVertices(ring, ringIndex);
-          }
-        });
-        break;
+      });
+      break;
     }
     
     // Store vertices
@@ -743,9 +743,9 @@ export class EditingTool extends ToolBase {
         featureId: this.workingData.targetFeature.id,
         vertexIndex: index,
         isSelected: false,
-        temporary: true
+        temporary: true,
       }, metadata),
-      style: this.options.vertexSymbol
+      style: this.options.vertexSymbol,
     });
     
     return vertexFeature;
@@ -785,9 +785,9 @@ export class EditingTool extends ToolBase {
           ringIndex: ringIndex,
           startVertex: i,
           endVertex: (i + 1) % coordinates.length,
-          temporary: true
+          temporary: true,
         },
-        style: this.options.insertionVertexSymbol
+        style: this.options.insertionVertexSymbol,
       });
       
       insertionVertices.push(insertionVertex);
@@ -824,7 +824,7 @@ export class EditingTool extends ToolBase {
         
         const distance = Math.sqrt(
           Math.pow(vertexScreenPos[0] - screenPosition[0], 2) +
-          Math.pow(vertexScreenPos[1] - screenPosition[1], 2)
+          Math.pow(vertexScreenPos[1] - screenPosition[1], 2),
         );
         
         if (distance <= this.options.vertexDistanceTolerance && distance < closestDistance) {
@@ -866,7 +866,7 @@ export class EditingTool extends ToolBase {
         
         const distance = Math.sqrt(
           Math.pow(vertexScreenPos[0] - screenPosition[0], 2) +
-          Math.pow(vertexScreenPos[1] - screenPosition[1], 2)
+          Math.pow(vertexScreenPos[1] - screenPosition[1], 2),
         );
         
         if (distance <= this.options.vertexDistanceTolerance && distance < closestDistance) {
@@ -895,57 +895,57 @@ export class EditingTool extends ToolBase {
     
     // Different hit test based on feature type
     switch (this.workingData.targetFeature.type) {
-      case 'point':
-        // For points, use the vertex hit test
-        return !!this._findVertexAtPosition(screenPosition);
+    case 'point':
+      // For points, use the vertex hit test
+      return !!this._findVertexAtPosition(screenPosition);
         
-      case 'line':
-        // For lines, check if we're close to any segment
-        const lineCoords = this.workingData.targetFeature.getCoordinates();
+    case 'line':
+      // For lines, check if we're close to any segment
+      const lineCoords = this.workingData.targetFeature.getCoordinates();
         
-        // Need at least two points for a line
-        if (lineCoords.length < 2) {
-          return false;
-        }
+      // Need at least two points for a line
+      if (lineCoords.length < 2) {
+        return false;
+      }
         
-        // Check each segment
-        for (let i = 0; i < lineCoords.length - 1; i++) {
-          const nearestInfo = this.geometryEngine.nearestPointOnSegment(
-            lineCoords[i],
-            lineCoords[i + 1],
-            coordinate
-          );
+      // Check each segment
+      for (let i = 0; i < lineCoords.length - 1; i++) {
+        const nearestInfo = this.geometryEngine.nearestPointOnSegment(
+          lineCoords[i],
+          lineCoords[i + 1],
+          coordinate,
+        );
           
-          if (nearestInfo) {
-            try {
-              // Convert nearest point to screen coordinates
-              const nearestScreenPos = this.mapInterface.coordinateToPixel(nearestInfo.point);
+        if (nearestInfo) {
+          try {
+            // Convert nearest point to screen coordinates
+            const nearestScreenPos = this.mapInterface.coordinateToPixel(nearestInfo.point);
               
-              // Ensure the screen position is valid
-              if (!nearestScreenPos || nearestScreenPos.length < 2) {
-                console.warn('Invalid screen position for nearest point on segment');
-                continue;
-              }
+            // Ensure the screen position is valid
+            if (!nearestScreenPos || nearestScreenPos.length < 2) {
+              console.warn('Invalid screen position for nearest point on segment');
+              continue;
+            }
             
             // Check distance in screen space
             const distance = Math.sqrt(
               Math.pow(nearestScreenPos[0] - screenPosition[0], 2) +
-              Math.pow(nearestScreenPos[1] - screenPosition[1], 2)
+              Math.pow(nearestScreenPos[1] - screenPosition[1], 2),
             );
             
             if (distance <= this.options.vertexDistanceTolerance) {
               return true;
             }
-            } catch (error) {
-              console.warn('Error calculating screen distance for line segment:', error);
-            }
+          } catch (error) {
+            console.warn('Error calculating screen distance for line segment:', error);
           }
         }
-        return false;
+      }
+      return false;
         
-      case 'polygon':
-        // For polygons, check if the point is inside
-        return this.workingData.targetFeature.containsPoint(coordinate);
+    case 'polygon':
+      // For polygons, check if the point is inside
+      return this.workingData.targetFeature.containsPoint(coordinate);
     }
     
     return false;
@@ -962,12 +962,12 @@ export class EditingTool extends ToolBase {
     const features = this.manager.features.getFeaturesAtPosition(coordinate, {
       tolerance: this.options.vertexDistanceTolerance,
       screenPosition: screenPosition,
-      mapInterface: this.mapInterface
+      mapInterface: this.mapInterface,
     });
     
     // Filter to editable feature types
     const editableFeatures = features.filter(f => 
-      ['point', 'line', 'polygon'].includes(f.type)
+      ['point', 'line', 'polygon'].includes(f.type),
     );
     
     if (editableFeatures.length > 0) {
@@ -998,7 +998,7 @@ export class EditingTool extends ToolBase {
     // Emit event
     this.emit('vertexSelected', {
       feature: this.workingData.targetFeature,
-      vertexIndex: vertex.getProperty('vertexIndex')
+      vertexIndex: vertex.getProperty('vertexIndex'),
     });
   }
   
@@ -1020,7 +1020,7 @@ export class EditingTool extends ToolBase {
     // Emit event
     this.emit('vertexDeselected', {
       feature: this.workingData.targetFeature,
-      vertexIndex: this.workingData.selectedVertex.getProperty('vertexIndex')
+      vertexIndex: this.workingData.selectedVertex.getProperty('vertexIndex'),
     });
     
     // Clear selected vertex
@@ -1042,7 +1042,7 @@ export class EditingTool extends ToolBase {
     // Temporarily adjust style
     const currentStyle = vertex.getStyle();
     vertex.setStyle(Object.assign({}, currentStyle, {
-      size: currentStyle.size * 1.2
+      size: currentStyle.size * 1.2,
     }));
     
     // Reset other vertex styles
@@ -1063,7 +1063,7 @@ export class EditingTool extends ToolBase {
     const currentStyle = vertex.getStyle();
     vertex.setStyle(Object.assign({}, currentStyle, {
       size: currentStyle.size * 1.5,
-      color: 'rgba(255, 87, 51, 0.5)'
+      color: 'rgba(255, 87, 51, 0.5)',
     }));
     
     // Reset other insertion vertex styles
@@ -1091,41 +1091,41 @@ export class EditingTool extends ToolBase {
     
     // Different approach based on feature type
     switch (this.workingData.targetFeature.type) {
-      case 'line':
-        // For lines, insert between two vertices
-        const lineCoords = this.workingData.targetFeature.getCoordinates();
+    case 'line':
+      // For lines, insert between two vertices
+      const lineCoords = this.workingData.targetFeature.getCoordinates();
         
-        // Insert at proper position
-        lineCoords.splice(endIndex, 0, coordinate);
+      // Insert at proper position
+      lineCoords.splice(endIndex, 0, coordinate);
         
-        // Update line coordinates
-        this.workingData.targetFeature.setCoordinates(lineCoords);
-        break;
+      // Update line coordinates
+      this.workingData.targetFeature.setCoordinates(lineCoords);
+      break;
         
-      case 'polygon':
-        // For polygons, insert in the appropriate ring
-        const rings = this.workingData.targetFeature.getRings();
+    case 'polygon':
+      // For polygons, insert in the appropriate ring
+      const rings = this.workingData.targetFeature.getRings();
         
-        // Make sure ring exists
-        if (ringIndex >= 0 && ringIndex < rings.length) {
-          const ring = rings[ringIndex];
+      // Make sure ring exists
+      if (ringIndex >= 0 && ringIndex < rings.length) {
+        const ring = rings[ringIndex];
           
-          // For polygons, the last point is the same as the first,
-          // so we need to handle insertion differently
-          if (endIndex === 0) {
-            // Inserting between last and first point (wrapping around)
-            ring.splice(ring.length - 1, 0, coordinate);
-            // Also update the closing point
-            ring[ring.length - 1] = ring[0];
-          } else {
-            // Normal insertion
-            ring.splice(endIndex, 0, coordinate);
-          }
-          
-          // Update polygon rings
-          this.workingData.targetFeature.setRings(rings);
+        // For polygons, the last point is the same as the first,
+        // so we need to handle insertion differently
+        if (endIndex === 0) {
+          // Inserting between last and first point (wrapping around)
+          ring.splice(ring.length - 1, 0, coordinate);
+          // Also update the closing point
+          ring[ring.length - 1] = ring[0];
+        } else {
+          // Normal insertion
+          ring.splice(endIndex, 0, coordinate);
         }
-        break;
+          
+        // Update polygon rings
+        this.workingData.targetFeature.setRings(rings);
+      }
+      break;
     }
     
     // Update vertex controls
@@ -1136,7 +1136,7 @@ export class EditingTool extends ToolBase {
       feature: this.workingData.targetFeature,
       coordinate: coordinate,
       beforeIndex: startIndex,
-      afterIndex: endIndex
+      afterIndex: endIndex,
     });
   }
   
@@ -1154,57 +1154,57 @@ export class EditingTool extends ToolBase {
     
     // Different approach based on feature type
     switch (this.workingData.targetFeature.type) {
-      case 'point':
-        // Can't delete the only vertex of a point
-        console.warn('Cannot delete the vertex of a point feature');
+    case 'point':
+      // Can't delete the only vertex of a point
+      console.warn('Cannot delete the vertex of a point feature');
+      return;
+        
+    case 'line':
+      // For lines, remove the vertex
+      const lineCoords = this.workingData.targetFeature.getCoordinates();
+        
+      // Ensure we have enough vertices left
+      if (lineCoords.length <= 2) {
+        console.warn('Cannot delete vertex: Line must have at least 2 vertices');
         return;
+      }
         
-      case 'line':
-        // For lines, remove the vertex
-        const lineCoords = this.workingData.targetFeature.getCoordinates();
+      // Remove the vertex
+      lineCoords.splice(vertexIndex, 1);
         
+      // Update line coordinates
+      this.workingData.targetFeature.setCoordinates(lineCoords);
+      break;
+        
+    case 'polygon':
+      // For polygons, remove from the appropriate ring
+      const rings = this.workingData.targetFeature.getRings();
+        
+      // Make sure ring exists
+      if (ringIndex >= 0 && ringIndex < rings.length) {
+        const ring = rings[ringIndex];
+          
         // Ensure we have enough vertices left
-        if (lineCoords.length <= 2) {
-          console.warn('Cannot delete vertex: Line must have at least 2 vertices');
+        if (ring.length <= 4) { // 3 real vertices + closing point
+          console.warn('Cannot delete vertex: Polygon must have at least 3 vertices');
           return;
         }
-        
+          
+        // Get the point index within the ring
+        const pointIndex = this.workingData.selectedVertex.getProperty('pointIndex');
+          
         // Remove the vertex
-        lineCoords.splice(vertexIndex, 1);
-        
-        // Update line coordinates
-        this.workingData.targetFeature.setCoordinates(lineCoords);
-        break;
-        
-      case 'polygon':
-        // For polygons, remove from the appropriate ring
-        const rings = this.workingData.targetFeature.getRings();
-        
-        // Make sure ring exists
-        if (ringIndex >= 0 && ringIndex < rings.length) {
-          const ring = rings[ringIndex];
+        ring.splice(pointIndex, 1);
           
-          // Ensure we have enough vertices left
-          if (ring.length <= 4) { // 3 real vertices + closing point
-            console.warn('Cannot delete vertex: Polygon must have at least 3 vertices');
-            return;
-          }
-          
-          // Get the point index within the ring
-          const pointIndex = this.workingData.selectedVertex.getProperty('pointIndex');
-          
-          // Remove the vertex
-          ring.splice(pointIndex, 1);
-          
-          // If we removed the first point, update the closing point
-          if (pointIndex === 0) {
-            ring[ring.length - 1] = ring[0];
-          }
-          
-          // Update polygon rings
-          this.workingData.targetFeature.setRings(rings);
+        // If we removed the first point, update the closing point
+        if (pointIndex === 0) {
+          ring[ring.length - 1] = ring[0];
         }
-        break;
+          
+        // Update polygon rings
+        this.workingData.targetFeature.setRings(rings);
+      }
+      break;
     }
     
     // Clear selected vertex
@@ -1216,7 +1216,7 @@ export class EditingTool extends ToolBase {
     // Emit event
     this.emit('vertexDeleted', {
       feature: this.workingData.targetFeature,
-      vertexIndex: vertexIndex
+      vertexIndex: vertexIndex,
     });
   }
   
@@ -1235,7 +1235,7 @@ export class EditingTool extends ToolBase {
     const startScreenPos = this.mapInterface.coordinateToPixel(this.workingData.dragStartPosition);
     const distance = Math.sqrt(
       Math.pow(startScreenPos[0] - screenPosition[0], 2) +
-      Math.pow(startScreenPos[1] - screenPosition[1], 2)
+      Math.pow(startScreenPos[1] - screenPosition[1], 2),
     );
     
     // Update tracked distance
@@ -1243,13 +1243,13 @@ export class EditingTool extends ToolBase {
     
     // Handle based on operation mode
     switch (this.workingData.operationMode) {
-      case 'moveVertex':
-        this._moveSelectedVertex(coordinate);
-        break;
+    case 'moveVertex':
+      this._moveSelectedVertex(coordinate);
+      break;
         
-      case 'move':
-        this._moveFeature(coordinate);
-        break;
+    case 'move':
+      this._moveFeature(coordinate);
+      break;
     }
   }
   
@@ -1279,41 +1279,41 @@ export class EditingTool extends ToolBase {
     
     // Update feature geometry based on type
     switch (this.workingData.targetFeature.type) {
-      case 'point':
-        // For points, just update the coordinate
-        this.workingData.targetFeature.setCoordinate(coordinate);
-        break;
+    case 'point':
+      // For points, just update the coordinate
+      this.workingData.targetFeature.setCoordinate(coordinate);
+      break;
         
-      case 'line':
-        // For lines, update the specific vertex
-        const lineCoords = this.workingData.targetFeature.getCoordinates();
-        lineCoords[vertexIndex] = coordinate;
-        this.workingData.targetFeature.setCoordinates(lineCoords);
-        break;
+    case 'line':
+      // For lines, update the specific vertex
+      const lineCoords = this.workingData.targetFeature.getCoordinates();
+      lineCoords[vertexIndex] = coordinate;
+      this.workingData.targetFeature.setCoordinates(lineCoords);
+      break;
         
-      case 'polygon':
-        // For polygons, update in the appropriate ring
-        const rings = this.workingData.targetFeature.getRings();
+    case 'polygon':
+      // For polygons, update in the appropriate ring
+      const rings = this.workingData.targetFeature.getRings();
         
-        // Make sure ring exists
-        if (ringIndex >= 0 && ringIndex < rings.length) {
-          const ring = rings[ringIndex];
+      // Make sure ring exists
+      if (ringIndex >= 0 && ringIndex < rings.length) {
+        const ring = rings[ringIndex];
           
-          // Get the point index within the ring
-          const pointIndex = this.workingData.selectedVertex.getProperty('pointIndex');
+        // Get the point index within the ring
+        const pointIndex = this.workingData.selectedVertex.getProperty('pointIndex');
           
-          // Update the vertex
-          ring[pointIndex] = coordinate;
+        // Update the vertex
+        ring[pointIndex] = coordinate;
           
-          // If we updated the first point, also update the closing point
-          if (pointIndex === 0) {
-            ring[ring.length - 1] = coordinate;
-          }
-          
-          // Update polygon rings
-          this.workingData.targetFeature.setRings(rings);
+        // If we updated the first point, also update the closing point
+        if (pointIndex === 0) {
+          ring[ring.length - 1] = coordinate;
         }
-        break;
+          
+        // Update polygon rings
+        this.workingData.targetFeature.setRings(rings);
+      }
+      break;
     }
     
     // Update insertion vertices
@@ -1323,7 +1323,7 @@ export class EditingTool extends ToolBase {
     this.emit('vertexMoved', {
       feature: this.workingData.targetFeature,
       vertexIndex: vertexIndex,
-      coordinate: coordinate
+      coordinate: coordinate,
     });
   }
   
@@ -1343,75 +1343,75 @@ export class EditingTool extends ToolBase {
     const startLat = this.workingData.dragStartPosition.lat !== undefined ? this.workingData.dragStartPosition.lat : this.workingData.dragStartPosition.y;
     const startLng = this.workingData.dragStartPosition.lng !== undefined ? this.workingData.dragStartPosition.lng : this.workingData.dragStartPosition.x;
     const startElevation = this.workingData.dragStartPosition.elevation !== undefined ? this.workingData.dragStartPosition.elevation : 
-                        (this.workingData.dragStartPosition.z !== undefined ? this.workingData.dragStartPosition.z : 0);
+      (this.workingData.dragStartPosition.z !== undefined ? this.workingData.dragStartPosition.z : 0);
     
     const currentLat = coordinate.lat !== undefined ? coordinate.lat : coordinate.y;
     const currentLng = coordinate.lng !== undefined ? coordinate.lng : coordinate.x;
     const currentElevation = coordinate.elevation !== undefined ? coordinate.elevation : 
-                          (coordinate.z !== undefined ? coordinate.z : 0);
+      (coordinate.z !== undefined ? coordinate.z : 0);
     
     // Calculate offset using standard lat/lng/elevation properties
     const offset = {
       lat: currentLat - startLat,
       lng: currentLng - startLng,
-      elevation: this.options.enable3D ? currentElevation - startElevation : 0
+      elevation: this.options.enable3D ? currentElevation - startElevation : 0,
     };
     
     // Move the feature based on type
     switch (this.workingData.targetFeature.type) {
-      case 'point':
-        // For points, just update the coordinate
-        const pointCoord = this.workingData.targetFeature.getCoordinate();
-        const pointLat = pointCoord.lat !== undefined ? pointCoord.lat : pointCoord.y;
-        const pointLng = pointCoord.lng !== undefined ? pointCoord.lng : pointCoord.x;
-        const pointElevation = pointCoord.elevation !== undefined ? pointCoord.elevation : 
-                            (pointCoord.z !== undefined ? pointCoord.z : 0);
+    case 'point':
+      // For points, just update the coordinate
+      const pointCoord = this.workingData.targetFeature.getCoordinate();
+      const pointLat = pointCoord.lat !== undefined ? pointCoord.lat : pointCoord.y;
+      const pointLng = pointCoord.lng !== undefined ? pointCoord.lng : pointCoord.x;
+      const pointElevation = pointCoord.elevation !== undefined ? pointCoord.elevation : 
+        (pointCoord.z !== undefined ? pointCoord.z : 0);
         
-        const newCoord = {
-          lat: pointLat + offset.lat,
-          lng: pointLng + offset.lng,
-          elevation: pointElevation + offset.elevation
+      const newCoord = {
+        lat: pointLat + offset.lat,
+        lng: pointLng + offset.lng,
+        elevation: pointElevation + offset.elevation,
+      };
+      this.workingData.targetFeature.setCoordinate(newCoord);
+      break;
+        
+    case 'line':
+      // For lines, offset all vertices
+      const lineCoords = this.workingData.targetFeature.getCoordinates();
+      const newLineCoords = lineCoords.map(coord => {
+        const lat = coord.lat !== undefined ? coord.lat : coord.y;
+        const lng = coord.lng !== undefined ? coord.lng : coord.x;
+        const elevation = coord.elevation !== undefined ? coord.elevation : 
+          (coord.z !== undefined ? coord.z : 0);
+          
+        return {
+          lat: lat + offset.lat,
+          lng: lng + offset.lng,
+          elevation: elevation + offset.elevation,
         };
-        this.workingData.targetFeature.setCoordinate(newCoord);
-        break;
+      });
+      this.workingData.targetFeature.setCoordinates(newLineCoords);
+      break;
         
-      case 'line':
-        // For lines, offset all vertices
-        const lineCoords = this.workingData.targetFeature.getCoordinates();
-        const newLineCoords = lineCoords.map(coord => {
+    case 'polygon':
+      // For polygons, offset all rings
+      const rings = this.workingData.targetFeature.getRings();
+      const newRings = rings.map(ring => 
+        ring.map(coord => {
           const lat = coord.lat !== undefined ? coord.lat : coord.y;
           const lng = coord.lng !== undefined ? coord.lng : coord.x;
           const elevation = coord.elevation !== undefined ? coord.elevation : 
-                          (coord.z !== undefined ? coord.z : 0);
-          
+            (coord.z !== undefined ? coord.z : 0);
+            
           return {
             lat: lat + offset.lat,
             lng: lng + offset.lng,
-            elevation: elevation + offset.elevation
+            elevation: elevation + offset.elevation,
           };
-        });
-        this.workingData.targetFeature.setCoordinates(newLineCoords);
-        break;
-        
-      case 'polygon':
-        // For polygons, offset all rings
-        const rings = this.workingData.targetFeature.getRings();
-        const newRings = rings.map(ring => 
-          ring.map(coord => {
-            const lat = coord.lat !== undefined ? coord.lat : coord.y;
-            const lng = coord.lng !== undefined ? coord.lng : coord.x;
-            const elevation = coord.elevation !== undefined ? coord.elevation : 
-                            (coord.z !== undefined ? coord.z : 0);
-            
-            return {
-              lat: lat + offset.lat,
-              lng: lng + offset.lng,
-              elevation: elevation + offset.elevation
-            };
-          })
-        );
-        this.workingData.targetFeature.setRings(newRings);
-        break;
+        }),
+      );
+      this.workingData.targetFeature.setRings(newRings);
+      break;
     }
     
     // Update start position for continuous movement
@@ -1423,7 +1423,7 @@ export class EditingTool extends ToolBase {
     // Emit event
     this.emit('featureMoved', {
       feature: this.workingData.targetFeature,
-      offset: offset
+      offset: offset,
     });
   }
   
@@ -1450,7 +1450,7 @@ export class EditingTool extends ToolBase {
     
     // Emit event
     this.emit('dragCancelled', {
-      feature: this.workingData.targetFeature
+      feature: this.workingData.targetFeature,
     });
     
     // Reset operation mode
@@ -1495,7 +1495,7 @@ export class EditingTool extends ToolBase {
     
     // Emit event
     this.emit('editingCompleted', {
-      feature: feature
+      feature: feature,
     });
   }
   
@@ -1528,7 +1528,7 @@ export class EditingTool extends ToolBase {
     
     // Emit event
     this.emit('editingCancelled', {
-      feature: feature
+      feature: feature,
     });
   }
   
@@ -1547,7 +1547,7 @@ export class EditingTool extends ToolBase {
     
     // Emit event
     this.emit('enable3DChanged', {
-      enable3D: this.options.enable3D
+      enable3D: this.options.enable3D,
     });
     
     return this.options.enable3D;
@@ -1568,7 +1568,7 @@ export class EditingTool extends ToolBase {
     
     // Emit event
     this.emit('allowVertexAdditionChanged', {
-      allowVertexAddition: this.options.allowVertexAddition
+      allowVertexAddition: this.options.allowVertexAddition,
     });
     
     return this.options.allowVertexAddition;
@@ -1584,7 +1584,7 @@ export class EditingTool extends ToolBase {
     
     // Emit event
     this.emit('allowVertexDeletionChanged', {
-      allowVertexDeletion: this.options.allowVertexDeletion
+      allowVertexDeletion: this.options.allowVertexDeletion,
     });
     
     return this.options.allowVertexDeletion;
@@ -1600,7 +1600,7 @@ export class EditingTool extends ToolBase {
     
     // Emit event
     this.emit('snapToTerrainChanged', {
-      snapToTerrain: this.options.snapToTerrain
+      snapToTerrain: this.options.snapToTerrain,
     });
     
     return this.options.snapToTerrain;
@@ -1616,7 +1616,7 @@ export class EditingTool extends ToolBase {
       allowVertexAddition: this.options.allowVertexAddition,
       allowVertexDeletion: this.options.allowVertexDeletion,
       snapToTerrain: this.options.snapToTerrain,
-      vertexDistanceTolerance: this.options.vertexDistanceTolerance
+      vertexDistanceTolerance: this.options.vertexDistanceTolerance,
     };
   }
 }

@@ -137,7 +137,7 @@ export class CoordinateTransformer {
         coordinate.lng - 360, // Shift to equivalent position without crossing date line
         coordinate.elevation,
         coordinate.heightReference,
-        fromProjection
+        fromProjection,
       );
     } else {
       // Adjust eastern hemisphere coordinates
@@ -146,7 +146,7 @@ export class CoordinateTransformer {
         coordinate.lng + 360, // Shift to equivalent position without crossing date line
         coordinate.elevation,
         coordinate.heightReference,
-        fromProjection
+        fromProjection,
       );
     }
     
@@ -178,10 +178,10 @@ export class CoordinateTransformer {
         projection: fromProjection,
         lat: coordinate.lat,
         lng: coordinate.lng,
-        elev: coordinate.elevation
+        elev: coordinate.elevation,
       },
       target: toProjection,
-      error: error.stack
+      error: error.stack,
     });
   }
 }

@@ -26,18 +26,18 @@ export class SimplifiedDrawingTool extends EventEmitter {
       continuousDrawing: true,
       pointSymbol: {
         color: '#4285F4',
-        size: 8
+        size: 8,
       },
       lineSymbol: {
         color: '#4285F4',
-        width: 3
+        width: 3,
       },
       polygonSymbol: {
         fillColor: 'rgba(66, 133, 244, 0.3)',
         outlineColor: '#4285F4',
-        outlineWidth: 2
+        outlineWidth: 2,
       },
-      ...options
+      ...options,
     };
     
     this.isActive = false;
@@ -116,17 +116,17 @@ export class SimplifiedDrawingTool extends EventEmitter {
     console.log(`Map clicked at ${lat}, ${lng} in ${this.options.mode} mode`);
     
     switch (this.options.mode) {
-      case 'point':
-        this._createPoint(lat, lng);
-        break;
+    case 'point':
+      this._createPoint(lat, lng);
+      break;
         
-      case 'line':
-        this._addLineVertex(lat, lng);
-        break;
+    case 'line':
+      this._addLineVertex(lat, lng);
+      break;
         
-      case 'polygon':
-        this._addPolygonVertex(lat, lng);
-        break;
+    case 'polygon':
+      this._addPolygonVertex(lat, lng);
+      break;
     }
   }
   
@@ -161,7 +161,7 @@ export class SimplifiedDrawingTool extends EventEmitter {
       position: { lat, lng },
       map: this.map,
       title: `Point (${lat.toFixed(6)}, ${lng.toFixed(6)})`,
-      animation: google.maps.Animation.DROP
+      animation: google.maps.Animation.DROP,
     });
     
     this.markers.push(marker);
@@ -171,7 +171,7 @@ export class SimplifiedDrawingTool extends EventEmitter {
     this.emit('featureCreated', {
       type: 'point',
       coordinate: coordinate,
-      marker: marker
+      marker: marker,
     });
     
     // If continuousDrawing is false, deactivate the tool
@@ -201,8 +201,8 @@ export class SimplifiedDrawingTool extends EventEmitter {
         fillOpacity: 1,
         strokeWeight: 2,
         strokeColor: '#FFFFFF',
-        scale: 6
-      }
+        scale: 6,
+      },
     });
     
     this.markers.push(marker);
@@ -215,7 +215,7 @@ export class SimplifiedDrawingTool extends EventEmitter {
         strokeColor: this.options.lineSymbol.color,
         strokeOpacity: 1.0,
         strokeWeight: this.options.lineSymbol.width,
-        map: this.map
+        map: this.map,
       });
     } else {
       // Otherwise update the existing polyline
@@ -255,8 +255,8 @@ export class SimplifiedDrawingTool extends EventEmitter {
         fillOpacity: 1,
         strokeWeight: 2,
         strokeColor: '#FFFFFF',
-        scale: 6
-      }
+        scale: 6,
+      },
     });
     
     this.markers.push(marker);
@@ -270,7 +270,7 @@ export class SimplifiedDrawingTool extends EventEmitter {
         strokeColor: this.options.polygonSymbol.outlineColor,
         strokeOpacity: 1.0,
         strokeWeight: this.options.polygonSymbol.outlineWidth,
-        map: this.map
+        map: this.map,
       });
     } else if (this.vertices.length === 3) {
       // With 3 points, we can create a polygon
@@ -287,7 +287,7 @@ export class SimplifiedDrawingTool extends EventEmitter {
         strokeWeight: this.options.polygonSymbol.outlineWidth,
         fillColor: this.options.polygonSymbol.fillColor,
         fillOpacity: 0.35,
-        map: this.map
+        map: this.map,
       });
       
       // Double-click is handled automatically by listening for two clicks in quick succession
@@ -366,7 +366,7 @@ export class SimplifiedDrawingTool extends EventEmitter {
       strokeColor: this.options.lineSymbol.color,
       strokeOpacity: 1.0,
       strokeWeight: this.options.lineSymbol.width,
-      map: this.map
+      map: this.map,
     });
     
     // Emit event
@@ -374,7 +374,7 @@ export class SimplifiedDrawingTool extends EventEmitter {
     this.emit('featureCreated', {
       type: 'line',
       coordinates: coordinates,
-      polyline: finalLine
+      polyline: finalLine,
     });
     
     // Reset the drawing
@@ -401,7 +401,7 @@ export class SimplifiedDrawingTool extends EventEmitter {
       strokeWeight: this.options.polygonSymbol.outlineWidth,
       fillColor: this.options.polygonSymbol.fillColor,
       fillOpacity: 0.35,
-      map: this.map
+      map: this.map,
     });
     
     // Emit event
@@ -409,7 +409,7 @@ export class SimplifiedDrawingTool extends EventEmitter {
     this.emit('featureCreated', {
       type: 'polygon',
       coordinates: coordinates,
-      polygon: finalPolygon
+      polygon: finalPolygon,
     });
     
     // Reset the drawing

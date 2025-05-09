@@ -48,17 +48,17 @@ export class SurveyManager extends EventEmitter {
       defaultPointSymbol: {
         type: 'circle',
         size: 10,
-        color: '#FF5733'
+        color: '#FF5733',
       },
       defaultLineSymbol: {
         width: 3,
-        color: '#3388FF'
+        color: '#3388FF',
       },
       defaultPolygonSymbol: {
         fillColor: 'rgba(51, 136, 255, 0.2)',
         outlineColor: '#3388FF',
-        outlineWidth: 2
-      }
+        outlineWidth: 2,
+      },
     }, options.settings || {});
     
     // Initialize feature collections
@@ -73,7 +73,7 @@ export class SurveyManager extends EventEmitter {
     this.history = {
       undoStack: [],
       redoStack: [],
-      maxSize: this.settings.undoLevels
+      maxSize: this.settings.undoLevels,
     };
     
     // Initialize state trackers
@@ -94,9 +94,9 @@ export class SurveyManager extends EventEmitter {
       units: {
         distance: 'meters',
         area: 'square-meters',
-        angle: 'degrees'
+        angle: 'degrees',
       },
-      customProperties: {}
+      customProperties: {},
     };
     
     // Initialize internal callback bindings
@@ -115,20 +115,20 @@ export class SurveyManager extends EventEmitter {
     this.tools = {
       measurement: new MeasurementTool({ 
         manager: this,
-        mapInterface: this.mapInterface
+        mapInterface: this.mapInterface,
       }),
       offset: new OffsetTool({
         manager: this,
         mapInterface: this.mapInterface,
-        geometryEngine: this.geometryEngine
+        geometryEngine: this.geometryEngine,
       }),
       drawing: new DrawingTool({
         manager: this,
-        mapInterface: this.mapInterface
+        mapInterface: this.mapInterface,
       }),
       editing: new EditingTool({
         manager: this,
-        mapInterface: this.mapInterface
+        mapInterface: this.mapInterface,
       }),
     };
     
@@ -137,7 +137,7 @@ export class SurveyManager extends EventEmitter {
       manager: this,
       tolerance: this.settings.snapTolerance,
       mapInterface: this.mapInterface,
-      geometryEngine: this.geometryEngine
+      geometryEngine: this.geometryEngine,
     });
     
     // Activate snapping by default
@@ -146,7 +146,7 @@ export class SurveyManager extends EventEmitter {
     // Emit event for tools initialized
     this.emit('tools-initialized', {
       tools: Object.keys(this.tools),
-      snappingActive: true
+      snappingActive: true,
     });
   }
   
@@ -160,7 +160,7 @@ export class SurveyManager extends EventEmitter {
       this._recordHistoryAction({
         type: 'feature-added',
         featureId: feature.id,
-        featureData: feature.toGeoJSON()
+        featureData: feature.toGeoJSON(),
       });
       this.emit('feature-added', { feature });
       this.metadata.modified = new Date();
@@ -170,7 +170,7 @@ export class SurveyManager extends EventEmitter {
       this._recordHistoryAction({
         type: 'feature-removed',
         featureId: feature.id,
-        featureData: feature.toGeoJSON()
+        featureData: feature.toGeoJSON(),
       });
       this.emit('feature-removed', { feature });
       this.metadata.modified = new Date();
@@ -181,7 +181,7 @@ export class SurveyManager extends EventEmitter {
         type: 'feature-updated',
         featureId: feature.id,
         featureData: feature.toGeoJSON(),
-        previousData: this._lastFeatureState[feature.id]
+        previousData: this._lastFeatureState[feature.id],
       });
       this.emit('feature-updated', { feature });
       this.metadata.modified = new Date();
@@ -226,7 +226,7 @@ export class SurveyManager extends EventEmitter {
       // Emit event for tool activation
       this.emit('tool-activated', { 
         tool: toolName, 
-        options 
+        options, 
       });
       
       return true;
@@ -288,7 +288,7 @@ export class SurveyManager extends EventEmitter {
     // Emit history change event
     this.emit('historyChanged', {
       canUndo: this.history.undoStack.length > 0,
-      canRedo: this.history.redoStack.length > 0
+      canRedo: this.history.redoStack.length > 0,
     });
   }
   
@@ -310,31 +310,31 @@ export class SurveyManager extends EventEmitter {
     // Perform the undo based on action type
     try {
       switch (action.type) {
-        case 'featureAdded':
-          this.features.removeFeature(action.featureId);
-          break;
-        case 'featureRemoved':
-          this.features.fromGeoJSON(action.featureData);
-          break;
-        case 'featureUpdated':
-          if (action.previousData) {
-            const feature = this.features.getFeature(action.featureId);
-            if (feature) {
-              feature.fromGeoJSON(action.previousData, { silent: true });
-              this.features.updateFeature(feature, { silent: true });
-            }
+      case 'featureAdded':
+        this.features.removeFeature(action.featureId);
+        break;
+      case 'featureRemoved':
+        this.features.fromGeoJSON(action.featureData);
+        break;
+      case 'featureUpdated':
+        if (action.previousData) {
+          const feature = this.features.getFeature(action.featureId);
+          if (feature) {
+            feature.fromGeoJSON(action.previousData, { silent: true });
+            this.features.updateFeature(feature, { silent: true });
           }
-          break;
+        }
+        break;
         // Add more action types as needed
-        default:
-          console.warn(`Unknown action type for undo: ${action.type}`);
+      default:
+        console.warn(`Unknown action type for undo: ${action.type}`);
       }
       
       // Emit events
       this.emit('undo-performed', action);
       this.emit('history-changed', {
         canUndo: this.history.undoStack.length > 0,
-        canRedo: this.history.redoStack.length > 0
+        canRedo: this.history.redoStack.length > 0,
       });
       
       this.metadata.modified = new Date();
@@ -365,29 +365,29 @@ export class SurveyManager extends EventEmitter {
     // Perform the redo based on action type
     try {
       switch (action.type) {
-        case 'featureAdded':
-          this.features.fromGeoJSON(action.featureData);
-          break;
-        case 'featureRemoved':
-          this.features.removeFeature(action.featureId);
-          break;
-        case 'featureUpdated':
-          const feature = this.features.getFeature(action.featureId);
-          if (feature) {
-            feature.fromGeoJSON(action.featureData, { silent: true });
-            this.features.updateFeature(feature, { silent: true });
-          }
-          break;
+      case 'featureAdded':
+        this.features.fromGeoJSON(action.featureData);
+        break;
+      case 'featureRemoved':
+        this.features.removeFeature(action.featureId);
+        break;
+      case 'featureUpdated':
+        const feature = this.features.getFeature(action.featureId);
+        if (feature) {
+          feature.fromGeoJSON(action.featureData, { silent: true });
+          this.features.updateFeature(feature, { silent: true });
+        }
+        break;
         // Add more action types as needed
-        default:
-          console.warn(`Unknown action type for redo: ${action.type}`);
+      default:
+        console.warn(`Unknown action type for redo: ${action.type}`);
       }
       
       // Emit events
       this.emit('redo-performed', action);
       this.emit('history-changed', {
         canUndo: this.history.undoStack.length > 0,
-        canRedo: this.history.redoStack.length > 0
+        canRedo: this.history.redoStack.length > 0,
       });
       
       this.metadata.modified = new Date();
@@ -409,7 +409,7 @@ export class SurveyManager extends EventEmitter {
     const surveyData = {
       metadata: { ...this.metadata },
       features: this.features.toGeoJSON(),
-      settings: { ...this.settings }
+      settings: { ...this.settings },
     };
     
     // Auto-update modified timestamp
@@ -607,40 +607,40 @@ export class SurveyManager extends EventEmitter {
           try {
             // Apply based on feature type
             switch (feature.type) {
-              case 'point':
-                const pointCoord = feature.getCoordinate();
-                // Get elevation for the point
-                if (!pointCoord.elevation) {
-                  const elevation = await this.mapInterface.getElevation(pointCoord);
-                  pointCoord.setZ(elevation);
-                }
-                break;
+            case 'point':
+              const pointCoord = feature.getCoordinate();
+              // Get elevation for the point
+              if (!pointCoord.elevation) {
+                const elevation = await this.mapInterface.getElevation(pointCoord);
+                pointCoord.setZ(elevation);
+              }
+              break;
                 
-              case 'line':
-                const lineCoords = feature.getCoordinates();
-                // Get elevation for each coordinate that needs it
-                for (const coord of lineCoords) {
+            case 'line':
+              const lineCoords = feature.getCoordinates();
+              // Get elevation for each coordinate that needs it
+              for (const coord of lineCoords) {
+                if (!coord.elevation) {
+                  const elevation = await this.mapInterface.getElevation(coord);
+                  coord.setZ(elevation);
+                }
+              }
+              feature.setCoordinates(lineCoords);
+              break;
+                
+            case 'polygon':
+              const rings = feature.getRings();
+              // Get elevation for each coordinate in each ring
+              for (const ring of rings) {
+                for (const coord of ring) {
                   if (!coord.elevation) {
                     const elevation = await this.mapInterface.getElevation(coord);
                     coord.setZ(elevation);
                   }
                 }
-                feature.setCoordinates(lineCoords);
-                break;
-                
-              case 'polygon':
-                const rings = feature.getRings();
-                // Get elevation for each coordinate in each ring
-                for (const ring of rings) {
-                  for (const coord of ring) {
-                    if (!coord.elevation) {
-                      const elevation = await this.mapInterface.getElevation(coord);
-                      coord.setZ(elevation);
-                    }
-                  }
-                }
-                feature.setRings(rings);
-                break;
+              }
+              feature.setRings(rings);
+              break;
             }
             
             // Update the feature in the collection

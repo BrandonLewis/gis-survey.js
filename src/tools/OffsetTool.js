@@ -7,8 +7,8 @@
 import { ToolBase } from './ToolBase.js';
 import { PointFeature } from '../features/PointFeature.js';
 import { LineFeature } from '../features/LineFeature.js';
-import { Coordinate } from "../core/Coordinate.js";
-import { GeometryEngine } from "../core/GeometryEngine.js";
+import { Coordinate } from '../core/Coordinate.js';
+import { GeometryEngine } from '../core/GeometryEngine.js';
 
 /**
  * @typedef {Object} OffsetToolOptions
@@ -46,25 +46,25 @@ export class OffsetTool extends ToolBase {
       sourceSymbol: {
         type: 'circle',
         size: 8,
-        color: '#3388FF'
+        color: '#3388FF',
       },
       targetSymbol: {
         type: 'circle',
         size: 8,
-        color: '#FF5733'
+        color: '#FF5733',
       },
       lineSymbol: {
         width: 2,
         color: '#FF5733',
-        dashArray: '5,5'
+        dashArray: '5,5',
       },
       previewSymbol: {
         type: 'circle',
         size: 8,
         color: 'rgba(255, 87, 51, 0.5)',
         outlineWidth: 1,
-        outlineColor: '#FF5733'
-      }
+        outlineColor: '#FF5733',
+      },
     }, options);
     
     // Initialize internal state
@@ -77,7 +77,7 @@ export class OffsetTool extends ToolBase {
       offsetBearing: this.options.defaultBearing,
       mousePosition: null,
       selectedPoint: null,
-      snapEnabled: true
+      snapEnabled: true,
     };
     
     // Bind event handlers to maintain 'this' context
@@ -123,7 +123,7 @@ export class OffsetTool extends ToolBase {
     this.emit('activated', {
       mode: this.options.mode,
       offsetDistance: this.workingData.offsetDistance,
-      offsetBearing: this.workingData.offsetBearing
+      offsetBearing: this.workingData.offsetBearing,
     });
   }
   
@@ -154,7 +154,7 @@ export class OffsetTool extends ToolBase {
       offsetBearing: this.options.defaultBearing,
       mousePosition: null,
       selectedPoint: null,
-      snapEnabled: true
+      snapEnabled: true,
     };
   }
   
@@ -181,14 +181,14 @@ export class OffsetTool extends ToolBase {
       offsetBearing: currentBearing,
       mousePosition: null,
       selectedPoint: null,
-      snapEnabled: true
+      snapEnabled: true,
     };
     
     // Emit reset event
     this.emit('reset', {
       mode: currentMode,
       offsetDistance: currentDistance,
-      offsetBearing: currentBearing
+      offsetBearing: currentBearing,
     });
   }
   
@@ -239,48 +239,48 @@ export class OffsetTool extends ToolBase {
   _handleMapClick(event) {
     // Handle click based on current mode and state
     switch (this.options.mode) {
-      case 'point':
-        if (!this.workingData.sourceFeature) {
-          // First click: select or create source point
-          if (this.workingData.selectedPoint) {
-            // Use the selected point as source
-            this.workingData.sourceFeature = this.workingData.selectedPoint;
-            this._updatePointOffsetPreview();
-          } else {
-            // Create a new source point at click location
-            this._createSourcePoint(event.coordinate);
-          }
+    case 'point':
+      if (!this.workingData.sourceFeature) {
+        // First click: select or create source point
+        if (this.workingData.selectedPoint) {
+          // Use the selected point as source
+          this.workingData.sourceFeature = this.workingData.selectedPoint;
+          this._updatePointOffsetPreview();
         } else {
-          // Second click: create offset point
-          this._createOffsetPoint();
+          // Create a new source point at click location
+          this._createSourcePoint(event.coordinate);
         }
-        break;
+      } else {
+        // Second click: create offset point
+        this._createOffsetPoint();
+      }
+      break;
         
-      case 'line':
-      case 'perpendicular':
-        if (!this.workingData.sourceFeature) {
-          // First click: select or create source line
-          const selectedFeatures = this.manager.getSelectedFeatures();
-          const selectedLine = selectedFeatures.find(f => f.type === 'line');
+    case 'line':
+    case 'perpendicular':
+      if (!this.workingData.sourceFeature) {
+        // First click: select or create source line
+        const selectedFeatures = this.manager.getSelectedFeatures();
+        const selectedLine = selectedFeatures.find(f => f.type === 'line');
           
-          if (selectedLine) {
-            // Use the selected line as source
-            this.workingData.sourceFeature = selectedLine;
-            this._updateLineOffsetPreview();
-          } else {
-            // Start creating a new line
-            this._startCreatingSourceLine(event.coordinate);
-          }
-        } else if (this.workingData.sourceFeature && this.workingData.sourceFeature.type === 'line') {
-          if (this.workingData.sourceFeature.isTemporary) {
-            // Add point to temporary source line
-            this._addPointToSourceLine(event.coordinate);
-          } else {
-            // Create offset from existing line
-            this._createOffsetFromLine();
-          }
+        if (selectedLine) {
+          // Use the selected line as source
+          this.workingData.sourceFeature = selectedLine;
+          this._updateLineOffsetPreview();
+        } else {
+          // Start creating a new line
+          this._startCreatingSourceLine(event.coordinate);
         }
-        break;
+      } else if (this.workingData.sourceFeature && this.workingData.sourceFeature.type === 'line') {
+        if (this.workingData.sourceFeature.isTemporary) {
+          // Add point to temporary source line
+          this._addPointToSourceLine(event.coordinate);
+        } else {
+          // Create offset from existing line
+          this._createOffsetFromLine();
+        }
+      }
+      break;
     }
   }
   
@@ -296,20 +296,20 @@ export class OffsetTool extends ToolBase {
     // Update preview based on current mode and state
     if (this.workingData.sourceFeature) {
       switch (this.options.mode) {
-        case 'point':
-          this._updatePointOffsetPreview();
-          break;
+      case 'point':
+        this._updatePointOffsetPreview();
+        break;
           
-        case 'line':
-        case 'perpendicular':
-          if (this.workingData.sourceFeature.isTemporary) {
-            // Update the temporary source line
-            this._updateTemporarySourceLine();
-          } else {
-            // Update the offset preview
-            this._updateLineOffsetPreview();
-          }
-          break;
+      case 'line':
+      case 'perpendicular':
+        if (this.workingData.sourceFeature.isTemporary) {
+          // Update the temporary source line
+          this._updateTemporarySourceLine();
+        } else {
+          // Update the offset preview
+          this._updateLineOffsetPreview();
+        }
+        break;
       }
     }
   }
@@ -433,9 +433,9 @@ export class OffsetTool extends ToolBase {
       id: `offset-source-${Date.now()}`,
       properties: {
         type: 'offset-source',
-        temporary: false
+        temporary: false,
       },
-      style: this.options.sourceSymbol
+      style: this.options.sourceSymbol,
     });
     
     // Apply 3D elevation if enabled
@@ -493,7 +493,7 @@ export class OffsetTool extends ToolBase {
     const offsetCoord = GeometryEngine.destinationCoordinate(
       sourceCoord,
       this.workingData.offsetDistance,
-      bearing
+      bearing,
     );
     
     // Create preview point
@@ -501,9 +501,9 @@ export class OffsetTool extends ToolBase {
       id: `offset-preview-${Date.now()}`,
       properties: {
         type: 'offset-preview',
-        temporary: true
+        temporary: true,
       },
-      style: this.options.previewSymbol
+      style: this.options.previewSymbol,
     });
     
     // Create preview line
@@ -511,9 +511,9 @@ export class OffsetTool extends ToolBase {
       id: `offset-line-${Date.now()}`,
       properties: {
         type: 'offset-line',
-        temporary: true
+        temporary: true,
       },
-      style: this.options.lineSymbol
+      style: this.options.lineSymbol,
     });
     
     // Add to working features
@@ -525,7 +525,7 @@ export class OffsetTool extends ToolBase {
       distance: this.workingData.offsetDistance,
       bearing: this.workingData.offsetBearing,
       sourceCoordinate: sourceCoord,
-      targetCoordinate: offsetCoord
+      targetCoordinate: offsetCoord,
     });
   }
   
@@ -549,9 +549,9 @@ export class OffsetTool extends ToolBase {
         offsetDistance: this.workingData.offsetDistance,
         offsetBearing: this.workingData.offsetBearing,
         sourceFeatureId: this.workingData.sourceFeature.id,
-        temporary: false
+        temporary: false,
       },
-      style: this.options.targetSymbol
+      style: this.options.targetSymbol,
     });
     
     // Add to features collection
@@ -571,7 +571,7 @@ export class OffsetTool extends ToolBase {
       sourceFeature: this.workingData.sourceFeature,
       targetFeature: offsetPoint,
       distance: this.workingData.offsetDistance,
-      bearing: this.workingData.offsetBearing
+      bearing: this.workingData.offsetBearing,
     });
     
     // Reset for next operation
@@ -589,9 +589,9 @@ export class OffsetTool extends ToolBase {
       id: `offset-source-line-${Date.now()}`,
       properties: {
         type: 'offset-source',
-        temporary: true
+        temporary: true,
       },
-      style: this.options.sourceSymbol
+      style: this.options.sourceSymbol,
     });
     
     // Apply 3D elevation if enabled
@@ -642,7 +642,7 @@ export class OffsetTool extends ToolBase {
     this.emit('sourceLinePointAdded', {
       line: this.workingData.sourceFeature,
       coordinate: coordinate,
-      pointIndex: coordinates.length - 1
+      pointIndex: coordinates.length - 1,
     });
   }
   
@@ -703,9 +703,9 @@ export class OffsetTool extends ToolBase {
       id: `offset-source-line-${Date.now()}`,
       properties: {
         type: 'offset-source',
-        temporary: false
+        temporary: false,
       },
-      style: this.options.sourceSymbol
+      style: this.options.sourceSymbol,
     });
     
     // Apply 3D elevation if enabled
@@ -777,7 +777,7 @@ export class OffsetTool extends ToolBase {
       offsetCoords = this.geometryEngine.createOffsetLine(
         sourceCoords,
         this.workingData.offsetDistance,
-        { enable3D: this.options.enable3D }
+        { enable3D: this.options.enable3D },
       );
       
       // Create preview line
@@ -785,11 +785,11 @@ export class OffsetTool extends ToolBase {
         id: `offset-preview-${Date.now()}`,
         properties: {
           type: 'offset-preview',
-          temporary: true
+          temporary: true,
         },
         style: Object.assign({}, this.options.lineSymbol, {
-          dashArray: '5,5'
-        })
+          dashArray: '5,5',
+        }),
       });
       
     } else if (this.options.mode === 'perpendicular') {
@@ -805,7 +805,7 @@ export class OffsetTool extends ToolBase {
             nearestInfo.pointIndex,
             nearestInfo.segmentPosition,
             this.workingData.offsetDistance,
-            { enable3D: this.options.enable3D }
+            { enable3D: this.options.enable3D },
           );
           
           // Create preview point
@@ -813,9 +813,9 @@ export class OffsetTool extends ToolBase {
             id: `offset-preview-${Date.now()}`,
             properties: {
               type: 'offset-preview',
-              temporary: true
+              temporary: true,
             },
-            style: this.options.previewSymbol
+            style: this.options.previewSymbol,
           });
           
           // Create preview line (perpendicular segment)
@@ -823,9 +823,9 @@ export class OffsetTool extends ToolBase {
             id: `offset-line-${Date.now()}`,
             properties: {
               type: 'offset-line',
-              temporary: true
+              temporary: true,
             },
-            style: this.options.lineSymbol
+            style: this.options.lineSymbol,
           });
           
           // Store segment info for offset creation
@@ -833,7 +833,7 @@ export class OffsetTool extends ToolBase {
             pointIndex: nearestInfo.pointIndex,
             segmentPosition: nearestInfo.segmentPosition,
             nearestPoint: nearestInfo.nearestPoint,
-            offsetPoint: perpendicular.offsetPoint
+            offsetPoint: perpendicular.offsetPoint,
           };
         }
       }
@@ -852,7 +852,7 @@ export class OffsetTool extends ToolBase {
     this.emit('previewUpdated', {
       distance: this.workingData.offsetDistance,
       sourceFeature: this.workingData.sourceFeature,
-      previewFeature: this.workingData.previewFeature
+      previewFeature: this.workingData.previewFeature,
     });
   }
   
@@ -878,11 +878,11 @@ export class OffsetTool extends ToolBase {
           type: 'offset-target',
           offsetDistance: this.workingData.offsetDistance,
           sourceFeatureId: this.workingData.sourceFeature.id,
-          temporary: false
+          temporary: false,
         },
         style: Object.assign({}, this.options.lineSymbol, {
-          dashArray: null
-        })
+          dashArray: null,
+        }),
       });
       
     } else if (this.options.mode === 'perpendicular') {
@@ -898,9 +898,9 @@ export class OffsetTool extends ToolBase {
           sourceFeatureId: this.workingData.sourceFeature.id,
           pointIndex: this.workingData.perpendicularInfo.pointIndex,
           segmentPosition: this.workingData.perpendicularInfo.segmentPosition,
-          temporary: false
+          temporary: false,
         },
-        style: this.options.targetSymbol
+        style: this.options.targetSymbol,
       });
     }
     
@@ -916,7 +916,7 @@ export class OffsetTool extends ToolBase {
         sourceFeature: this.workingData.sourceFeature,
         targetFeature: offsetFeature,
         distance: this.workingData.offsetDistance,
-        mode: this.options.mode
+        mode: this.options.mode,
       });
     }
     
@@ -956,7 +956,7 @@ export class OffsetTool extends ToolBase {
     
     // Emit event
     this.emit('offsetDistanceChanged', {
-      distance: this.workingData.offsetDistance
+      distance: this.workingData.offsetDistance,
     });
     
     return this.workingData.offsetDistance;
@@ -987,7 +987,7 @@ export class OffsetTool extends ToolBase {
     
     // Emit event
     this.emit('offsetBearingChanged', {
-      bearing: this.workingData.offsetBearing
+      bearing: this.workingData.offsetBearing,
     });
     
     return this.workingData.offsetBearing;
@@ -1002,7 +1002,7 @@ export class OffsetTool extends ToolBase {
     // Calculate new distance with snap
     const newDistance = Math.max(
       1,
-      Math.round((this.workingData.offsetDistance + amount) / this.options.distanceSnap) * this.options.distanceSnap
+      Math.round((this.workingData.offsetDistance + amount) / this.options.distanceSnap) * this.options.distanceSnap,
     );
     
     return this.setOffsetDistance(newDistance);
@@ -1034,7 +1034,7 @@ export class OffsetTool extends ToolBase {
     
     // Emit event
     this.emit('snapToggled', {
-      snapEnabled: this.workingData.snapEnabled
+      snapEnabled: this.workingData.snapEnabled,
     });
     
     return this.workingData.snapEnabled;
@@ -1067,7 +1067,7 @@ export class OffsetTool extends ToolBase {
       distance: this.workingData.offsetDistance,
       bearing: this.workingData.offsetBearing,
       enable3D: this.options.enable3D,
-      snapEnabled: this.workingData.snapEnabled
+      snapEnabled: this.workingData.snapEnabled,
     };
   }
 }

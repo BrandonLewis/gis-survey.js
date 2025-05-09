@@ -62,7 +62,7 @@ export class DrawingTool extends ToolBase {
         color: '#3388FF', 
         width: 2,
         opacity: 0.8,
-        dashArray: [5, 5]  // Dashed line for preview
+        dashArray: [5, 5],  // Dashed line for preview
       },
       polygonSymbol: this.manager.settings.defaultPolygonSymbol,
       // Enhanced polygonSymbol with style for preview polygon
@@ -70,7 +70,7 @@ export class DrawingTool extends ToolBase {
         fillColor: 'rgba(51, 136, 255, 0.1)',  // More transparent fill
         outlineColor: '#3388FF',
         outlineWidth: 2,
-        dashArray: [5, 5]  // Dashed outline for preview
+        dashArray: [5, 5],  // Dashed outline for preview
       },
       vertexSymbol: {
         type: 'circle',
@@ -79,7 +79,7 @@ export class DrawingTool extends ToolBase {
         outlineWidth: 2,
         outlineColor: 'white',
         // Use dual marker for vertices too for better position clarity
-        useDualMarker: true
+        useDualMarker: true,
       },
       // Enhanced vertexSymbol with style for active vertices
       activeVertexSymbol: {
@@ -89,8 +89,8 @@ export class DrawingTool extends ToolBase {
         outlineWidth: 2,
         outlineColor: 'white',
         // Use dual marker for vertices too for better position clarity
-        useDualMarker: true
-      }
+        useDualMarker: true,
+      },
     }, options);
     
     // Initialize internal state
@@ -99,7 +99,7 @@ export class DrawingTool extends ToolBase {
       vertices: [],
       mousePosition: null,
       isDragging: false,
-      lastFreehandPoint: null
+      lastFreehandPoint: null,
     };
     
     // Bind event handlers to maintain 'this' context
@@ -136,7 +136,7 @@ export class DrawingTool extends ToolBase {
         vertices: [],
         mousePosition: null,
         isDragging: false,
-        lastFreehandPoint: null
+        lastFreehandPoint: null,
       };
     }
     
@@ -161,7 +161,7 @@ export class DrawingTool extends ToolBase {
       // Emit activation event with mode
       this.emit('activated', {
         mode: this.options.mode,
-        continuousDrawing: this.options.continuousDrawing
+        continuousDrawing: this.options.continuousDrawing,
       });
     } catch (error) {
       console.error('Error activating DrawingTool:', error);
@@ -194,7 +194,7 @@ export class DrawingTool extends ToolBase {
       vertices: [],
       mousePosition: null,
       isDragging: false,
-      lastFreehandPoint: null
+      lastFreehandPoint: null,
     };
   }
   
@@ -211,7 +211,7 @@ export class DrawingTool extends ToolBase {
         vertices: [],
         mousePosition: null,
         isDragging: false,
-        lastFreehandPoint: null
+        lastFreehandPoint: null,
       };
     } else {
       // Finish current drawing if any and start a new one
@@ -234,78 +234,78 @@ export class DrawingTool extends ToolBase {
     
     // Create appropriate feature based on mode
     switch (this.options.mode) {
-      case 'point':
-        // For points, we don't create a feature until click
-        break;
+    case 'point':
+      // For points, we don't create a feature until click
+      break;
         
-      case 'line':
-        // Fix: Pass empty array directly as first parameter, not in options
+    case 'line':
+      // Fix: Pass empty array directly as first parameter, not in options
+      this.workingData.activeFeature = new LineFeature([], {
+        id: `drawing-${Date.now()}`,
+        properties: {
+          type: 'drawing',
+          drawingType: 'line',
+          temporary: true,
+          isPreview: true,
+        },
+        style: this.options.previewLineSymbol || this.options.lineSymbol,
+      });
+      console.log('Created new empty LineFeature for drawing with preview style');
+      break;
+        
+    case 'polygon':
+      try {
+        // Create a minimal polygon with initial vertices to avoid centroid calculation error
+        // Use a tiny "invisible" triangle as a starter polygon that will be replaced
+        const initialCoords = [
+          new Coordinate(0, 0, 0),
+          new Coordinate(0, 0.000001, 0),
+          new Coordinate(0.000001, 0, 0),
+          new Coordinate(0, 0, 0), // Close the polygon
+        ];
+          
+        this.workingData.activeFeature = new PolygonFeature(initialCoords, {
+          id: `drawing-${Date.now()}`,
+          properties: {
+            type: 'drawing',
+            drawingType: 'polygon',
+            temporary: true,
+            isPreview: true,
+          },
+          style: this.options.previewPolygonSymbol || this.options.polygonSymbol,
+        });
+        console.log('Created new PolygonFeature for drawing with preview style');
+      } catch (error) {
+        console.error('Error creating polygon feature:', error);
+        // If polygon creation fails, create a line instead as fallback
         this.workingData.activeFeature = new LineFeature([], {
           id: `drawing-${Date.now()}`,
           properties: {
             type: 'drawing',
             drawingType: 'line',
             temporary: true,
-            isPreview: true
+            isPreview: true,
           },
-          style: this.options.previewLineSymbol || this.options.lineSymbol
+          style: this.options.previewLineSymbol || this.options.lineSymbol,
         });
-        console.log('Created new empty LineFeature for drawing with preview style');
-        break;
+        console.warn('Fallback to LineFeature for drawing');
+      }
+      break;
         
-      case 'polygon':
-        try {
-          // Create a minimal polygon with initial vertices to avoid centroid calculation error
-          // Use a tiny "invisible" triangle as a starter polygon that will be replaced
-          const initialCoords = [
-            new Coordinate(0, 0, 0),
-            new Coordinate(0, 0.000001, 0),
-            new Coordinate(0.000001, 0, 0),
-            new Coordinate(0, 0, 0) // Close the polygon
-          ];
-          
-          this.workingData.activeFeature = new PolygonFeature(initialCoords, {
-            id: `drawing-${Date.now()}`,
-            properties: {
-              type: 'drawing',
-              drawingType: 'polygon',
-              temporary: true,
-              isPreview: true
-            },
-            style: this.options.previewPolygonSymbol || this.options.polygonSymbol
-          });
-          console.log('Created new PolygonFeature for drawing with preview style');
-        } catch (error) {
-          console.error('Error creating polygon feature:', error);
-          // If polygon creation fails, create a line instead as fallback
-          this.workingData.activeFeature = new LineFeature([], {
-            id: `drawing-${Date.now()}`,
-            properties: {
-              type: 'drawing',
-              drawingType: 'line',
-              temporary: true,
-              isPreview: true
-            },
-            style: this.options.previewLineSymbol || this.options.lineSymbol
-          });
-          console.warn('Fallback to LineFeature for drawing');
-        }
-        break;
-        
-      case 'freehand':
-        // Fix: Pass empty array directly as first parameter, not in options
-        this.workingData.activeFeature = new LineFeature([], {
-          id: `drawing-${Date.now()}`,
-          properties: {
-            type: 'drawing',
-            drawingType: 'freehand',
-            temporary: true,
-            isPreview: true
-          },
-          style: this.options.previewLineSymbol || this.options.lineSymbol
-        });
-        console.log('Created new empty LineFeature for freehand drawing with preview style');
-        break;
+    case 'freehand':
+      // Fix: Pass empty array directly as first parameter, not in options
+      this.workingData.activeFeature = new LineFeature([], {
+        id: `drawing-${Date.now()}`,
+        properties: {
+          type: 'drawing',
+          drawingType: 'freehand',
+          temporary: true,
+          isPreview: true,
+        },
+        style: this.options.previewLineSymbol || this.options.lineSymbol,
+      });
+      console.log('Created new empty LineFeature for freehand drawing with preview style');
+      break;
     }
     
     // Add feature to working features if created
@@ -330,7 +330,7 @@ export class DrawingTool extends ToolBase {
         vertices: [],
         mousePosition: null,
         isDragging: false,
-        lastFreehandPoint: null
+        lastFreehandPoint: null,
       };
       return;
     }
@@ -370,7 +370,7 @@ export class DrawingTool extends ToolBase {
       hasLatLng: !!event.latLng,
       hasOriginalEvent: !!event.originalEvent,
       hasPixel: !!event.pixel,
-      pixel: event.pixel ? `[${event.pixel[0]}, ${event.pixel[1]}]` : 'N/A'
+      pixel: event.pixel ? `[${event.pixel[0]}, ${event.pixel[1]}]` : 'N/A',
     });
     
     // Skip freehand mode (handled by mousedown/mouseup)
@@ -396,7 +396,7 @@ export class DrawingTool extends ToolBase {
       coordinate = {
         lat: event.latLng.lat(),
         lng: event.latLng.lng(),
-        elevation: 0
+        elevation: 0,
       };
       console.log('Using raw coordinates from Google Maps event:', coordinate);
     } else {
@@ -405,23 +405,23 @@ export class DrawingTool extends ToolBase {
     }
     
     console.log(`DrawingTool handling click in ${this.options.mode} mode at:`, 
-                coordinate.lat, coordinate.lng, `(continuousDrawing=${this.options.continuousDrawing})`);
+      coordinate.lat, coordinate.lng, `(continuousDrawing=${this.options.continuousDrawing})`);
     
     try {
       // Handle based on mode
       switch (this.options.mode) {
-        case 'point':
-          // Create a point at the clicked location
-          console.log('Creating point feature at click location');
-          this._createPoint(coordinate);
-          break;
+      case 'point':
+        // Create a point at the clicked location
+        console.log('Creating point feature at click location');
+        this._createPoint(coordinate);
+        break;
           
-        case 'line':
-        case 'polygon':
-          // Add vertex to the feature
-          console.log(`Adding vertex to ${this.options.mode} at click location`);
-          this._addVertex(coordinate);
-          break;
+      case 'line':
+      case 'polygon':
+        // Add vertex to the feature
+        console.log(`Adding vertex to ${this.options.mode} at click location`);
+        this._addVertex(coordinate);
+        break;
       }
       
       console.log('✅ Click successfully processed');
@@ -462,7 +462,7 @@ export class DrawingTool extends ToolBase {
         coordinate = new Coordinate(
           event.coordinate.lat,
           event.coordinate.lng,
-          event.coordinate.elevation !== undefined ? event.coordinate.elevation : 0
+          event.coordinate.elevation !== undefined ? event.coordinate.elevation : 0,
         );
         
       } else if (event.latLng && typeof event.latLng.lat === 'function' && typeof event.latLng.lng === 'function') {
@@ -470,7 +470,7 @@ export class DrawingTool extends ToolBase {
         coordinate = new Coordinate(
           event.latLng.lat(),
           event.latLng.lng(),
-          0
+          0,
         );
         
       } else {
@@ -480,7 +480,7 @@ export class DrawingTool extends ToolBase {
           // Try to convert from pixel coordinates if map interface supports it
           const pixel = {
             x: event.originalEvent.clientX,
-            y: event.originalEvent.clientY
+            y: event.originalEvent.clientY,
           };
           coordinate = mapInterface.getCoordinateFromPixel(pixel);
         }
@@ -723,7 +723,7 @@ export class DrawingTool extends ToolBase {
         validCoord = new Coordinate(
           coordinate.lat,
           coordinate.lng,
-          coordinate.elevation !== undefined ? coordinate.elevation : 0
+          coordinate.elevation !== undefined ? coordinate.elevation : 0,
         );
       } else {
         console.error('Invalid coordinate provided:', coordinate);
@@ -733,7 +733,7 @@ export class DrawingTool extends ToolBase {
       // Create a style object with dual marker enabled
       const pointStyle = {
         ...this.options.pointSymbol,
-        useDualMarker: true // Enable the pin + dot dual marker for better position clarity
+        useDualMarker: true, // Enable the pin + dot dual marker for better position clarity
       };
       
       const pointFeature = new PointFeature(validCoord, {
@@ -741,9 +741,9 @@ export class DrawingTool extends ToolBase {
         properties: {
           type: 'drawing',
           drawingType: 'point',
-          temporary: false
+          temporary: false,
         },
-        style: pointStyle
+        style: pointStyle,
       });
       
       console.log(`Created point at ${validCoord.lat}, ${validCoord.lng}`);
@@ -810,7 +810,7 @@ export class DrawingTool extends ToolBase {
         validCoord = new Coordinate(
           coordinate.lat,
           coordinate.lng,
-          coordinate.elevation !== undefined ? coordinate.elevation : 0
+          coordinate.elevation !== undefined ? coordinate.elevation : 0,
         );
       } else {
         console.error('Invalid coordinate provided:', coordinate);
@@ -825,7 +825,7 @@ export class DrawingTool extends ToolBase {
         size: this.options.vertexSymbol.size || 8,
         color: this.options.vertexSymbol.color || '#3388FF',
         outlineWidth: this.options.vertexSymbol.outlineWidth || 2,
-        outlineColor: this.options.vertexSymbol.outlineColor || 'white'
+        outlineColor: this.options.vertexSymbol.outlineColor || 'white',
       };
       
       // Create vertex feature for visual feedback
@@ -835,9 +835,9 @@ export class DrawingTool extends ToolBase {
           type: 'vertex',
           drawingId: this.workingData.activeFeature.id,
           vertexIndex: this.workingData.vertices.length,
-          temporary: true
+          temporary: true,
         },
-        style: enhancedVertexStyle
+        style: enhancedVertexStyle,
       });
       
       // Apply 3D elevation if enabled
@@ -896,7 +896,7 @@ export class DrawingTool extends ToolBase {
       this.emit('vertexAdded', {
         feature: this.workingData.activeFeature,
         coordinate: validCoord,
-        vertexIndex: this.workingData.vertices.length - 1
+        vertexIndex: this.workingData.vertices.length - 1,
       });
       
       // Log the current state of feature collection for debugging
@@ -934,7 +934,7 @@ export class DrawingTool extends ToolBase {
     if (this.workingData.lastFreehandPoint) {
       const distance = this.geometryEngine.calculateDistance(
         this.workingData.lastFreehandPoint, 
-        coordinate
+        coordinate,
       );
       
       // Skip if too close to the last point
@@ -951,7 +951,7 @@ export class DrawingTool extends ToolBase {
       validCoord = new Coordinate(
         coordinate.lat,
         coordinate.lng,
-        coordinate.elevation !== undefined ? coordinate.elevation : 0
+        coordinate.elevation !== undefined ? coordinate.elevation : 0,
       );
     } else {
       console.error('Invalid coordinate for freehand drawing:', coordinate);
@@ -1005,7 +1005,7 @@ export class DrawingTool extends ToolBase {
     const vertices = this.workingData.vertices.map(v => v.getCoordinate());
     
     // Ensure the mousePosition is a proper Coordinate object
-    let mouseCoordinate = this.workingData.mousePosition;
+    const mouseCoordinate = this.workingData.mousePosition;
     
     // Handle line preview
     if (this.options.mode === 'line' && vertices.length > 0) {
@@ -1083,7 +1083,7 @@ export class DrawingTool extends ToolBase {
     // Emit event
     this.emit('vertexRemoved', {
       feature: this.workingData.activeFeature,
-      vertexCount: this.workingData.vertices.length
+      vertexCount: this.workingData.vertices.length,
     });
   }
   
@@ -1100,152 +1100,152 @@ export class DrawingTool extends ToolBase {
     let finalFeature;
     
     switch (this.options.mode) {
-      case 'line':
-        // Need at least 2 vertices for a valid line
-        if (this.workingData.vertices.length < 2) {
-          console.log('Not enough vertices for a line (need at least 2)');
-          this._startNewDrawing();
-          return;
-        }
+    case 'line':
+      // Need at least 2 vertices for a valid line
+      if (this.workingData.vertices.length < 2) {
+        console.log('Not enough vertices for a line (need at least 2)');
+        this._startNewDrawing();
+        return;
+      }
         
-        // Create final line feature
-        const lineCoordinates = this.workingData.vertices.map(v => v.getCoordinate());
-        console.log(`Creating final line feature with ${lineCoordinates.length} vertices`);
+      // Create final line feature
+      const lineCoordinates = this.workingData.vertices.map(v => v.getCoordinate());
+      console.log(`Creating final line feature with ${lineCoordinates.length} vertices`);
         
+      try {
+        // Using the existing feature to create the final one
+        this.workingData.activeFeature.properties.temporary = false;
+        this.workingData.activeFeature.properties.isPreview = false;
+        this.workingData.activeFeature.setCoordinates(lineCoordinates);
+          
+        // Change from preview style to final style
+        this.workingData.activeFeature.style = this.options.lineSymbol;
+          
+        // Set a more descriptive name for the line
+        const firstCoord = lineCoordinates[0];
+        const lastCoord = lineCoordinates[lineCoordinates.length - 1];
+          
+        // Format the coordinates for the name (rounded to 5 decimal places)
+        const startLat = firstCoord.lat.toFixed(5);
+        const startLng = firstCoord.lng.toFixed(5);
+        const endLat = lastCoord.lat.toFixed(5);
+        const endLng = lastCoord.lng.toFixed(5);
+          
+        this.workingData.activeFeature.setName(`Line from (${startLat}, ${startLng}) to (${endLat}, ${endLng})`);
+          
+        finalFeature = this.workingData.activeFeature;
+          
+        // Remove this feature from working features since we'll add it to permanent features
+        this.manager.workingFeatures.removeFeature(finalFeature);
+      } catch (error) {
+        console.error('Error finalizing line feature:', error);
+        this._startNewDrawing();
+        return;
+      }
+      break;
+        
+    case 'polygon':
+      // Need at least 3 vertices for a valid polygon
+      if (this.workingData.vertices.length < 3) {
+        console.log('Not enough vertices for a polygon (need at least 3)');
+        this._startNewDrawing();
+        return;
+      }
+        
+      // Create final polygon feature
+      let polygonCoordinates = this.workingData.vertices.map(v => v.getCoordinate());
+        
+      // Ensure the polygon is closed (first vertex is the same as last vertex)
+      if (polygonCoordinates.length > 0) {
+        // Explicitly close the polygon by adding the first vertex again
+        polygonCoordinates = [...polygonCoordinates, polygonCoordinates[0]];
+      }
+        
+      console.log(`Creating final polygon feature with ${polygonCoordinates.length} vertices (including closing vertex)`);
+        
+      try {
+        // Create a new polygon instance with the collected coordinates
+        finalFeature = new PolygonFeature(polygonCoordinates, {
+          id: `polygon-${Date.now()}`,
+          properties: {
+            type: 'drawing',
+            drawingType: 'polygon',
+            temporary: false,
+            isPreview: false,
+          },
+          style: this.options.polygonSymbol,
+        });
+          
+        // Set a descriptive name for the polygon
         try {
-          // Using the existing feature to create the final one
-          this.workingData.activeFeature.properties.temporary = false;
-          this.workingData.activeFeature.properties.isPreview = false;
-          this.workingData.activeFeature.setCoordinates(lineCoordinates);
-          
-          // Change from preview style to final style
-          this.workingData.activeFeature.style = this.options.lineSymbol;
-          
-          // Set a more descriptive name for the line
-          const firstCoord = lineCoordinates[0];
-          const lastCoord = lineCoordinates[lineCoordinates.length - 1];
-          
-          // Format the coordinates for the name (rounded to 5 decimal places)
-          const startLat = firstCoord.lat.toFixed(5);
-          const startLng = firstCoord.lng.toFixed(5);
-          const endLat = lastCoord.lat.toFixed(5);
-          const endLng = lastCoord.lng.toFixed(5);
-          
-          this.workingData.activeFeature.setName(`Line from (${startLat}, ${startLng}) to (${endLat}, ${endLng})`);
-          
-          finalFeature = this.workingData.activeFeature;
-          
-          // Remove this feature from working features since we'll add it to permanent features
-          this.manager.workingFeatures.removeFeature(finalFeature);
-        } catch (error) {
-          console.error('Error finalizing line feature:', error);
-          this._startNewDrawing();
-          return;
-        }
-        break;
-        
-      case 'polygon':
-        // Need at least 3 vertices for a valid polygon
-        if (this.workingData.vertices.length < 3) {
-          console.log('Not enough vertices for a polygon (need at least 3)');
-          this._startNewDrawing();
-          return;
-        }
-        
-        // Create final polygon feature
-        let polygonCoordinates = this.workingData.vertices.map(v => v.getCoordinate());
-        
-        // Ensure the polygon is closed (first vertex is the same as last vertex)
-        if (polygonCoordinates.length > 0) {
-          // Explicitly close the polygon by adding the first vertex again
-          polygonCoordinates = [...polygonCoordinates, polygonCoordinates[0]];
-        }
-        
-        console.log(`Creating final polygon feature with ${polygonCoordinates.length} vertices (including closing vertex)`);
-        
-        try {
-          // Create a new polygon instance with the collected coordinates
-          finalFeature = new PolygonFeature(polygonCoordinates, {
-            id: `polygon-${Date.now()}`,
-            properties: {
-              type: 'drawing',
-              drawingType: 'polygon',
-              temporary: false,
-              isPreview: false
-            },
-            style: this.options.polygonSymbol
-          });
-          
-          // Set a descriptive name for the polygon
-          try {
-            const center = finalFeature.getCenter();
-            if (center) {
-              const centerLat = center.lat.toFixed(5);
-              const centerLng = center.lng.toFixed(5);
-              finalFeature.setName(`Polygon at (${centerLat}, ${centerLng})`);
-            } else {
-              finalFeature.setName(`Polygon with ${polygonCoordinates.length} vertices`);
-            }
-          } catch (error) {
-            // Fallback naming if there's any issue getting the center
+          const center = finalFeature.getCenter();
+          if (center) {
+            const centerLat = center.lat.toFixed(5);
+            const centerLng = center.lng.toFixed(5);
+            finalFeature.setName(`Polygon at (${centerLat}, ${centerLng})`);
+          } else {
             finalFeature.setName(`Polygon with ${polygonCoordinates.length} vertices`);
           }
-          
-          // Remove the preview features from working features collection
-          this.manager.workingFeatures.removeFeature(this.workingData.activeFeature);
-          
-          // Also remove all vertex features from working features
-          this.workingData.vertices.forEach(vertex => {
-            this.manager.workingFeatures.removeFeature(vertex);
-          });
         } catch (error) {
-          console.error('Error finalizing polygon feature:', error);
-          this._startNewDrawing();
-          return;
+          // Fallback naming if there's any issue getting the center
+          finalFeature.setName(`Polygon with ${polygonCoordinates.length} vertices`);
         }
-        break;
+          
+        // Remove the preview features from working features collection
+        this.manager.workingFeatures.removeFeature(this.workingData.activeFeature);
+          
+        // Also remove all vertex features from working features
+        this.workingData.vertices.forEach(vertex => {
+          this.manager.workingFeatures.removeFeature(vertex);
+        });
+      } catch (error) {
+        console.error('Error finalizing polygon feature:', error);
+        this._startNewDrawing();
+        return;
+      }
+      break;
         
-      case 'freehand':
-        // Need at least 2 points for a valid freehand line
-        const freehandCoords = this.workingData.activeFeature.getCoordinates();
-        if (freehandCoords.length < 2) {
-          console.log('Not enough points for a freehand line (need at least 2)');
-          this._startNewDrawing();
-          return;
-        }
+    case 'freehand':
+      // Need at least 2 points for a valid freehand line
+      const freehandCoords = this.workingData.activeFeature.getCoordinates();
+      if (freehandCoords.length < 2) {
+        console.log('Not enough points for a freehand line (need at least 2)');
+        this._startNewDrawing();
+        return;
+      }
         
-        // Create final feature based on geometry
-        console.log(`Creating final freehand feature with ${freehandCoords.length} vertices`);
+      // Create final feature based on geometry
+      console.log(`Creating final freehand feature with ${freehandCoords.length} vertices`);
         
-        try {
-          // Using the existing feature for the final feature
-          this.workingData.activeFeature.properties.temporary = false;
-          this.workingData.activeFeature.properties.isPreview = false;
+      try {
+        // Using the existing feature for the final feature
+        this.workingData.activeFeature.properties.temporary = false;
+        this.workingData.activeFeature.properties.isPreview = false;
           
-          // Change from preview style to final style
-          this.workingData.activeFeature.style = this.options.lineSymbol;
+        // Change from preview style to final style
+        this.workingData.activeFeature.style = this.options.lineSymbol;
           
-          // Set a descriptive name for the freehand line
-          const firstCoord = freehandCoords[0];
-          const lastCoord = freehandCoords[freehandCoords.length - 1];
+        // Set a descriptive name for the freehand line
+        const firstCoord = freehandCoords[0];
+        const lastCoord = freehandCoords[freehandCoords.length - 1];
           
-          const startLat = firstCoord.lat.toFixed(5);
-          const startLng = firstCoord.lng.toFixed(5);
-          const endLat = lastCoord.lat.toFixed(5);
-          const endLng = lastCoord.lng.toFixed(5);
+        const startLat = firstCoord.lat.toFixed(5);
+        const startLng = firstCoord.lng.toFixed(5);
+        const endLat = lastCoord.lat.toFixed(5);
+        const endLng = lastCoord.lng.toFixed(5);
           
-          this.workingData.activeFeature.setName(`Freehand line from (${startLat}, ${startLng}) to (${endLat}, ${endLng})`);
+        this.workingData.activeFeature.setName(`Freehand line from (${startLat}, ${startLng}) to (${endLat}, ${endLng})`);
           
-          finalFeature = this.workingData.activeFeature;
+        finalFeature = this.workingData.activeFeature;
           
-          // Remove this feature from working features since we'll add it to permanent features
-          this.manager.workingFeatures.removeFeature(finalFeature);
-        } catch (error) {
-          console.error('Error finalizing freehand feature:', error);
-          this._startNewDrawing();
-          return;
-        }
-        break;
+        // Remove this feature from working features since we'll add it to permanent features
+        this.manager.workingFeatures.removeFeature(finalFeature);
+      } catch (error) {
+        console.error('Error finalizing freehand feature:', error);
+        this._startNewDrawing();
+        return;
+      }
+      break;
     }
     
     if (finalFeature) {
@@ -1268,7 +1268,7 @@ export class DrawingTool extends ToolBase {
         id: finalFeature.id,
         coordinates: finalFeature.getCoordinates ? finalFeature.getCoordinates() : null,
         name: finalFeature.name,
-        properties: finalFeature.properties
+        properties: finalFeature.properties,
       });
       
       this.manager.features.addFeature(finalFeature);
@@ -1383,7 +1383,7 @@ export class DrawingTool extends ToolBase {
     
     // Emit event
     this.emit('continuousDrawingChanged', {
-      continuousDrawing: this.options.continuousDrawing
+      continuousDrawing: this.options.continuousDrawing,
     });
     
     return this.options.continuousDrawing;
@@ -1399,7 +1399,7 @@ export class DrawingTool extends ToolBase {
     
     // Emit event
     this.emit('enable3DChanged', {
-      enable3D: this.options.enable3D
+      enable3D: this.options.enable3D,
     });
     
     return this.options.enable3D;
@@ -1420,7 +1420,7 @@ export class DrawingTool extends ToolBase {
     
     // Emit event
     this.emit('freehandSamplingIntervalChanged', {
-      interval: this.options.freehandSamplingInterval
+      interval: this.options.freehandSamplingInterval,
     });
     
     return this.options.freehandSamplingInterval;
@@ -1435,7 +1435,7 @@ export class DrawingTool extends ToolBase {
       mode: this.options.mode,
       enable3D: this.options.enable3D,
       continuousDrawing: this.options.continuousDrawing,
-      freehandSamplingInterval: this.options.freehandSamplingInterval
+      freehandSamplingInterval: this.options.freehandSamplingInterval,
     };
   }
 }

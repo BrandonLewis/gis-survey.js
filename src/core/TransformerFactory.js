@@ -47,19 +47,19 @@ export class TransformerFactory {
     let transformer;
     
     switch (transformerType) {
-      case 'simple':
-        transformer = new SimpleWGS84Transformer();
-        break;
+    case 'simple':
+      transformer = new SimpleWGS84Transformer();
+      break;
         
-      case 'proj4js':
-        // Try to load proj4js if available
-        this._checkForProj4js();
+    case 'proj4js':
+      // Try to load proj4js if available
+      this._checkForProj4js();
         
-        // We'll implement this when needed
-        throw new Error('Proj4js transformer not yet implemented. Use "simple" for now.');
+      // We'll implement this when needed
+      throw new Error('Proj4js transformer not yet implemented. Use "simple" for now.');
         
-      default:
-        throw new Error(`Unknown transformer type: ${transformerType}`);
+    default:
+      throw new Error(`Unknown transformer type: ${transformerType}`);
     }
     
     // Cache the instance
@@ -101,14 +101,14 @@ export class TransformerFactory {
    */
   static isAvailable(type) {
     switch (type) {
-      case 'simple':
-        return true;
+    case 'simple':
+      return true;
         
-      case 'proj4js':
-        return this._checkForProj4js();
+    case 'proj4js':
+      return this._checkForProj4js();
         
-      default:
-        return false;
+    default:
+      return false;
     }
   }
   

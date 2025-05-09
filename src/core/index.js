@@ -23,7 +23,7 @@ export { CoordinateUtils } from './CoordinateUtils.js';
 export async function initializeCore(options = {}) {
   const { 
     transformerType = 'simple',
-    geoidModel = 'default'
+    geoidModel = 'default',
   } = options;
   
   // Set the default transformer type
@@ -86,7 +86,7 @@ export function coordinateToGeoJSON(coordinate, properties = {}) {
   return {
     type: 'Feature',
     geometry: coordinate.toGeoJSON(),
-    properties
+    properties,
   };
 }
 
@@ -101,8 +101,8 @@ export function coordinatesToGeoJSON(coordinates, properties = {}) {
     type: 'FeatureCollection',
     features: coordinates.map((coord, index) => coordinateToGeoJSON(coord, { 
       id: index, 
-      ...properties 
+      ...properties, 
     })),
-    properties
+    properties,
   };
 }

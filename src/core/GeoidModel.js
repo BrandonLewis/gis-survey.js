@@ -73,7 +73,7 @@ export class GeoidModel {
       { lat: 24, lng: -125, height: -32.5 }, // Southwest
       { lat: 24, lng: -66, height: -29.5 },  // Southeast
       { lat: 50, lng: -125, height: -22.5 }, // Northwest
-      { lat: 50, lng: -66, height: -34.0 }   // Northeast
+      { lat: 50, lng: -66, height: -34.0 },   // Northeast
     ];
     
     // Normalize coordinates to 0-1 range within the grid

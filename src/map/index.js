@@ -31,7 +31,7 @@ export { LayerManager } from './LayerManager.js';
  * @returns {MapInterface} - The created map instance
  */
 export function createMap(provider, options = {}) {
-    return MapFactory.createMap(provider, options);
+  return MapFactory.createMap(provider, options);
 }
 
 /**
@@ -39,5 +39,5 @@ export function createMap(provider, options = {}) {
  * @returns {Array<string>} - Array of supported provider names
  */
 export function getSupportedProviders() {
-    return MapFactory.getSupportedProviders();
+  return MapFactory.getSupportedProviders();
 }

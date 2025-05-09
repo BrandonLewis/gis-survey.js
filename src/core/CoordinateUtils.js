@@ -27,19 +27,19 @@ export const CoordinateUtils = {
     
     // Extract latitude (try different common property names)
     const lat = coordinate.lat !== undefined ? coordinate.lat : 
-                coordinate.latitude !== undefined ? coordinate.latitude :
-                coordinate.y !== undefined ? coordinate.y : null;
+      coordinate.latitude !== undefined ? coordinate.latitude :
+        coordinate.y !== undefined ? coordinate.y : null;
     
     // Extract longitude (try different common property names)
     const lng = coordinate.lng !== undefined ? coordinate.lng : 
-                coordinate.longitude !== undefined ? coordinate.longitude :
-                coordinate.x !== undefined ? coordinate.x : null;
+      coordinate.longitude !== undefined ? coordinate.longitude :
+        coordinate.x !== undefined ? coordinate.x : null;
     
     // Extract elevation (try different common property names)
     const elevation = coordinate.elevation !== undefined ? coordinate.elevation : 
-                      coordinate.altitude !== undefined ? coordinate.altitude :
-                      coordinate.alt !== undefined ? coordinate.alt :
-                      coordinate.z !== undefined ? coordinate.z : 0;
+      coordinate.altitude !== undefined ? coordinate.altitude :
+        coordinate.alt !== undefined ? coordinate.alt :
+          coordinate.z !== undefined ? coordinate.z : 0;
     
     // Validate required properties
     if (lat === null || lng === null) {
@@ -66,7 +66,7 @@ export const CoordinateUtils = {
       z: elevation,
       
       // Original properties for reference
-      ...coordinate
+      ...coordinate,
     };
   },
   
@@ -98,7 +98,7 @@ export const CoordinateUtils = {
     return {
       lat: standardized.lat,
       lng: standardized.lng,
-      elevation: standardized.elevation
+      elevation: standardized.elevation,
     };
   },
   
@@ -115,7 +115,7 @@ export const CoordinateUtils = {
     return {
       lat: standardized.lat,
       lng: standardized.lng,
-      elevation: standardized.elevation
+      elevation: standardized.elevation,
     };
-  }
+  },
 };

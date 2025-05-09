@@ -62,22 +62,22 @@ export class SnappingManager extends EventEmitter {
         size: 12,
         color: 'rgba(255, 87, 51, 0.6)',
         outlineWidth: 2,
-        outlineColor: '#FF5733'
+        outlineColor: '#FF5733',
       },
       edgeSnapSymbol: {
         type: 'circle',
         size: 10,
         color: 'rgba(51, 136, 255, 0.6)',
         outlineWidth: 1,
-        outlineColor: '#3388FF'
+        outlineColor: '#3388FF',
       },
       gridSnapSymbol: {
         type: 'circle',
         size: 8,
         color: 'rgba(0, 200, 0, 0.5)',
         outlineWidth: 1,
-        outlineColor: '#00C800'
-      }
+        outlineColor: '#00C800',
+      },
     }, options);
     
     // Initialize state
@@ -87,7 +87,7 @@ export class SnappingManager extends EventEmitter {
       snapIndicator: null,
       snapSourceFeature: null,
       snapTargets: [],
-      lastMousePosition: null
+      lastMousePosition: null,
     };
     
     // Bind event handlers
@@ -186,7 +186,7 @@ export class SnappingManager extends EventEmitter {
     // Store current mouse position
     this.state.lastMousePosition = {
       coordinate: event.coordinate,
-      pixel: event.pixel
+      pixel: event.pixel,
     };
     
     // Find snap point
@@ -263,24 +263,24 @@ export class SnappingManager extends EventEmitter {
       let vertices = [];
       
       switch (feature.type) {
-        case 'point':
-          vertices = [feature.getCoordinate()];
-          break;
+      case 'point':
+        vertices = [feature.getCoordinate()];
+        break;
           
-        case 'line':
-          vertices = feature.getCoordinates();
-          break;
+      case 'line':
+        vertices = feature.getCoordinates();
+        break;
           
-        case 'polygon':
-          // Get all vertices from all rings
-          const rings = feature.getRings();
-          rings.forEach(ring => {
-            vertices = vertices.concat(ring);
-          });
-          break;
+      case 'polygon':
+        // Get all vertices from all rings
+        const rings = feature.getRings();
+        rings.forEach(ring => {
+          vertices = vertices.concat(ring);
+        });
+        break;
           
-        default:
-          continue; // Skip unsupported types
+      default:
+        continue; // Skip unsupported types
       }
       
       // Check each vertex
@@ -297,7 +297,7 @@ export class SnappingManager extends EventEmitter {
         // Calculate screen distance
         const distance = Math.sqrt(
           Math.pow(vertexPixel[0] - pixel[0], 2) +
-          Math.pow(vertexPixel[1] - pixel[1], 2)
+          Math.pow(vertexPixel[1] - pixel[1], 2),
         );
         
         // Check if within tolerance and closer than current best
@@ -308,7 +308,7 @@ export class SnappingManager extends EventEmitter {
             feature: feature,
             coordinate: vertex,
             distance: distance,
-            isSnapped: true
+            isSnapped: true,
           };
         }
       }
@@ -343,38 +343,38 @@ export class SnappingManager extends EventEmitter {
       }
       
       // Get segments based on feature type
-      let segments = [];
+      const segments = [];
       
       switch (feature.type) {
-        case 'line':
-          const coords = feature.getCoordinates();
+      case 'line':
+        const coords = feature.getCoordinates();
           
-          // Create segments from adjacent coordinates
-          for (let i = 0; i < coords.length - 1; i++) {
+        // Create segments from adjacent coordinates
+        for (let i = 0; i < coords.length - 1; i++) {
+          segments.push({
+            start: coords[i],
+            end: coords[i + 1],
+            feature: feature,
+          });
+        }
+        break;
+          
+      case 'polygon':
+        // Get segments from all rings
+        const rings = feature.getRings();
+        rings.forEach(ring => {
+          for (let i = 0; i < ring.length - 1; i++) {
             segments.push({
-              start: coords[i],
-              end: coords[i + 1],
-              feature: feature
+              start: ring[i],
+              end: ring[i + 1],
+              feature: feature,
             });
           }
-          break;
+        });
+        break;
           
-        case 'polygon':
-          // Get segments from all rings
-          const rings = feature.getRings();
-          rings.forEach(ring => {
-            for (let i = 0; i < ring.length - 1; i++) {
-              segments.push({
-                start: ring[i],
-                end: ring[i + 1],
-                feature: feature
-              });
-            }
-          });
-          break;
-          
-        default:
-          continue; // Skip unsupported types
+      default:
+        continue; // Skip unsupported types
       }
       
       // Check each segment
@@ -383,7 +383,7 @@ export class SnappingManager extends EventEmitter {
         const nearestInfo = this.geometryEngine.nearestPointOnSegment(
           segment.start,
           segment.end,
-          coordinate
+          coordinate,
         );
         
         if (nearestInfo) {
@@ -393,7 +393,7 @@ export class SnappingManager extends EventEmitter {
           // Calculate screen distance
           const distance = Math.sqrt(
             Math.pow(nearestPixel[0] - pixel[0], 2) +
-            Math.pow(nearestPixel[1] - pixel[1], 2)
+            Math.pow(nearestPixel[1] - pixel[1], 2),
           );
           
           // Check if within tolerance and closer than current best
@@ -407,7 +407,7 @@ export class SnappingManager extends EventEmitter {
               segmentEnd: segment.end,
               segmentPosition: nearestInfo.segmentPosition,
               distance: distance,
-              isSnapped: true
+              isSnapped: true,
             };
           }
         }
@@ -437,7 +437,7 @@ export class SnappingManager extends EventEmitter {
     const lat = coordinate.lat !== undefined ? coordinate.lat : coordinate.y;
     const lng = coordinate.lng !== undefined ? coordinate.lng : coordinate.x;
     const elevation = coordinate.elevation !== undefined ? coordinate.elevation : 
-                     (coordinate.z !== undefined ? coordinate.z : 0);
+      (coordinate.z !== undefined ? coordinate.z : 0);
     
     if (lat === undefined || lng === undefined) {
       console.error('Invalid coordinate format for grid snapping:', coordinate);
@@ -460,7 +460,7 @@ export class SnappingManager extends EventEmitter {
     const snappedCoordinate = {
       lat: snappedLat,
       lng: snappedLng,
-      elevation: elevation
+      elevation: elevation,
     };
     
     // Return snap info
@@ -468,7 +468,7 @@ export class SnappingManager extends EventEmitter {
       type: 'grid',
       coordinate: snappedCoordinate,
       gridSize: gridSize,
-      isSnapped: true
+      isSnapped: true,
     };
   }
   
@@ -558,20 +558,20 @@ export class SnappingManager extends EventEmitter {
     let symbol;
     
     switch (snap.type) {
-      case 'vertex':
-        symbol = this.options.vertexSnapSymbol;
-        break;
+    case 'vertex':
+      symbol = this.options.vertexSnapSymbol;
+      break;
         
-      case 'edge':
-        symbol = this.options.edgeSnapSymbol;
-        break;
+    case 'edge':
+      symbol = this.options.edgeSnapSymbol;
+      break;
         
-      case 'grid':
-        symbol = this.options.gridSnapSymbol;
-        break;
+    case 'grid':
+      symbol = this.options.gridSnapSymbol;
+      break;
         
-      default:
-        symbol = this.options.vertexSnapSymbol;
+    default:
+      symbol = this.options.vertexSnapSymbol;
     }
     
     // Create indicator feature
@@ -580,9 +580,9 @@ export class SnappingManager extends EventEmitter {
       properties: {
         type: 'snap-indicator',
         snapType: snap.type,
-        temporary: true
+        temporary: true,
       },
-      style: symbol
+      style: symbol,
     });
     
     // Add to working features
@@ -626,7 +626,7 @@ export class SnappingManager extends EventEmitter {
     
     // Emit event
     this.emit('snapSettingsChanged', {
-      snapToVertex: this.options.snapToVertex
+      snapToVertex: this.options.snapToVertex,
     });
     
     return this.options.snapToVertex;
@@ -642,7 +642,7 @@ export class SnappingManager extends EventEmitter {
     
     // Emit event
     this.emit('snapSettingsChanged', {
-      snapToEdge: this.options.snapToEdge
+      snapToEdge: this.options.snapToEdge,
     });
     
     return this.options.snapToEdge;
@@ -658,7 +658,7 @@ export class SnappingManager extends EventEmitter {
     
     // Emit event
     this.emit('snapSettingsChanged', {
-      snapToGrid: this.options.snapToGrid
+      snapToGrid: this.options.snapToGrid,
     });
     
     return this.options.snapToGrid;
@@ -679,7 +679,7 @@ export class SnappingManager extends EventEmitter {
     
     // Emit event
     this.emit('snapSettingsChanged', {
-      gridSize: this.options.gridSize
+      gridSize: this.options.gridSize,
     });
     
     return this.options.gridSize;
@@ -700,7 +700,7 @@ export class SnappingManager extends EventEmitter {
     
     // Emit event
     this.emit('snapSettingsChanged', {
-      tolerance: this.options.tolerance
+      tolerance: this.options.tolerance,
     });
     
     return this.options.tolerance;
@@ -720,7 +720,7 @@ export class SnappingManager extends EventEmitter {
       snapToGrid: this.options.snapToGrid,
       gridSize: this.options.gridSize,
       highlightSnap: this.options.highlightSnap,
-      includeTemporaryFeatures: this.options.includeTemporaryFeatures
+      includeTemporaryFeatures: this.options.includeTemporaryFeatures,
     };
   }
   

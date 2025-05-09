@@ -27,7 +27,7 @@ export class GnssAdapter extends EventEmitter {
     this.options = Object.assign({
       autoConnect: false,
       positionSmoothingFactor: 0.5,
-      enableElevation: true
+      enableElevation: true,
     }, options);
   }
   

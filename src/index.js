@@ -39,8 +39,8 @@ export async function initialize(options = {}) {
       GeometryEngine,
       GeoidModel,
       CoordinateUtils,
-      TransformerFactory
-    }
+      TransformerFactory,
+    },
   };
 }
 
@@ -63,7 +63,7 @@ export async function createSurvey(mapInstance, mapType, options = {}) {
         return new Coordinate(lat, lng, elevation, heightReference, projection);
       },
       engine: GeometryEngine,
-      utils: CoordinateUtils
+      utils: CoordinateUtils,
     },
     
     // Map utilities
@@ -71,7 +71,7 @@ export async function createSurvey(mapInstance, mapType, options = {}) {
       getMap: () => mapInstance,
       // Map adapter stubs to be implemented
       getCenter: () => null,
-      setCenter: () => false
+      setCenter: () => false,
     },
     
     // Feature creation stubs
@@ -87,7 +87,7 @@ export async function createSurvey(mapInstance, mapType, options = {}) {
       createPolygon: async (coordinates, options = {}) => {
         console.log('createPolygon not yet implemented');
         return null;
-      }
+      },
     },
     
     // Survey tools
@@ -100,10 +100,10 @@ export async function createSurvey(mapInstance, mapType, options = {}) {
         geometryEngine: GeometryEngine,
         mode: 'point',
         enable3D: options.enable3D || false,
-        continuousDrawing: options.continuousDrawing || true
+        continuousDrawing: options.continuousDrawing || true,
       }),
       editing: null,
-      snapping: null
+      snapping: null,
     },
     
     // GNSS integration
@@ -113,7 +113,7 @@ export async function createSurvey(mapInstance, mapType, options = {}) {
     },
     
     // Core module interface
-    core: moduleInterface.core
+    core: moduleInterface.core,
   };
 }
 
@@ -126,7 +126,7 @@ export {
   CoordinateTransformer,
   SimpleWGS84Transformer,
   CoordinateUtils,
-  EventEmitter
+  EventEmitter,
 };
 
 // Export initialization functions

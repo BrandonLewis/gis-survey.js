@@ -53,8 +53,8 @@ export class MeasurementTool extends ToolBase {
         font: '12px Arial',
         fillColor: 'black',
         strokeColor: 'white',
-        strokeWidth: 3
-      }
+        strokeWidth: 3,
+      },
     }, options);
     
     // Initialize internal state
@@ -65,7 +65,7 @@ export class MeasurementTool extends ToolBase {
       mousePosition: null,
       hoverCoordinate: null,
       measurementLabels: [],
-      segmentLabels: []
+      segmentLabels: [],
     };
     
     // Use direct imported GeometryEngine instead of relying on manager
@@ -177,34 +177,34 @@ export class MeasurementTool extends ToolBase {
     
     // Create appropriate feature type based on mode
     switch (this.options.mode) {
-      case 'distance':
-        this.workingData.activeMeasurement = new LineFeature([], {
-          id: `measurement-${Date.now()}`,
-          properties: {
-            type: 'measurement',
-            measurementType: 'distance',
-            temporary: true
-          },
-          style: this.options.lineSymbol
-        });
-        break;
+    case 'distance':
+      this.workingData.activeMeasurement = new LineFeature([], {
+        id: `measurement-${Date.now()}`,
+        properties: {
+          type: 'measurement',
+          measurementType: 'distance',
+          temporary: true,
+        },
+        style: this.options.lineSymbol,
+      });
+      break;
         
-      case 'area':
-      case 'volume':
-        // Create a polygon with empty rings
-        this.workingData.activeMeasurement = new PolygonFeature([[]], {
-          id: `measurement-${Date.now()}`,
-          properties: {
-            type: 'measurement',
-            measurementType: this.options.mode,
-            temporary: true
-          },
-          style: Object.assign({}, this.manager.settings.defaultPolygonSymbol, {
-            outlineColor: this.options.lineSymbol.color,
-            outlineWidth: this.options.lineSymbol.width
-          })
-        });
-        break;
+    case 'area':
+    case 'volume':
+      // Create a polygon with empty rings
+      this.workingData.activeMeasurement = new PolygonFeature([[]], {
+        id: `measurement-${Date.now()}`,
+        properties: {
+          type: 'measurement',
+          measurementType: this.options.mode,
+          temporary: true,
+        },
+        style: Object.assign({}, this.manager.settings.defaultPolygonSymbol, {
+          outlineColor: this.options.lineSymbol.color,
+          outlineWidth: this.options.lineSymbol.width,
+        }),
+      });
+      break;
     }
     
     // Add the feature to the manager's working features
@@ -316,7 +316,7 @@ export class MeasurementTool extends ToolBase {
       const lastPoint = this.workingData.points[this.workingData.points.length - 1];
       const lastCoord = lastPoint.getCoordinate();
       const distance = this.geometryEngine.calculateDistance(lastCoord, event.coordinate, 
-        { includeElevation: this.options.enable3D }
+        { includeElevation: this.options.enable3D },
       );
       
       // Add point if it's more than 5 meters away from the last point
@@ -399,9 +399,9 @@ export class MeasurementTool extends ToolBase {
         type: 'measurement-point',
         measurementId: this.workingData.activeMeasurement.id,
         index: this.workingData.points.length,
-        temporary: true
+        temporary: true,
       },
-      style: this.options.pointSymbol
+      style: this.options.pointSymbol,
     });
     
     // Apply 3D elevation if enabled
@@ -451,24 +451,24 @@ export class MeasurementTool extends ToolBase {
     
     // Update the geometry based on measurement type
     switch (this.options.mode) {
-      case 'distance':
-        this.workingData.activeMeasurement.setCoordinates(coordinates);
-        break;
+    case 'distance':
+      this.workingData.activeMeasurement.setCoordinates(coordinates);
+      break;
         
-      case 'area':
-      case 'volume':
-        // For area and volume, we need a polygon
-        if (coordinates.length >= 3) {
-          // Close the polygon if needed
-          const polygonCoordinates = [...coordinates];
+    case 'area':
+    case 'volume':
+      // For area and volume, we need a polygon
+      if (coordinates.length >= 3) {
+        // Close the polygon if needed
+        const polygonCoordinates = [...coordinates];
           
-          // Don't explicitly close it - the polygon feature will handle this
-          this.workingData.activeMeasurement.setRings([polygonCoordinates]);
-        } else {
-          // Not enough points for a polygon yet, use empty geometry
-          this.workingData.activeMeasurement.setRings([coordinates]);
-        }
-        break;
+        // Don't explicitly close it - the polygon feature will handle this
+        this.workingData.activeMeasurement.setRings([polygonCoordinates]);
+      } else {
+        // Not enough points for a polygon yet, use empty geometry
+        this.workingData.activeMeasurement.setRings([coordinates]);
+      }
+      break;
     }
   }
   
@@ -487,18 +487,18 @@ export class MeasurementTool extends ToolBase {
     
     // Update preview based on measurement type
     switch (this.options.mode) {
-      case 'distance':
-        this.workingData.activeMeasurement.setCoordinates(previewCoordinates);
-        break;
+    case 'distance':
+      this.workingData.activeMeasurement.setCoordinates(previewCoordinates);
+      break;
         
-      case 'area':
-      case 'volume':
-        if (previewCoordinates.length >= 3) {
-          this.workingData.activeMeasurement.setRings([previewCoordinates]);
-        } else {
-          this.workingData.activeMeasurement.setRings([previewCoordinates]);
-        }
-        break;
+    case 'area':
+    case 'volume':
+      if (previewCoordinates.length >= 3) {
+        this.workingData.activeMeasurement.setRings([previewCoordinates]);
+      } else {
+        this.workingData.activeMeasurement.setRings([previewCoordinates]);
+      }
+      break;
     }
     
     // Update display including preview
@@ -524,66 +524,66 @@ export class MeasurementTool extends ToolBase {
     let segmentValues = [];
     
     switch (this.options.mode) {
-      case 'distance':
-        // Get coordinates including potential preview point
-        const lineCoordinates = this.workingData.points.map(point => point.getCoordinate());
-        if (preview && this.workingData.mousePosition) {
-          lineCoordinates.push(this.workingData.mousePosition);
-        }
+    case 'distance':
+      // Get coordinates including potential preview point
+      const lineCoordinates = this.workingData.points.map(point => point.getCoordinate());
+      if (preview && this.workingData.mousePosition) {
+        lineCoordinates.push(this.workingData.mousePosition);
+      }
         
-        // Calculate total distance
-        if (lineCoordinates.length >= 2) {
-          measurementValue = this._calculateDistance(lineCoordinates);
-          measurementUnit = this.options.units;
+      // Calculate total distance
+      if (lineCoordinates.length >= 2) {
+        measurementValue = this._calculateDistance(lineCoordinates);
+        measurementUnit = this.options.units;
           
-          // Calculate individual segment distances
-          if (this.options.showSegmentLengths) {
-            segmentValues = this._calculateSegmentDistances(lineCoordinates);
-          }
+        // Calculate individual segment distances
+        if (this.options.showSegmentLengths) {
+          segmentValues = this._calculateSegmentDistances(lineCoordinates);
         }
-        break;
+      }
+      break;
         
-      case 'area':
-        // Get coordinates including potential preview point
-        const areaCoordinates = this.workingData.points.map(point => point.getCoordinate());
-        if (preview && this.workingData.mousePosition) {
-          areaCoordinates.push(this.workingData.mousePosition);
-        }
+    case 'area':
+      // Get coordinates including potential preview point
+      const areaCoordinates = this.workingData.points.map(point => point.getCoordinate());
+      if (preview && this.workingData.mousePosition) {
+        areaCoordinates.push(this.workingData.mousePosition);
+      }
         
-        // Calculate area
-        if (areaCoordinates.length >= 3) {
-          measurementValue = this._calculateArea(areaCoordinates);
-          measurementUnit = this.options.areaUnits;
+      // Calculate area
+      if (areaCoordinates.length >= 3) {
+        measurementValue = this._calculateArea(areaCoordinates);
+        measurementUnit = this.options.areaUnits;
           
-          // Also calculate perimeter if showing segment lengths
-          if (this.options.showSegmentLengths) {
-            // Add a copy of the first point to close the polygon
-            const perimeterCoords = [...areaCoordinates, areaCoordinates[0]];
-            segmentValues = this._calculateSegmentDistances(perimeterCoords);
-          }
+        // Also calculate perimeter if showing segment lengths
+        if (this.options.showSegmentLengths) {
+          // Add a copy of the first point to close the polygon
+          const perimeterCoords = [...areaCoordinates, areaCoordinates[0]];
+          segmentValues = this._calculateSegmentDistances(perimeterCoords);
         }
-        break;
+      }
+      break;
         
-      case 'volume':
-        // Get coordinates including potential preview point
-        const volumeCoordinates = this.workingData.points.map(point => point.getCoordinate());
-        if (preview && this.workingData.mousePosition) {
-          volumeCoordinates.push(this.workingData.mousePosition);
-        }
+    case 'volume':
+      // Get coordinates including potential preview point
+      const volumeCoordinates = this.workingData.points.map(point => point.getCoordinate());
+      if (preview && this.workingData.mousePosition) {
+        volumeCoordinates.push(this.workingData.mousePosition);
+      }
         
-        // Calculate volume (requires at least 3 points and 3D data)
-        if (volumeCoordinates.length >= 3 && this.options.enable3D) {
-          measurementValue = this._calculateVolume(volumeCoordinates);
-          measurementUnit = this.options.volumeUnits;
+      // Calculate volume (requires at least 3 points and 3D data)
+      if (volumeCoordinates.length >= 3 && this.options.enable3D) {
+        measurementValue = this._calculateVolume(volumeCoordinates);
+        measurementUnit = this.options.volumeUnits;
           
-          // Also calculate perimeter if showing segment lengths
-          if (this.options.showSegmentLengths) {
-            // Add a copy of the first point to close the polygon
-            const perimeterCoords = [...volumeCoordinates, volumeCoordinates[0]];
-            segmentValues = this._calculateSegmentDistances(perimeterCoords);
-          }
+        // Also calculate perimeter if showing segment lengths
+        if (this.options.showSegmentLengths) {
+          // Add a copy of the first point to close the polygon
+          const perimeterCoords = [...volumeCoordinates, volumeCoordinates[0]];
+          segmentValues = this._calculateSegmentDistances(perimeterCoords);
         }
-        break;
+      }
+      break;
     }
     
     // Create and display measurement labels
@@ -599,7 +599,7 @@ export class MeasurementTool extends ToolBase {
         formattedValue: formattedValue,
         segments: segmentValues.length,
         vertices: this.workingData.points.length,
-        preview: preview
+        preview: preview,
       });
       
       // Create overall measurement label
@@ -609,7 +609,7 @@ export class MeasurementTool extends ToolBase {
         const measurementLabel = this.mapInterface.createLabel({
           position: labelPosition,
           text: formattedValue,
-          style: this.options.labelStyle
+          style: this.options.labelStyle,
         });
         
         this.workingData.measurementLabels.push(measurementLabel);
@@ -631,8 +631,8 @@ export class MeasurementTool extends ToolBase {
             position: segment.midpoint,
             text: formattedSegment,
             style: Object.assign({}, this.options.labelStyle, {
-              font: '10px Arial'
-            })
+              font: '10px Arial',
+            }),
           });
           
           this.workingData.segmentLabels.push(segmentLabel);
@@ -648,21 +648,21 @@ export class MeasurementTool extends ToolBase {
    */
   _calculateLabelPosition() {
     switch (this.options.mode) {
-      case 'distance':
-        // For distance, place label near the last point
-        if (this.workingData.points.length > 0) {
-          const lastPoint = this.workingData.points[this.workingData.points.length - 1];
-          return lastPoint.getCoordinate();
-        }
-        break;
+    case 'distance':
+      // For distance, place label near the last point
+      if (this.workingData.points.length > 0) {
+        const lastPoint = this.workingData.points[this.workingData.points.length - 1];
+        return lastPoint.getCoordinate();
+      }
+      break;
         
-      case 'area':
-      case 'volume':
-        // For area/volume, place label at centroid
-        if (this.workingData.activeMeasurement) {
-          return this.workingData.activeMeasurement.getCentroid();
-        }
-        break;
+    case 'area':
+    case 'volume':
+      // For area/volume, place label at centroid
+      if (this.workingData.activeMeasurement) {
+        return this.workingData.activeMeasurement.getCentroid();
+      }
+      break;
     }
     
     // Fallback to first point if available
@@ -698,27 +698,27 @@ export class MeasurementTool extends ToolBase {
     let measurementUnit = '';
     
     switch (this.options.mode) {
-      case 'distance':
-        const coordinates = finalMeasurement.getCoordinates();
-        measurementValue = this._calculateDistance(coordinates);
-        measurementUnit = this.options.units;
-        break;
+    case 'distance':
+      const coordinates = finalMeasurement.getCoordinates();
+      measurementValue = this._calculateDistance(coordinates);
+      measurementUnit = this.options.units;
+      break;
         
-      case 'area':
-        const areaRings = finalMeasurement.getRings();
-        if (areaRings.length > 0) {
-          measurementValue = this._calculateArea(areaRings[0]);
-          measurementUnit = this.options.areaUnits;
-        }
-        break;
+    case 'area':
+      const areaRings = finalMeasurement.getRings();
+      if (areaRings.length > 0) {
+        measurementValue = this._calculateArea(areaRings[0]);
+        measurementUnit = this.options.areaUnits;
+      }
+      break;
         
-      case 'volume':
-        const volumeRings = finalMeasurement.getRings();
-        if (volumeRings.length > 0) {
-          measurementValue = this._calculateVolume(volumeRings[0]);
-          measurementUnit = this.options.volumeUnits;
-        }
-        break;
+    case 'volume':
+      const volumeRings = finalMeasurement.getRings();
+      if (volumeRings.length > 0) {
+        measurementValue = this._calculateVolume(volumeRings[0]);
+        measurementUnit = this.options.volumeUnits;
+      }
+      break;
     }
     
     // Format and store the measurement value
@@ -747,7 +747,7 @@ export class MeasurementTool extends ToolBase {
       value: measurementValue,
       unit: measurementUnit,
       formattedValue: formattedValue,
-      mode: this.options.mode
+      mode: this.options.mode,
     });
   }
   
@@ -768,7 +768,7 @@ export class MeasurementTool extends ToolBase {
       const segmentDistance = this.geometryEngine.calculateDistance(
         coordinates[i],
         coordinates[i + 1],
-        { includeElevation: this.options.enable3D }
+        { includeElevation: this.options.enable3D },
       );
       
       totalDistance += segmentDistance;
@@ -798,7 +798,7 @@ export class MeasurementTool extends ToolBase {
       const segmentDistance = this.geometryEngine.calculateDistance(
         start,
         end,
-        { includeElevation: this.options.enable3D }
+        { includeElevation: this.options.enable3D },
       );
       
       // Calculate midpoint for label placement
@@ -807,7 +807,7 @@ export class MeasurementTool extends ToolBase {
         lat: (start.lat + end.lat) / 2,
         lng: (start.lng + end.lng) / 2,
         elevation: (start.elevation !== undefined && end.elevation !== undefined) ? 
-          (start.elevation + end.elevation) / 2 : 0
+          (start.elevation + end.elevation) / 2 : 0,
       };
       
       // Convert to requested units
@@ -815,7 +815,7 @@ export class MeasurementTool extends ToolBase {
       
       segments.push({
         value: convertedDistance,
-        midpoint: midpoint
+        midpoint: midpoint,
       });
     }
     
@@ -847,7 +847,7 @@ export class MeasurementTool extends ToolBase {
     
     // Calculate area using GeometryEngine static method
     const area = this.geometryEngine.calculateArea(closedCoordinates, {
-      includeElevation: this.options.enable3D
+      includeElevation: this.options.enable3D,
     });
     
     // Convert to requested units
@@ -933,30 +933,30 @@ export class MeasurementTool extends ToolBase {
     let meters = distance;
     if (fromUnit !== 'meters') {
       switch (fromUnit) {
-        case 'feet':
-          meters = distance * 0.3048;
-          break;
-        case 'kilometers':
-          meters = distance * 1000;
-          break;
-        case 'miles':
-          meters = distance * 1609.344;
-          break;
+      case 'feet':
+        meters = distance * 0.3048;
+        break;
+      case 'kilometers':
+        meters = distance * 1000;
+        break;
+      case 'miles':
+        meters = distance * 1609.344;
+        break;
       }
     }
     
     // Convert from meters to target unit
     switch (toUnit) {
-      case 'meters':
-        return meters;
-      case 'feet':
-        return meters / 0.3048;
-      case 'kilometers':
-        return meters / 1000;
-      case 'miles':
-        return meters / 1609.344;
-      default:
-        return meters;
+    case 'meters':
+      return meters;
+    case 'feet':
+      return meters / 0.3048;
+    case 'kilometers':
+      return meters / 1000;
+    case 'miles':
+      return meters / 1609.344;
+    default:
+      return meters;
     }
   }
   
@@ -977,30 +977,30 @@ export class MeasurementTool extends ToolBase {
     let squareMeters = area;
     if (fromUnit !== 'square-meters') {
       switch (fromUnit) {
-        case 'square-feet':
-          squareMeters = area * 0.092903;
-          break;
-        case 'hectares':
-          squareMeters = area * 10000;
-          break;
-        case 'acres':
-          squareMeters = area * 4046.856;
-          break;
+      case 'square-feet':
+        squareMeters = area * 0.092903;
+        break;
+      case 'hectares':
+        squareMeters = area * 10000;
+        break;
+      case 'acres':
+        squareMeters = area * 4046.856;
+        break;
       }
     }
     
     // Convert from square meters to target unit
     switch (toUnit) {
-      case 'square-meters':
-        return squareMeters;
-      case 'square-feet':
-        return squareMeters / 0.092903;
-      case 'hectares':
-        return squareMeters / 10000;
-      case 'acres':
-        return squareMeters / 4046.856;
-      default:
-        return squareMeters;
+    case 'square-meters':
+      return squareMeters;
+    case 'square-feet':
+      return squareMeters / 0.092903;
+    case 'hectares':
+      return squareMeters / 10000;
+    case 'acres':
+      return squareMeters / 4046.856;
+    default:
+      return squareMeters;
     }
   }
   
@@ -1021,20 +1021,20 @@ export class MeasurementTool extends ToolBase {
     let cubicMeters = volume;
     if (fromUnit !== 'cubic-meters') {
       switch (fromUnit) {
-        case 'cubic-feet':
-          cubicMeters = volume * 0.0283168;
-          break;
+      case 'cubic-feet':
+        cubicMeters = volume * 0.0283168;
+        break;
       }
     }
     
     // Convert from cubic meters to target unit
     switch (toUnit) {
-      case 'cubic-meters':
-        return cubicMeters;
-      case 'cubic-feet':
-        return cubicMeters / 0.0283168;
-      default:
-        return cubicMeters;
+    case 'cubic-meters':
+      return cubicMeters;
+    case 'cubic-feet':
+      return cubicMeters / 0.0283168;
+    default:
+      return cubicMeters;
     }
   }
   
@@ -1052,49 +1052,49 @@ export class MeasurementTool extends ToolBase {
     
     // Format to appropriate precision based on unit
     switch (unit) {
-      case 'meters':
-        formattedValue = value < 10 ? value.toFixed(2) : Math.round(value).toString();
-        unitDisplay = 'm';
-        break;
-      case 'feet':
-        formattedValue = value < 10 ? value.toFixed(2) : Math.round(value).toString();
-        unitDisplay = 'ft';
-        break;
-      case 'kilometers':
-        formattedValue = value.toFixed(3);
-        unitDisplay = 'km';
-        break;
-      case 'miles':
-        formattedValue = value.toFixed(3);
-        unitDisplay = 'mi';
-        break;
-      case 'square-meters':
-        formattedValue = value < 10 ? value.toFixed(2) : Math.round(value).toString();
-        unitDisplay = 'm²';
-        break;
-      case 'square-feet':
-        formattedValue = value < 10 ? value.toFixed(2) : Math.round(value).toString();
-        unitDisplay = 'ft²';
-        break;
-      case 'hectares':
-        formattedValue = value.toFixed(4);
-        unitDisplay = 'ha';
-        break;
-      case 'acres':
-        formattedValue = value.toFixed(4);
-        unitDisplay = 'ac';
-        break;
-      case 'cubic-meters':
-        formattedValue = value < 10 ? value.toFixed(2) : Math.round(value).toString();
-        unitDisplay = 'm³';
-        break;
-      case 'cubic-feet':
-        formattedValue = value < 10 ? value.toFixed(2) : Math.round(value).toString();
-        unitDisplay = 'ft³';
-        break;
-      default:
-        formattedValue = value.toString();
-        unitDisplay = unit;
+    case 'meters':
+      formattedValue = value < 10 ? value.toFixed(2) : Math.round(value).toString();
+      unitDisplay = 'm';
+      break;
+    case 'feet':
+      formattedValue = value < 10 ? value.toFixed(2) : Math.round(value).toString();
+      unitDisplay = 'ft';
+      break;
+    case 'kilometers':
+      formattedValue = value.toFixed(3);
+      unitDisplay = 'km';
+      break;
+    case 'miles':
+      formattedValue = value.toFixed(3);
+      unitDisplay = 'mi';
+      break;
+    case 'square-meters':
+      formattedValue = value < 10 ? value.toFixed(2) : Math.round(value).toString();
+      unitDisplay = 'm²';
+      break;
+    case 'square-feet':
+      formattedValue = value < 10 ? value.toFixed(2) : Math.round(value).toString();
+      unitDisplay = 'ft²';
+      break;
+    case 'hectares':
+      formattedValue = value.toFixed(4);
+      unitDisplay = 'ha';
+      break;
+    case 'acres':
+      formattedValue = value.toFixed(4);
+      unitDisplay = 'ac';
+      break;
+    case 'cubic-meters':
+      formattedValue = value < 10 ? value.toFixed(2) : Math.round(value).toString();
+      unitDisplay = 'm³';
+      break;
+    case 'cubic-feet':
+      formattedValue = value < 10 ? value.toFixed(2) : Math.round(value).toString();
+      unitDisplay = 'ft³';
+      break;
+    default:
+      formattedValue = value.toString();
+      unitDisplay = unit;
     }
     
     return `${formattedValue} ${unitDisplay}`;
@@ -1164,7 +1164,7 @@ export class MeasurementTool extends ToolBase {
     this.emit('units-changed', {
       distance: this.options.units,
       area: this.options.areaUnits,
-      volume: this.options.volumeUnits
+      volume: this.options.volumeUnits,
     });
     
     return true;
@@ -1185,7 +1185,7 @@ export class MeasurementTool extends ToolBase {
     
     // Emit 3D mode changed event
     this.emit('enable-3d-changed', {
-      enable3D: this.options.enable3D
+      enable3D: this.options.enable3D,
     });
     
     return this.options.enable3D;

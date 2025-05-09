@@ -151,6 +151,7 @@
   <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=geometry"></script>
   <script type="module">
     // Import modules
+    import { GnssModule } from 'https://cdn.jsdelivr.net/gh/BrandonLewis/gnss.js@main/dist/gnss.esm.js';
     import { 
       createSurvey,
       Coordinate,
@@ -186,9 +187,19 @@
     let drawingTool;
     let activeTool = null;
     
-    // For GNSS integration (mock implementation for example)
-    let mockGnssPosition = null;
-    const mockGnssPositionMarker = new google.maps.Marker({
+    // For GNSS integration
+    // Initialize GNSS module
+    const gnss = new GnssModule({
+      debugSettings: {
+        info: true,
+        debug: true,
+        errors: true
+      }
+    });
+    
+    // Position marker
+    let gnssPosition = null;
+    const gnssPositionMarker = new google.maps.Marker({
       map: map,
       icon: {
         path: google.maps.SymbolPath.CIRCLE,
@@ -199,7 +210,7 @@
         scale: 10
       }
     });
-    mockGnssPositionMarker.setVisible(false);
+    gnssPositionMarker.setVisible(false);
     
     async function init() {
       try {
@@ -223,8 +234,14 @@
         // Add event listener for when features are created
         drawingTool.on('featureCreated', handleFeatureCreated);
         
-        // Set up simulated GNSS module
-        setupMockGnss();
+        // Connect GNSS module to survey
+        if (typeof survey.connectGnssModule === 'function') {
+          survey.connectGnssModule(gnss);
+          console.log('GNSS module connected to survey');
+        }
+        
+        // Set up GNSS event handlers
+        setupGnssEvents();
         
         // Set up button handlers
         setupButtonHandlers();
@@ -251,15 +268,67 @@
       }
     }
     
-    function setupMockGnss() {
-      // For this example, we'll mock a GNSS position that moves slightly over time
-      // In a real implementation, this would come from the gnss.js library
+    function setupGnssEvents() {
+      // Set up GNSS event handlers
       
+      // Position updates
+      gnss.on('position', (position) => {
+        gnssPosition = position;
+        updatePositionDisplay(position);
+        
+        // Update the marker position
+        if (position && position.latitude && position.longitude) {
+          gnssPositionMarker.setPosition({
+            lat: position.latitude,
+            lng: position.longitude
+          });
+          gnssPositionMarker.setVisible(true);
+        }
+      });
+      
+      // Connection status
+      gnss.on('connection:connected', (data) => {
+        connectionStatusEl.textContent = `Connected via ${data.method}`;
+        connectionStatusEl.className = 'status connected';
+      });
+      
+      gnss.on('connection:disconnected', () => {
+        connectionStatusEl.textContent = 'Disconnected';
+        connectionStatusEl.className = 'status disconnected';
+      });
+      
+      gnss.on('connection:error', (data) => {
+        connectionStatusEl.textContent = `Error: ${data.message}`;
+        connectionStatusEl.className = 'status error';
+      });
+      
+      // NTRIP status
+      gnss.on('ntrip:connected', (data) => {
+        ntripStatusEl.textContent = `Connected to ${data.mountpoint}`;
+        ntripStatusEl.className = 'status connected';
+      });
+      
+      gnss.on('ntrip:disconnected', () => {
+        ntripStatusEl.textContent = 'Disconnected';
+        ntripStatusEl.className = 'status disconnected';
+      });
+      
+      gnss.on('ntrip:error', (data) => {
+        ntripStatusEl.textContent = `Error: ${data.message}`;
+        ntripStatusEl.className = 'status error';
+      });
+      
+      // If no real GNSS device is connected, simulate a position
+      // This is just for demo purposes
+      simulateGnssPosition();
+    }
+    
+    function simulateGnssPosition() {
       const centerLat = 40.7128;
       const centerLng = -74.0060;
       
       // Start position simulation
-      mockGnssPosition = {
+      gnssPosition = {
         latitude: centerLat,
         longitude: centerLng,
         altitude: 10,
@@ -267,46 +336,45 @@
         satellites: 12
       };
       
-      updatePositionDisplay(mockGnssPosition);
-      mockGnssPositionMarker.setPosition({
-        lat: mockGnssPosition.latitude,
-        lng: mockGnssPosition.longitude
+      updatePositionDisplay(gnssPosition);
+      gnssPositionMarker.setPosition({
+        lat: gnssPosition.latitude,
+        lng: gnssPosition.longitude
       });
-      mockGnssPositionMarker.setVisible(true);
+      gnssPositionMarker.setVisible(true);
       
       // Simulate position updates every 3 seconds
       setInterval(() => {
-        // Slightly move the position
-        mockGnssPosition.latitude += (Math.random() - 0.5) * 0.0002;
-        mockGnssPosition.longitude += (Math.random() - 0.5) * 0.0002;
-        mockGnssPosition.altitude = 10 + Math.random() * 5;
-        
-        // Occasionally change the fix quality to simulate real-world conditions
-        if (Math.random() < 0.1) {
-          mockGnssPosition.quality = 5; // RTK float
-        } else if (Math.random() < 0.05) {
-          mockGnssPosition.quality = 1; // GPS
-        } else {
-          mockGnssPosition.quality = 4; // RTK fixed
+        // Only simulate if not connected to a real device
+        if (connectionStatusEl.textContent === 'Disconnected') {
+          // Slightly move the position
+          gnssPosition.latitude += (Math.random() - 0.5) * 0.0002;
+          gnssPosition.longitude += (Math.random() - 0.5) * 0.0002;
+          gnssPosition.altitude = 10 + Math.random() * 5;
+          
+          // Occasionally change the fix quality to simulate real-world conditions
+          if (Math.random() < 0.1) {
+            gnssPosition.quality = 5; // RTK float
+          } else if (Math.random() < 0.05) {
+            gnssPosition.quality = 1; // GPS
+          } else {
+            gnssPosition.quality = 4; // RTK fixed
+          }
+          
+          // Update the position display
+          updatePositionDisplay(gnssPosition);
+          
+          // Update the marker position
+          gnssPositionMarker.setPosition({
+            lat: gnssPosition.latitude,
+            lng: gnssPosition.longitude
+          });
+          
+          // Simulate connection status to make it clear this is a simulation
+          connectionStatusEl.textContent = 'Connected via Simulation';
+          connectionStatusEl.className = 'status connected';
         }
-        
-        // Update the position display
-        updatePositionDisplay(mockGnssPosition);
-        
-        // Update the marker position
-        mockGnssPositionMarker.setPosition({
-          lat: mockGnssPosition.latitude,
-          lng: mockGnssPosition.longitude
-        });
       }, 3000);
-      
-      // Simulate connection status
-      connectionStatusEl.textContent = 'Connected via Simulation';
-      connectionStatusEl.className = 'status connected';
-      
-      // Simulate NTRIP connection
-      ntripStatusEl.textContent = 'Connected to DEMO-MOUNTPOINT';
-      ntripStatusEl.className = 'status connected';
     }
     
     function updatePositionDisplay(position) {
@@ -460,42 +528,87 @@
     }
     
     function setupButtonHandlers() {
-      // GNSS connection buttons would be set up here in a real integration
-      document.getElementById('connect-bluetooth').addEventListener('click', () => {
-        showStatusMessage('This is a mock example. Bluetooth connection would be handled by gnss.js in a real implementation.');
+      // GNSS connection buttons
+      document.getElementById('connect-bluetooth').addEventListener('click', async () => {
+        try {
+          await gnss.connectBluetooth({acceptAllDevices: true});
+        } catch (error) {
+          console.error('Error connecting via Bluetooth:', error);
+          showStatusMessage('Error connecting via Bluetooth: ' + error.message, true);
+        }
       });
       
-      document.getElementById('connect-serial').addEventListener('click', () => {
-        showStatusMessage('This is a mock example. Serial connection would be handled by gnss.js in a real implementation.');
+      document.getElementById('connect-serial').addEventListener('click', async () => {
+        try {
+          await gnss.connectSerial();
+        } catch (error) {
+          console.error('Error connecting via Serial:', error);
+          showStatusMessage('Error connecting via Serial: ' + error.message, true);
+        }
       });
       
-      document.getElementById('disconnect-device').addEventListener('click', () => {
-        showStatusMessage('This is a mock example. Device disconnection would be handled by gnss.js in a real implementation.');
+      document.getElementById('disconnect-device').addEventListener('click', async () => {
+        try {
+          await gnss.disconnectDevice();
+        } catch (error) {
+          console.error('Error disconnecting device:', error);
+          showStatusMessage('Error disconnecting device: ' + error.message, true);
+        }
       });
       
       // NTRIP connection buttons
-      document.getElementById('connect-ntrip').addEventListener('click', () => {
-        showStatusMessage('This is a mock example. NTRIP connection would be handled by gnss.js in a real implementation.');
+      document.getElementById('connect-ntrip').addEventListener('click', async () => {
+        try {
+          const host = prompt('NTRIP Host:', 'rtk2go.com');
+          const port = prompt('NTRIP Port:', '2101');
+          const mountpoint = prompt('NTRIP Mountpoint:');
+          const username = prompt('NTRIP Username (optional):');
+          const password = prompt('NTRIP Password (optional):');
+          
+          if (!host || !mountpoint) {
+            alert('Host and mountpoint are required');
+            return;
+          }
+          
+          await gnss.connectNtrip({
+            host,
+            port: parseInt(port, 10),
+            mountpoint,
+            username,
+            password
+          });
+        } catch (error) {
+          console.error('Error connecting to NTRIP:', error);
+          showStatusMessage('Error connecting to NTRIP: ' + error.message, true);
+        }
       });
       
-      document.getElementById('disconnect-ntrip').addEventListener('click', () => {
-        showStatusMessage('This is a mock example. NTRIP disconnection would be handled by gnss.js in a real implementation.');
+      document.getElementById('disconnect-ntrip').addEventListener('click', async () => {
+        try {
+          await gnss.disconnectNtrip();
+        } catch (error) {
+          console.error('Error disconnecting from NTRIP:', error);
+          showStatusMessage('Error disconnecting from NTRIP: ' + error.message, true);
+        }
       });
       
       // Survey tools
       document.getElementById('capture-point').addEventListener('click', () => {
-        if (!mockGnssPosition) {
+        // Try to get position from GNSS module
+        const position = gnss.getPosition ? gnss.getPosition() : gnssPosition;
+        
+        if (!position) {
           showStatusMessage('No position available', true);
           return;
         }
         
-        console.log('Capturing point at position:', mockGnssPosition);
+        console.log('Capturing point at position:', position);
         
         // Create a point at the current GNSS position
         const coordinate = new Coordinate(
-          mockGnssPosition.latitude, 
-          mockGnssPosition.longitude, 
-          mockGnssPosition.altitude || 0
+          position.latitude, 
+          position.longitude, 
+          position.altitude || 0
         );
         
         // Create a marker for the point
@@ -508,7 +621,7 @@
           title: `Captured Point (${coordinate.toCompactString()})`,
           icon: {
             path: google.maps.SymbolPath.CIRCLE,
-            fillColor: mockGnssPosition.quality >= 4 ? '#4CAF50' : '#FFC107',
+            fillColor: position.quality >= 4 ? '#4CAF50' : '#FFC107',
             fillOpacity: 0.8,
             strokeColor: '#FFFFFF',
             strokeWeight: 2,

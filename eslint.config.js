@@ -1,0 +1,56 @@
+export default [
+  {
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: {
+        // Browser globals
+        window: 'readonly',
+        document: 'readonly',
+        console: 'readonly',
+        navigator: 'readonly',
+        google: 'readonly',
+        // Globals from env settings
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        Promise: 'readonly',
+        Map: 'readonly',
+        Set: 'readonly',
+        WeakMap: 'readonly',
+        WeakSet: 'readonly',
+        Array: 'readonly',
+        Object: 'readonly',
+        Symbol: 'readonly',
+        Reflect: 'readonly',
+        JSON: 'readonly',
+        Math: 'readonly',
+        Error: 'readonly',
+        process: 'readonly',
+        module: 'readonly',
+        require: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        exports: 'writable',
+      },
+    },
+    rules: {
+      'indent': ['error', 2],
+      'linebreak-style': ['error', 'unix'],
+      'quotes': ['error', 'single'],
+      'semi': ['error', 'always'],
+      'no-unused-vars': ['warn', { 
+        'argsIgnorePattern': '^_', 
+        'varsIgnorePattern': '^_',
+        'ignoreRestSiblings': true
+      }],
+      'no-console': ['warn'],
+      'prefer-const': ['error'],
+      'no-var': ['error'],
+      'arrow-spacing': ['error', { before: true, after: true }],
+      'comma-dangle': ['error', 'always-multiline'],
+      'object-curly-spacing': ['error', 'always'],
+    },
+  },
+];

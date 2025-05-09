@@ -27,35 +27,35 @@ export class SimpleWGS84Transformer extends CoordinateTransformer {
         datum: 'WGS84',
         type: 'geographic',
         epsg: '4326',
-        params: {}
+        params: {},
       },
       'NAD83': { // North American Datum 1983
         datum: 'NAD83',
         type: 'geographic',
         epsg: '4269',
-        params: {}
+        params: {},
       },
       'NAD27': { // North American Datum 1927
         datum: 'NAD27',
         type: 'geographic',
         epsg: '4267',
-        params: {}
+        params: {},
       },
       'UTM_NAD83_N': { // UTM North zones with NAD83 datum
         datum: 'NAD83',
         type: 'utm',
-        params: { north: true }
+        params: { north: true },
       },
       'UTM_NAD83_S': { // UTM South zones with NAD83 datum
         datum: 'NAD83',
         type: 'utm',
-        params: { north: false }
+        params: { north: false },
       },
       'StatePlane_NAD83': { // State Plane with NAD83 datum
         datum: 'NAD83',
         type: 'stateplane',
-        params: {}
-      }
+        params: {},
+      },
     };
     
     // Datum shift parameters
@@ -67,7 +67,7 @@ export class SimpleWGS84Transformer extends CoordinateTransformer {
         rx: 0.025915, // arcseconds
         ry: 0.009426, // arcseconds
         rz: 0.011599, // arcseconds
-        ds: -0.00062  // parts per million
+        ds: -0.00062,  // parts per million
       },
       'NAD83_to_NAD27': {
         // Parameters vary by region - simplification
@@ -75,7 +75,7 @@ export class SimpleWGS84Transformer extends CoordinateTransformer {
         dx: -8.0, // meters
         dy: 160.0, // meters
         dz: 176.0, // meters
-      }
+      },
     };
   }
   
@@ -181,7 +181,7 @@ export class SimpleWGS84Transformer extends CoordinateTransformer {
       coordinate.lng,
       coordinate.elevation - geoidHeight,
       'orthometric',
-      coordinate.projection
+      coordinate.projection,
     );
   }
   
@@ -198,7 +198,7 @@ export class SimpleWGS84Transformer extends CoordinateTransformer {
       coordinate.lng,
       coordinate.elevation + geoidHeight,
       'ellipsoidal',
-      coordinate.projection
+      coordinate.projection,
     );
   }
   
@@ -325,7 +325,7 @@ export class SimpleWGS84Transformer extends CoordinateTransformer {
       rx: -(params.rx || 0),
       ry: -(params.ry || 0),
       rz: -(params.rz || 0),
-      ds: -(params.ds || 0)
+      ds: -(params.ds || 0),
     };
   }
   
@@ -343,7 +343,7 @@ export class SimpleWGS84Transformer extends CoordinateTransformer {
     const lat = coordinate.lat !== undefined ? coordinate.lat : coordinate.y;
     const lng = coordinate.lng !== undefined ? coordinate.lng : coordinate.x;
     const elevation = coordinate.elevation !== undefined ? coordinate.elevation : 
-                    (coordinate.z !== undefined ? coordinate.z : 0);
+      (coordinate.z !== undefined ? coordinate.z : 0);
     
     // Validate coordinate values
     if (lat === undefined || lng === undefined) {
@@ -369,7 +369,7 @@ export class SimpleWGS84Transformer extends CoordinateTransformer {
     return {
       x, y, z,
       lat, lng, elevation,
-      originalFormat: 'geographic'
+      originalFormat: 'geographic',
     };
   }
   
@@ -403,7 +403,7 @@ export class SimpleWGS84Transformer extends CoordinateTransformer {
     
     const φ = Math.atan2(
       z + e2 * b * sinθ * sinθ * sinθ,
-      p - e2 * a * cosθ * cosθ * cosθ
+      p - e2 * a * cosθ * cosθ * cosθ,
     ); // latitude
     
     const λ = Math.atan2(y, x); // longitude
