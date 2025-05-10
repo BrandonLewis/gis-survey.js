@@ -4,7 +4,7 @@
  * Part of the RTK Surveyor 3D-first implementation
  */
 
-import { EventEmitter } from '../../event-emitter.js';
+import { EventEmitter } from '../core/event-emitter.js';
 import { FeatureCollection } from '../features/FeatureCollection.js';
 import { GeometryEngine } from '../core/GeometryEngine.js';
 
@@ -667,31 +667,380 @@ export class SurveyManager extends EventEmitter {
   }
   
   /**
+   * Connect an external GNSS module for position updates and device integration
+   * @param {Object} gnssModule - GNSS module instance (from gnss.js library)
+   * @param {Object} [options] - GNSS integration options
+   * @returns {boolean} Success of connection
+   */
+  connectGnssModule(gnssModule, options = {}) {
+    if (!gnssModule) {
+      console.error('Invalid GNSS module provided');
+      return false;
+    }
+
+    try {
+      // Store reference to the GNSS module
+      this.gnssModule = gnssModule;
+
+      // Default options
+      this.gnssOptions = Object.assign({
+        centerMapOnPosition: true,
+        trackedPositionMarker: true,
+        trackedPositionMarkerStyle: {
+          color: '#4285F4',
+          size: 12,
+          outlineColor: '#FFFFFF',
+          outlineWidth: 2,
+        },
+        accuracyCircle: true,
+        qualityIndicator: true,
+      }, options);
+
+      // Setup position tracking
+      this._setupGnssEventHandlers();
+
+      // Create position marker if enabled
+      if (this.gnssOptions.trackedPositionMarker && this.mapInterface) {
+        this._createPositionMarker();
+      }
+
+      // Emit connected event
+      this.emit('gnss-connected', {
+        gnssModule: this.gnssModule,
+        options: this.gnssOptions,
+      });
+
+      return true;
+    } catch (error) {
+      console.error('Error connecting GNSS module:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Set up GNSS module event handlers
+   * @private
+   */
+  _setupGnssEventHandlers() {
+    if (!this.gnssModule || !this.gnssModule.events || typeof this.gnssModule.events.on !== 'function') {
+      console.warn('GNSS module has no events interface');
+      return;
+    }
+
+    // Handle position updates
+    this.gnssModule.events.on('position', (position) => {
+      this._handlePositionUpdate(position);
+    });
+
+    // Handle connection events
+    this.gnssModule.events.on('connection:connected', (data) => {
+      this.emit('gnss-device-connected', data);
+    });
+
+    this.gnssModule.events.on('connection:disconnected', () => {
+      this.emit('gnss-device-disconnected');
+    });
+
+    this.gnssModule.events.on('connection:error', (error) => {
+      this.emit('gnss-device-error', error);
+    });
+
+    // Handle NTRIP connection events
+    this.gnssModule.events.on('ntrip:connected', (data) => {
+      this.emit('gnss-ntrip-connected', data);
+    });
+
+    this.gnssModule.events.on('ntrip:disconnected', () => {
+      this.emit('gnss-ntrip-disconnected');
+    });
+
+    this.gnssModule.events.on('ntrip:error', (error) => {
+      this.emit('gnss-ntrip-error', error);
+    });
+  }
+
+  /**
+   * Handle position updates from GNSS module
+   * @param {Object} position - GNSS position data
+   * @private
+   */
+  _handlePositionUpdate(position) {
+    if (!position || !position.latitude || !position.longitude) {
+      return;
+    }
+
+    // Store current position
+    this.currentPosition = position;
+
+    // Update position marker if enabled
+    if (this.gnssOptions.trackedPositionMarker && this.positionMarker && this.mapInterface) {
+      this._updatePositionMarker(position);
+    }
+
+    // Center map if enabled
+    if (this.gnssOptions.centerMapOnPosition && this.mapInterface) {
+      this.mapInterface.setCenter({
+        lat: position.latitude,
+        lng: position.longitude,
+      });
+    }
+
+    // Emit position event
+    this.emit('gnss-position-updated', position);
+  }
+
+  /**
+   * Create a position marker on the map
+   * @private
+   */
+  _createPositionMarker() {
+    if (!this.mapInterface) return;
+
+    // Check if we already have a marker
+    if (this.positionMarker) {
+      return;
+    }
+
+    // Create position marker (implementation depends on map adapter)
+    if (this.mapInterface && typeof this.mapInterface.createMarker === 'function') {
+      this.positionMarker = this.mapInterface.createMarker({
+        lat: 0,
+        lng: 0,
+      }, {
+        ...this.gnssOptions.trackedPositionMarkerStyle,
+        visible: false,
+        zIndex: 1000,
+      });
+    }
+
+    // Create accuracy circle if enabled
+    if (this.gnssOptions.accuracyCircle && typeof this.mapInterface.createCircle === 'function') {
+      this.accuracyCircle = this.mapInterface.createCircle({
+        lat: 0,
+        lng: 0,
+      }, 0, {
+        fillColor: 'rgba(66, 133, 244, 0.2)',
+        strokeColor: '#4285F4',
+        strokeWeight: 1,
+        visible: false,
+        zIndex: 999,
+      });
+    }
+  }
+
+  /**
+   * Update position marker with new position data
+   * @param {Object} position - GNSS position data
+   * @private
+   */
+  _updatePositionMarker(position) {
+    if (!position || !position.latitude || !position.longitude) {
+      return;
+    }
+
+    // Get style based on fix quality
+    const style = this._getPositionStyleByQuality(position.quality);
+
+    // Update position marker
+    if (this.positionMarker) {
+      this.positionMarker.setPosition({
+        lat: position.latitude,
+        lng: position.longitude,
+      });
+
+      if (typeof this.positionMarker.setStyle === 'function') {
+        this.positionMarker.setStyle(style);
+      }
+
+      if (typeof this.positionMarker.setVisible === 'function') {
+        this.positionMarker.setVisible(true);
+      }
+    }
+
+    // Update accuracy circle if enabled and accuracy data is available
+    if (this.accuracyCircle && position.accuracy) {
+      this.accuracyCircle.setCenter({
+        lat: position.latitude,
+        lng: position.longitude,
+      });
+
+      this.accuracyCircle.setRadius(position.accuracy);
+
+      if (typeof this.accuracyCircle.setVisible === 'function') {
+        this.accuracyCircle.setVisible(true);
+      }
+    }
+  }
+
+  /**
+   * Get position marker style based on fix quality
+   * @param {number} quality - GNSS fix quality (0-5)
+   * @returns {Object} Style object
+   * @private
+   */
+  _getPositionStyleByQuality(quality) {
+    const baseStyle = { ...this.gnssOptions.trackedPositionMarkerStyle };
+
+    // Adjust color based on quality
+    switch (quality) {
+    case 4: // RTK Fixed
+      baseStyle.color = '#4CAF50'; // Green
+      break;
+
+    case 5: // RTK Float
+      baseStyle.color = '#FF9800'; // Orange
+      break;
+
+    case 2: // DGPS
+      baseStyle.color = '#FFEB3B'; // Yellow
+      break;
+
+    case 1: // GPS
+      baseStyle.color = '#2196F3'; // Blue
+      break;
+
+    case 0: // No fix
+    default:
+      baseStyle.color = '#F44336'; // Red
+      break;
+    }
+
+    return baseStyle;
+  }
+
+  /**
+   * Capture a GNSS position as a feature
+   * @param {Object} [options] - Capture options
+   * @returns {Promise<PointFeature|null>} Created point feature or null
+   */
+  async captureGnssPosition(options = {}) {
+    if (!this.gnssModule || !this.currentPosition) {
+      console.warn('No GNSS position available');
+      return null;
+    }
+
+    const position = this.currentPosition;
+
+    try {
+      // Create a point feature from the current position
+      const { PointFeature } = await import('../features/PointFeature.js');
+      const { Coordinate } = await import('../core/Coordinate.js');
+
+      // Create coordinate
+      const coordinate = new Coordinate(
+        position.latitude,
+        position.longitude,
+        position.altitude || 0,
+      );
+
+      // Create style based on fix quality
+      const style = this._getPositionStyleByQuality(position.quality);
+
+      // Set default options
+      const captureOptions = Object.assign({
+        name: `GNSS Point ${new Date().toLocaleTimeString()}`,
+        properties: {
+          source: 'gnss',
+          quality: position.quality,
+          satellites: position.satellites,
+          accuracy: position.accuracy,
+          timestamp: position.timestamp || new Date().toISOString(),
+        },
+        style,
+      }, options);
+
+      // Create feature
+      const feature = new PointFeature(coordinate, captureOptions);
+
+      // Add to feature collection
+      this.features.addFeature(feature);
+
+      // Emit capture event
+      this.emit('gnss-position-captured', {
+        feature,
+        position,
+      });
+
+      return feature;
+    } catch (error) {
+      console.error('Error capturing GNSS position:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Disconnect from GNSS module
+   * @returns {boolean} Success of disconnection
+   */
+  disconnectGnssModule() {
+    if (!this.gnssModule) {
+      return true; // Already disconnected
+    }
+
+    try {
+      // Remove position marker
+      if (this.positionMarker) {
+        if (typeof this.positionMarker.setMap === 'function') {
+          this.positionMarker.setMap(null);
+        }
+        this.positionMarker = null;
+      }
+
+      // Remove accuracy circle
+      if (this.accuracyCircle) {
+        if (typeof this.accuracyCircle.setMap === 'function') {
+          this.accuracyCircle.setMap(null);
+        }
+        this.accuracyCircle = null;
+      }
+
+      // Clear current position
+      this.currentPosition = null;
+
+      // Reset GNSS module reference
+      this.gnssModule = null;
+
+      // Emit disconnected event
+      this.emit('gnss-disconnected');
+
+      return true;
+    } catch (error) {
+      console.error('Error disconnecting GNSS module:', error);
+      return false;
+    }
+  }
+
+  /**
    * Destroy the survey manager and clean up resources
    */
   destroy() {
+    // Disconnect GNSS module if connected
+    if (this.gnssModule) {
+      this.disconnectGnssModule();
+    }
+
     // Deactivate any active tool
     this.deactivateActiveTool();
-    
+
     // Remove all event listeners
     this.removeAllListeners();
-    
+
     // Destroy all tools
     Object.values(this.tools).forEach(tool => {
       if (typeof tool.destroy === 'function') {
         tool.destroy();
       }
     });
-    
+
     // Clear collections
     this.features.clear();
     this.workingFeatures.clear();
     this.selectedFeatures.clear();
-    
+
     // Clear history
     this.history.undoStack = [];
     this.history.redoStack = [];
-    
+
     // Emit destruction event
     this.emit('destroyed', { manager: this });
   }

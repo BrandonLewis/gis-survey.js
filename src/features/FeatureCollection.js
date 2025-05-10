@@ -2,7 +2,7 @@
  * Feature collection for managing groups of features
  * @module gnss/survey/features/FeatureCollection
  */
-import { EventEmitter } from '../../../gnss/event-emitter.js';
+import { EventEmitter } from '../core/event-emitter.js';
 import { FeatureBase } from './FeatureBase.js';
 import { PointFeature } from './PointFeature.js';
 import { LineFeature } from './LineFeature.js';

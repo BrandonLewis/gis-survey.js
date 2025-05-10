@@ -4,7 +4,7 @@
  * Part of the RTK Surveyor 3D-first implementation
  */
 
-import { EventEmitter } from '../../event-emitter.js';
+import { EventEmitter } from '../core/event-emitter.js';
 
 /**
  * @typedef {Object} ToolBaseOptions

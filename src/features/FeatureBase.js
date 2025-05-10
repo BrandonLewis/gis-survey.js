@@ -2,7 +2,7 @@
  * Base abstract class for all survey features
  * @module gnss/survey/features/FeatureBase
  */
-import { EventEmitter } from '../../../gnss/event-emitter.js';
+import { EventEmitter } from '../core/event-emitter.js';
 
 export class FeatureBase extends EventEmitter {
   /**

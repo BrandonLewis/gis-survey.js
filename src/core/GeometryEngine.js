@@ -14,6 +14,69 @@ import { CoordinateUtils } from './CoordinateUtils.js';
  */
 export class GeometryEngine {
   /**
+   * Calculate the total elevation gain along a path
+   * @param {Array<Coordinate>} coordinates - Array of coordinates representing the path
+   * @returns {number} Total elevation gain in meters
+   */
+  static calculateElevationGain(coordinates) {
+    if (!coordinates || coordinates.length < 2) {
+      return 0;
+    }
+
+    let totalGain = 0;
+
+    for (let i = 1; i < coordinates.length; i++) {
+      const prev = coordinates[i - 1];
+      const curr = coordinates[i];
+
+      // Skip if either coordinate doesn't have elevation data
+      if (prev.elevation === undefined || prev.elevation === null ||
+          curr.elevation === undefined || curr.elevation === null) {
+        continue;
+      }
+
+      // Only add positive elevation changes
+      const diff = curr.elevation - prev.elevation;
+      if (diff > 0) {
+        totalGain += diff;
+      }
+    }
+
+    return totalGain;
+  }
+
+  /**
+   * Calculate the total elevation loss along a path
+   * @param {Array<Coordinate>} coordinates - Array of coordinates representing the path
+   * @returns {number} Total elevation loss in meters (as a positive number)
+   */
+  static calculateElevationLoss(coordinates) {
+    if (!coordinates || coordinates.length < 2) {
+      return 0;
+    }
+
+    let totalLoss = 0;
+
+    for (let i = 1; i < coordinates.length; i++) {
+      const prev = coordinates[i - 1];
+      const curr = coordinates[i];
+
+      // Skip if either coordinate doesn't have elevation data
+      if (prev.elevation === undefined || prev.elevation === null ||
+          curr.elevation === undefined || curr.elevation === null) {
+        continue;
+      }
+
+      // Only add negative elevation changes (as positive values)
+      const diff = curr.elevation - prev.elevation;
+      if (diff < 0) {
+        totalLoss += Math.abs(diff);
+      }
+    }
+
+    return totalLoss;
+  }
+  /**
      * Get the Coordinate class
      * @returns {Object} Object containing the Coordinate class
      * @private
