@@ -770,8 +770,7 @@ export class OffsetTool extends ToolBase {
     }
     
     let offsetCoords;
-    let targetPoint;
-    
+
     if (this.options.mode === 'line') {
       // Parallel offset line
       offsetCoords = this.geometryEngine.createOffsetLine(

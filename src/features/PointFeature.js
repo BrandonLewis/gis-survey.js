@@ -29,26 +29,31 @@ export class PointFeature extends FeatureBase {
     } else if (typeof coordinate === 'object') {
       if (coordinate.latitude !== undefined && coordinate.longitude !== undefined) {
         // Object with latitude/longitude properties
-        const elevation = coordinate.elevation !== undefined ? coordinate.elevation : 
+        const elevationVal = coordinate.elevation !== undefined ? coordinate.elevation :
           (coordinate.alt !== undefined ? coordinate.alt : null);
-                
+
         // Create compatible coordinate object
         this.coordinate = {
           lat: coordinate.latitude,
           lng: coordinate.longitude,
-          elevation: elevation,
+          elevation: elevationVal,
           toString: function() { return `${this.lat}, ${this.lng}, ${this.elevation || 0}`; },
         };
       } else if (coordinate.lat !== undefined && coordinate.lng !== undefined) {
         // Google Maps-style object with lat/lng - use directly with minimal modifications
-        const elevation = coordinate.elevation !== undefined ? coordinate.elevation : 
+        const elevationVal = coordinate.elevation !== undefined ? coordinate.elevation :
           (coordinate.alt !== undefined ? coordinate.alt : null);
-                
+
         // Ensure it has all expected properties
         if (!coordinate.toString) {
           coordinate.toString = function() { return `${this.lat}, ${this.lng}, ${this.elevation || 0}`; };
         }
-                
+
+        // Store elevation if available
+        if (elevationVal !== null && elevationVal !== undefined) {
+          coordinate.elevation = elevationVal;
+        }
+
         this.coordinate = coordinate;
       } else if (Array.isArray(coordinate) && coordinate.length >= 2) {
         // Array [lng, lat, elevation] (GeoJSON style)
@@ -288,7 +293,7 @@ export class PointFeature extends FeatureBase {
      * @param {Object} [options] - Import options
      * @returns {boolean} - Success status
      */
-  fromGeoJSON(geojson, options = {}) {
+  fromGeoJSON(geojson, _options = {}) {
     if (!geojson || geojson.type !== 'Feature' || !geojson.geometry || 
             geojson.geometry.type !== 'Point' || !Array.isArray(geojson.geometry.coordinates)) {
       return false;

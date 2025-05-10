@@ -469,7 +469,7 @@ export class LineFeature extends FeatureBase {
      * @param {Object} [options] - Import options
      * @returns {boolean} - Success status
      */
-  fromGeoJSON(geojson, options = {}) {
+  fromGeoJSON(geojson, _options = {}) {
     if (!geojson || geojson.type !== 'Feature' || !geojson.geometry) {
       return false;
     }

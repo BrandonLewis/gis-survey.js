@@ -986,7 +986,7 @@ export class GeometryEngine {
      * @private
      */
   static _calculate2DSphericalArea(coordinates) {
-    const R = this._EARTH_RADIUS_M;
+    // We don't need R here since it's used in _calculateSphericalTriangleArea
     let area = 0;
 
     // For more than 3 coordinates, we compute the area using a sum of spherical triangles
@@ -1048,7 +1048,7 @@ export class GeometryEngine {
      * @returns {number} Area in square meters
      * @private
      */
-  static _calculateAreaWithTriangulation(coordinates, options) {
+  static _calculateAreaWithTriangulation(coordinates, _options) {
     // For simplicity in this implementation, we'll assume the polygon is not self-intersecting
     // A full implementation would use ear clipping or other triangulation methods
 

@@ -405,7 +405,7 @@ export class SurveyManager extends EventEmitter {
    * @param {Object} [options] - Save options
    * @returns {Object} Survey data object
    */
-  saveState(options = {}) {
+  saveState(_options = {}) {
     const surveyData = {
       metadata: { ...this.metadata },
       features: this.features.toGeoJSON(),
@@ -427,7 +427,7 @@ export class SurveyManager extends EventEmitter {
    * @param {Object} [options] - Load options
    * @returns {boolean} Success of load operation
    */
-  loadState(surveyData, options = {}) {
+  loadState(surveyData, _options = {}) {
     if (!surveyData || !surveyData.features) {
       console.error('Invalid survey data format');
       return false;

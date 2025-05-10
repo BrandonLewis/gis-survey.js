@@ -55,7 +55,13 @@ export class DrawingTool extends ToolBase {
       enable3D: true,
       continuousDrawing: false,
       freehandSamplingInterval: 5, // meters
-      pointSymbol: this.manager.settings.defaultPointSymbol,
+      pointSymbol: Object.assign({
+        size: 32, // Larger size for better visibility
+        color: '#FF5733', // Orange color
+        outlineWidth: 2,
+        outlineColor: 'white',
+        useDualMarker: true, // Use the pin+dot style for better positioning feedback
+      }, this.manager.settings.defaultPointSymbol || {}),
       lineSymbol: this.manager.settings.defaultLineSymbol,
       // Enhanced lineSymbol with style for preview line
       previewLineSymbol: {
@@ -78,8 +84,8 @@ export class DrawingTool extends ToolBase {
         color: '#3388FF',
         outlineWidth: 2,
         outlineColor: 'white',
-        // Use dual marker for vertices too for better position clarity
-        useDualMarker: true,
+        // Don't use dual marker for vertices - use centered circle for precision
+        useDualMarker: false,
       },
       // Enhanced vertexSymbol with style for active vertices
       activeVertexSymbol: {
@@ -88,8 +94,8 @@ export class DrawingTool extends ToolBase {
         color: '#3388FF',
         outlineWidth: 2,
         outlineColor: 'white',
-        // Use dual marker for vertices too for better position clarity
-        useDualMarker: true,
+        // Don't use dual marker for vertices - use centered circle for precision
+        useDualMarker: false,
       },
     }, options);
     
@@ -154,10 +160,7 @@ export class DrawingTool extends ToolBase {
       
       // Create a new drawing based on the current mode
       this._startNewDrawing();
-      
-      // Log activation state for debugging
-      console.log(`DrawingTool activated with mode=${this.options.mode}, continuousDrawing=${this.options.continuousDrawing}`);
-      
+
       // Emit activation event with mode
       this.emit('activated', {
         mode: this.options.mode,
@@ -250,7 +253,6 @@ export class DrawingTool extends ToolBase {
         },
         style: this.options.previewLineSymbol || this.options.lineSymbol,
       });
-      console.log('Created new empty LineFeature for drawing with preview style');
       break;
         
     case 'polygon':
@@ -274,7 +276,6 @@ export class DrawingTool extends ToolBase {
           },
           style: this.options.previewPolygonSymbol || this.options.polygonSymbol,
         });
-        console.log('Created new PolygonFeature for drawing with preview style');
       } catch (error) {
         console.error('Error creating polygon feature:', error);
         // If polygon creation fails, create a line instead as fallback
@@ -304,7 +305,6 @@ export class DrawingTool extends ToolBase {
         },
         style: this.options.previewLineSymbol || this.options.lineSymbol,
       });
-      console.log('Created new empty LineFeature for freehand drawing with preview style');
       break;
     }
     
@@ -372,7 +372,7 @@ export class DrawingTool extends ToolBase {
       hasPixel: !!event.pixel,
       pixel: event.pixel ? `[${event.pixel[0]}, ${event.pixel[1]}]` : 'N/A',
     });
-    
+
     // Skip freehand mode (handled by mousedown/mouseup)
     if (this.options.mode === 'freehand') {
       console.log('Skipping click in freehand mode');
@@ -387,10 +387,8 @@ export class DrawingTool extends ToolBase {
       // Use the snapped coordinate instead of the raw click coordinate
       const snap = this.manager.snappingManager.getSnapPoint();
       coordinate = snap.coordinate;
-      console.log('Using snapped coordinate:', coordinate);
     } else if (event.coordinate) {
       coordinate = event.coordinate;
-      console.log('Using coordinate from event object:', coordinate);
     } else if (event.originalEvent && event.latLng) {
       // Handle Google Maps native events if adapter didn't convert properly
       coordinate = {
@@ -398,45 +396,36 @@ export class DrawingTool extends ToolBase {
         lng: event.latLng.lng(),
         elevation: 0,
       };
-      console.log('Using raw coordinates from Google Maps event:', coordinate);
     } else {
       console.error('❌ ERROR: Invalid click event, no coordinate found', event);
       return;
     }
-    
-    console.log(`DrawingTool handling click in ${this.options.mode} mode at:`, 
-      coordinate.lat, coordinate.lng, `(continuousDrawing=${this.options.continuousDrawing})`);
     
     try {
       // Handle based on mode
       switch (this.options.mode) {
       case 'point':
         // Create a point at the clicked location
-        console.log('Creating point feature at click location');
         this._createPoint(coordinate);
         break;
           
       case 'line':
       case 'polygon':
         // Add vertex to the feature
-        console.log(`Adding vertex to ${this.options.mode} at click location`);
         this._addVertex(coordinate);
         break;
       }
       
-      console.log('✅ Click successfully processed');
     } catch (error) {
       console.error(`❌ ERROR handling map click in ${this.options.mode} mode:`, error);
       
       // On error, try to recover by starting a new drawing
       // This prevents the tool from getting stuck in a broken state
-      console.log('Attempting to recover by starting a new drawing');
       setTimeout(() => {
         this._startNewDrawing();
       }, 10);
     }
     
-    console.log('======== END CLICK EVENT ========');
   }
   
   /**
@@ -632,7 +621,7 @@ export class DrawingTool extends ToolBase {
    * @param {Object} event - The map mouseup event
    * @private
    */
-  _handleMapMouseUp(event) {
+  _handleMapMouseUp(_event) {
     // End freehand drawing
     if (this.options.mode === 'freehand' && this.workingData.isDragging) {
       this.workingData.isDragging = false;
@@ -730,14 +719,19 @@ export class DrawingTool extends ToolBase {
         throw new Error('Invalid coordinate');
       }
       
-      // Create a style object with dual marker enabled
+      // Create the point style object
       const pointStyle = {
         ...this.options.pointSymbol,
-        useDualMarker: true, // Enable the pin + dot dual marker for better position clarity
+        // Use dual marker for points by default for better visual cues
+        // This shows both a pin and a dot at the exact location
+        useDualMarker: true,
       };
       
+      // Create a unique ID for debugging purposes
+      const pointId = `point-${Date.now()}`;
+
       const pointFeature = new PointFeature(validCoord, {
-        id: `point-${Date.now()}`,
+        id: pointId,
         properties: {
           type: 'drawing',
           drawingType: 'point',
@@ -745,8 +739,13 @@ export class DrawingTool extends ToolBase {
         },
         style: pointStyle,
       });
-      
-      console.log(`Created point at ${validCoord.lat}, ${validCoord.lng}`);
+
+      // Enhanced debugging for point creation
+      console.log('---------- POINT CREATION ----------');
+      console.log(`Created point with ID: ${pointId}`);
+      console.log(`At exact coordinate: ${validCoord.lat.toFixed(8)}, ${validCoord.lng.toFixed(8)}`);
+      console.log(`Using style: ${JSON.stringify(pointStyle)}`);
+      console.log('------------------------------------');
       
       // Apply 3D elevation if enabled
       if (this.options.enable3D) {
@@ -1186,7 +1185,7 @@ export class DrawingTool extends ToolBase {
           } else {
             finalFeature.setName(`Polygon with ${polygonCoordinates.length} vertices`);
           }
-        } catch (error) {
+        } catch (/* eslint-disable-line no-unused-vars */ error) {
           // Fallback naming if there's any issue getting the center
           finalFeature.setName(`Polygon with ${polygonCoordinates.length} vertices`);
         }

@@ -617,7 +617,7 @@ export class MeasurementTool extends ToolBase {
       
       // Create segment labels if enabled
       if (this.options.showSegmentLengths && segmentValues.length > 0) {
-        segmentValues.forEach((segment, index) => {
+        segmentValues.forEach((segment, _index) => {
           // Skip if segment value is 0
           if (segment.value <= 0) {
             return;

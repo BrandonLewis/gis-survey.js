@@ -22,7 +22,7 @@ export class Map3DInterface extends MapInterface {
      * @param {number} angle - The tilt angle in degrees (0 = looking straight down)
      * @returns {Promise<void>} - Promise that resolves when the tilt is set
      */
-  async setTilt(angle) {
+  async setTilt(_angle) {
     throw new Error('Method \'setTilt()\' must be implemented.');
   }
     
@@ -31,7 +31,7 @@ export class Map3DInterface extends MapInterface {
      * @param {number} angle - The heading angle in degrees (0 = north)
      * @returns {Promise<void>} - Promise that resolves when the heading is set
      */
-  async setHeading(angle) {
+  async setHeading(_angle) {
     throw new Error('Method \'setHeading()\' must be implemented.');
   }
     
@@ -52,7 +52,7 @@ export class Map3DInterface extends MapInterface {
      * @param {number} position.tilt - The tilt angle in degrees
      * @returns {Promise<void>} - Promise that resolves when the position is set
      */
-  async setCameraPosition(position) {
+  async setCameraPosition(_position) {
     throw new Error('Method \'setCameraPosition()\' must be implemented.');
   }
     
@@ -62,7 +62,7 @@ export class Map3DInterface extends MapInterface {
      * @param {Object} options - Configuration options for the model
      * @returns {Promise<Object>} - Promise that resolves with the model object
      */
-  async addModel(coordinate, options = {}) {
+  async addModel(_coordinate, _options = {}) {
     throw new Error('Method \'addModel()\' must be implemented.');
   }
     
@@ -71,7 +71,7 @@ export class Map3DInterface extends MapInterface {
      * @param {Object} model - The model to remove
      * @returns {Promise<void>} - Promise that resolves when the model is removed
      */
-  async removeModel(model) {
+  async removeModel(_model) {
     throw new Error('Method \'removeModel()\' must be implemented.');
   }
     
@@ -80,7 +80,7 @@ export class Map3DInterface extends MapInterface {
      * @param {Object} options - Configuration options for the terrain
      * @returns {Promise<Object>} - Promise that resolves with the terrain object
      */
-  async addTerrain(options = {}) {
+  async addTerrain(_options = {}) {
     throw new Error('Method \'addTerrain()\' must be implemented.');
   }
     
@@ -97,7 +97,7 @@ export class Map3DInterface extends MapInterface {
      * @param {number} factor - The exaggeration factor (1.0 = normal)
      * @returns {Promise<void>} - Promise that resolves when exaggeration is set
      */
-  async setTerrainExaggeration(factor) {
+  async setTerrainExaggeration(_factor) {
     throw new Error('Method \'setTerrainExaggeration()\' must be implemented.');
   }
 }

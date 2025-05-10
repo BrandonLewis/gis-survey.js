@@ -20,7 +20,7 @@ export class MapInterface {
      * @param {string} cursorType - CSS cursor value (e.g., 'default', 'pointer', 'crosshair')
      * @returns {void}
      */
-  setCursor(cursorType) {
+  setCursor(_cursorType) {
     throw new Error('Method \'setCursor()\' must be implemented.');
   }
     
@@ -29,7 +29,7 @@ export class MapInterface {
      * @param {string|HTMLElement} container - The HTML element or element ID to contain the map
      * @returns {Promise<void>} - Promise that resolves when the map is initialized
      */
-  async initialize(container) {
+  async initialize(_container) {
     throw new Error('Method \'initialize()\' must be implemented.');
   }
     
@@ -38,7 +38,7 @@ export class MapInterface {
      * @param {Coordinate} coordinate - The coordinate to center the map on
      * @returns {Promise<void>} - Promise that resolves when the map is centered
      */
-  async setCenter(coordinate) {
+  async setCenter(_coordinate) {
     throw new Error('Method \'setCenter()\' must be implemented.');
   }
     
@@ -47,7 +47,7 @@ export class MapInterface {
      * @param {number} zoomLevel - The zoom level to set
      * @returns {Promise<void>} - Promise that resolves when the zoom is set
      */
-  async setZoom(zoomLevel) {
+  async setZoom(_zoomLevel) {
     throw new Error('Method \'setZoom()\' must be implemented.');
   }
     
@@ -57,7 +57,7 @@ export class MapInterface {
      * @param {Object} options - Configuration options for the marker
      * @returns {Promise<Object>} - Promise that resolves with the created marker instance
      */
-  async addMarker(coordinate, options = {}) {
+  async addMarker(_coordinate, _options = {}) {
     throw new Error('Method \'addMarker()\' must be implemented.');
   }
     
@@ -66,7 +66,7 @@ export class MapInterface {
      * @param {Object} marker - The marker instance to remove
      * @returns {Promise<void>} - Promise that resolves when the marker is removed
      */
-  async removeMarker(marker) {
+  async removeMarker(_marker) {
     throw new Error('Method \'removeMarker()\' must be implemented.');
   }
     
@@ -76,7 +76,7 @@ export class MapInterface {
      * @param {Object} options - Configuration options for the polyline
      * @returns {Promise<Object>} - Promise that resolves with the created polyline instance
      */
-  async addPolyline(coordinates, options = {}) {
+  async addPolyline(_coordinates, _options = {}) {
     throw new Error('Method \'addPolyline()\' must be implemented.');
   }
     
@@ -85,7 +85,7 @@ export class MapInterface {
      * @param {Object} polyline - The polyline instance to remove
      * @returns {Promise<void>} - Promise that resolves when the polyline is removed
      */
-  async removePolyline(polyline) {
+  async removePolyline(_polyline) {
     throw new Error('Method \'removePolyline()\' must be implemented.');
   }
     
@@ -95,7 +95,7 @@ export class MapInterface {
      * @param {Object} options - Configuration options for the polygon
      * @returns {Promise<Object>} - Promise that resolves with the created polygon instance
      */
-  async addPolygon(coordinates, options = {}) {
+  async addPolygon(_coordinates, _options = {}) {
     throw new Error('Method \'addPolygon()\' must be implemented.');
   }
     
@@ -104,7 +104,7 @@ export class MapInterface {
      * @param {Object} polygon - The polygon instance to remove
      * @returns {Promise<void>} - Promise that resolves when the polygon is removed
      */
-  async removePolygon(polygon) {
+  async removePolygon(_polygon) {
     throw new Error('Method \'removePolygon()\' must be implemented.');
   }
     
@@ -122,7 +122,7 @@ export class MapInterface {
      * @param {Object} options - Configuration options for fitting
      * @returns {Promise<void>} - Promise that resolves when the map is fitted to bounds
      */
-  async fitBounds(bounds, options = {}) {
+  async fitBounds(_bounds, _options = {}) {
     throw new Error('Method \'fitBounds()\' must be implemented.');
   }
     
@@ -132,7 +132,7 @@ export class MapInterface {
      * @param {Function} listener - The callback function to execute when the event occurs
      * @returns {Promise<Object>} - Promise that resolves with the listener handle
      */
-  async addEventListener(eventType, listener) {
+  async addEventListener(_eventType, _listener) {
     throw new Error('Method \'addEventListener()\' must be implemented.');
   }
     
@@ -142,7 +142,7 @@ export class MapInterface {
      * @param {Object} listenerHandle - The listener handle to remove
      * @returns {Promise<void>} - Promise that resolves when the listener is removed
      */
-  async removeEventListener(eventType, listenerHandle) {
+  async removeEventListener(_eventType, _listenerHandle) {
     throw new Error('Method \'removeEventListener()\' must be implemented.');
   }
     
@@ -151,7 +151,7 @@ export class MapInterface {
      * @param {Coordinate} coordinate - The coordinate to get elevation for
      * @returns {Promise<number>} - Promise that resolves with the elevation in meters
      */
-  async getElevation(coordinate) {
+  async getElevation(_coordinate) {
     throw new Error('Method \'getElevation()\' must be implemented.');
   }
     
@@ -160,7 +160,7 @@ export class MapInterface {
      * @param {Array<Coordinate>} coordinates - Array of coordinates for the path
      * @returns {Promise<Array<number>>} - Promise that resolves with array of elevations in meters
      */
-  async getElevationsForPath(coordinates) {
+  async getElevationsForPath(_coordinates) {
     throw new Error('Method \'getElevationsForPath()\' must be implemented.');
   }
     
@@ -169,7 +169,7 @@ export class MapInterface {
      * @param {Coordinate} coordinate - The geographic coordinate to convert
      * @returns {Array<number>} - [x, y] pixel coordinates
      */
-  coordinateToPixel(coordinate) {
+  coordinateToPixel(_coordinate) {
     throw new Error('Method \'coordinateToPixel()\' must be implemented.');
   }
     
@@ -178,7 +178,7 @@ export class MapInterface {
      * @param {Array<number>} pixel - [x, y] pixel coordinates
      * @returns {Coordinate} - The geographic coordinate
      */
-  pixelToCoordinate(pixel) {
+  pixelToCoordinate(_pixel) {
     throw new Error('Method \'pixelToCoordinate()\' must be implemented.');
   }
 }

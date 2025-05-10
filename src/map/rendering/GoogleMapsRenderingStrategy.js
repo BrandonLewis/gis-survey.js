@@ -36,8 +36,17 @@ export class GoogleMapsRenderingStrategy extends RenderingStrategy {
       if (!coordinate) {
         throw new Error('Invalid point feature: no coordinate found');
       }
-            
+
+      // Enhanced debug logging - clearly mark the start of point rendering
+      console.log('========== RENDERING POINT ==========');
+      console.log(`Coordinate: ${coordinate.lat.toFixed(6)}, ${coordinate.lng.toFixed(6)}`);
+      console.log(`Feature ID: ${feature.id || 'unknown'}`);
+      console.log(`Source: ${feature.properties?.source || 'standard'}`);
+
       const style = feature.style || options.style || this.options.defaultPointStyle || {};
+      console.log(`Marker style: ${style.useDualMarker ? 'dual-marker' : (style.iconUrl ? 'image' : 'circle')}`);
+      console.log(`Marker color: ${style.color || 'default'}`);
+      console.log('=======================================');
             
       // Check for availability of Advanced Markers
       if (!this._isAdvancedMarkerAvailable()) {
@@ -758,166 +767,126 @@ export class GoogleMapsRenderingStrategy extends RenderingStrategy {
         
     // Check if we're using a dual-element marker (pin + centered dot)
     if (style.useDualMarker || style.showPinAndDot) {
-      // Pin height and width - using 32px as default standard marker size
-      const pinWidth = 32;
-      const pinHeight = 48; // Taller for the pin
-      const dotSize = 8; // Size of the center dot
-            
-      // Create container for the dual-element marker
-      // Using position:absolute for the elements inside
+      // Enhanced traditional pin marker
+      const size = style.size || 32; // Larger default size
+      
+      // Create the main container div - this will be centered on the coordinate by Google Maps
       const container = document.createElement('div');
-            
-      // For Advanced Markers, we need to use proper CSS positioning
-      // The key is to offset the entire container so that the dot aligns with the coordinate
       container.style.position = 'relative';
-            
-      // The container needs to accommodate the pin
-      container.style.width = `${pinWidth}px`;
-      container.style.height = `${pinHeight}px`;
-            
-      // Critical: shift the entire container so the bottom center (where the pin touches)
-      // is aligned with the geographic coordinate in Google Maps
-      container.style.transform = `translate(-${pinWidth/2}px, -${pinHeight}px)`;
-            
-      // 1. Create the pin element first - positioned relative to container
-      const pinElement = document.createElement('div');
-      pinElement.style.position = 'absolute';
-      pinElement.style.width = `${pinWidth}px`;
-      pinElement.style.height = `${pinHeight}px`;
-      pinElement.style.left = '0';
-      pinElement.style.top = '0';
-            
-      // Create the actual pin using SVG for maximum control
-      const pinSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      pinSvg.setAttribute('width', pinWidth);
-      pinSvg.setAttribute('height', pinHeight);
-      pinSvg.setAttribute('viewBox', '0 0 32 48');
-            
-      // Draw the pin shape - standard map pin with pointed bottom
-      const pinPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      pinPath.setAttribute('d', 'M16 0C7.2 0 0 7.2 0 16c0 9.6 16 32 16 32s16-22.4 16-32c0-8.8-7.2-16-16-16z');
-      pinPath.setAttribute('fill', color || '#FF9800'); // Use orange as default for pin
-            
-      // Add outer stroke to the pin
-      pinPath.setAttribute('stroke', style.outlineColor || 'white');
-      pinPath.setAttribute('stroke-width', style.outlineWidth || '2');
-            
+      container.style.width = '0';  // Zero width container
+      container.style.height = '0';  // Zero height container
+      
+      // Create an SVG pin instead of using div
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('width', `${size}px`);
+      svg.setAttribute('height', `${size * 1.6}px`); // Taller for pin shape
+      svg.setAttribute('viewBox', '0 0 32 52');
+      svg.style.position = 'absolute';
+      svg.style.left = `${-size/2}px`;  // Center horizontally
+      svg.style.top = `${-size * 1.6}px`;  // Position above the coordinate point
+      
+      // Create the traditional teardrop/pin shape
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', 'M16 0C7.2 0 0 7.2 0 16c0 9.6 16 36 16 36s16-26.4 16-36c0-8.8-7.2-16-16-16z');
+      path.setAttribute('fill', color);
+      path.setAttribute('stroke', style.outlineColor || 'white');
+      path.setAttribute('stroke-width', style.outlineWidth || 2);
+      
       // Add the path to the SVG
-      pinSvg.appendChild(pinPath);
-      pinElement.appendChild(pinSvg);
-            
-      // 2. Create the centered dot to mark the exact coordinate
+      svg.appendChild(path);
+      
+      // Create a small dot at the exact coordinate point
       const dotElement = document.createElement('div');
       dotElement.style.position = 'absolute';
-      dotElement.style.width = `${dotSize}px`;
-      dotElement.style.height = `${dotSize}px`;
+      dotElement.style.width = '6px';
+      dotElement.style.height = '6px';
+      dotElement.style.left = '-3px';  // Center the dot
+      dotElement.style.top = '-3px';   // Center the dot
+      dotElement.style.backgroundColor = 'black';
+      dotElement.style.border = '1px solid white';
       dotElement.style.borderRadius = '50%';
-      dotElement.style.backgroundColor = 'black'; // Always black for visibility
-      dotElement.style.border = '1px solid white'; // White border for contrast
-            
-      // Position the dot at the exact coordinate position
-      // This is critical: the dot should be at the bottom center of the pin
-      // where it touches the ground
-      dotElement.style.left = `${(pinWidth - dotSize) / 2}px`;
-      dotElement.style.top = `${pinHeight - (dotSize / 2)}px`;
-      dotElement.style.zIndex = '10'; // Ensure it's on top
-            
-      // Add both elements to the container
-      container.appendChild(pinElement);
+      dotElement.style.zIndex = '10';
+      
+      // Add elements to container
+      container.appendChild(svg);
       container.appendChild(dotElement);
-            
-      // Return the marker content - no position needed as we're using CSS transform
-      return {
-        content: container,
-        // Important: No position property needed for AdvancedMarker
-        // because we're handling the positioning with CSS transforms
-      };
+      
+      // Log for debugging
+      console.log('Created SVG pin marker with absolute positioning from center');
+      
+      return { content: container };
     } else if (style.iconUrl) {
-      // Image icon for advanced marker
-      const img = document.createElement('img');
-      img.src = style.iconUrl;
-            
-      // Get image dimensions
+      // SIMPLE APPROACH: Image marker with absolute positioning
       const width = style.iconSize?.[0] || 32;
       const height = style.iconSize?.[1] || 32;
-            
-      // Set image size
+      
+      // Create the main container div - this will be centered on the coordinate by Google Maps
+      const container = document.createElement('div');
+      container.style.position = 'relative';
+      container.style.width = '0';  // Zero width container
+      container.style.height = '0';  // Zero height container
+      
+      // Create and position the image element
+      const img = document.createElement('img');
+      img.src = style.iconUrl;
+      img.style.position = 'absolute';
       img.style.width = `${width}px`;
       img.style.height = `${height}px`;
-            
-      // Create container div to allow for centering the image on the coordinates
-      const container = document.createElement('div');
-      container.style.position = 'relative';
-            
-      // Set container dimensions
-      container.style.width = `${width}px`;
-      container.style.height = `${height}px`;
-            
-      // Transform to center the image on the coordinate point
-      container.style.transform = `translate(-${width/2}px, -${height/2}px)`;
-            
-      // Append the image to the container
+      img.style.left = `${-width/2}px`;  // Center horizontally
+      img.style.top = `${-height}px`;    // Bottom edge at the coordinate
+      
+      // Add the image to the container
       container.appendChild(img);
-            
-      // Return the marker content - no position needed as we're using CSS transform
-      return {
-        content: container,
-      };
+      
+      // Log for debugging
+      console.log('Created image marker with absolute positioning from center');
+      
+      return { content: container };
     } else {
-      // SVG circle for advanced marker
+      // SIMPLE APPROACH: Circle marker centered exactly on the coordinate
       const size = style.size || 10;
-      const diameter = size * 2;
-            
-      // Create container div for centering
-      const container = document.createElement('div');
-      container.style.position = 'relative';
-      container.style.width = `${diameter}px`;
-      container.style.height = `${diameter}px`;
-            
-      // Transform to center the circle on the coordinate point
-      container.style.transform = `translate(-${diameter/2}px, -${diameter/2}px)`;
-            
+      
       // Create the circle element
       const circleDiv = document.createElement('div');
-      circleDiv.style.width = '100%';
-      circleDiv.style.height = '100%';
+      circleDiv.style.width = `${size * 2}px`;
+      circleDiv.style.height = `${size * 2}px`;
       circleDiv.style.borderRadius = '50%';
       circleDiv.style.backgroundColor = color;
       circleDiv.style.border = `${style.outlineWidth || 2}px solid ${style.outlineColor || 'white'}`;
-      circleDiv.style.boxSizing = 'border-box'; // Ensure border is included in the size
-      circleDiv.style.position = 'relative'; // For positioning crosshair elements
-            
-      // Create horizontal crosshair line
-      const horizontalLine = document.createElement('div');
-      horizontalLine.style.position = 'absolute';
-      horizontalLine.style.width = '80%'; // Make it slightly smaller than the circle diameter
-      horizontalLine.style.height = '1px'; // 1px thin line
-      horizontalLine.style.backgroundColor = 'black';
-      horizontalLine.style.left = '10%'; // Center it
-      horizontalLine.style.top = '50%'; // Middle of the circle
-      horizontalLine.style.transform = 'translateY(-0.5px)'; // Ensure precise centering
-            
-      // Create vertical crosshair line
-      const verticalLine = document.createElement('div');
-      verticalLine.style.position = 'absolute';
-      verticalLine.style.width = '1px'; // 1px thin line
-      verticalLine.style.height = '80%'; // Make it slightly smaller than the circle diameter
-      verticalLine.style.backgroundColor = 'black';
-      verticalLine.style.left = '50%'; // Center it
-      verticalLine.style.top = '10%'; // Top position
-      verticalLine.style.transform = 'translateX(-0.5px)'; // Ensure precise centering
-            
-      // Add crosshair elements to the circle
-      circleDiv.appendChild(horizontalLine);
-      circleDiv.appendChild(verticalLine);
-            
-      // Add circle to container
-      container.appendChild(circleDiv);
-            
-      // Return the marker content - no position needed as we're using CSS transform
-      return {
-        content: container,
-      };
+      circleDiv.style.boxSizing = 'border-box';
+      circleDiv.style.position = 'relative';
+      
+      // Position exactly at the center
+      circleDiv.style.margin = `${-size}px 0 0 ${-size}px`;
+      
+      // Add crosshair if needed
+      if (style.showCrosshair) {
+        // Horizontal line
+        const hLine = document.createElement('div');
+        hLine.style.position = 'absolute';
+        hLine.style.width = '80%';
+        hLine.style.height = '1px';
+        hLine.style.backgroundColor = 'black';
+        hLine.style.left = '10%';
+        hLine.style.top = '50%';
+        
+        // Vertical line
+        const vLine = document.createElement('div');
+        vLine.style.position = 'absolute';
+        vLine.style.width = '1px';
+        vLine.style.height = '80%';
+        vLine.style.backgroundColor = 'black';
+        vLine.style.left = '50%';
+        vLine.style.top = '10%';
+        
+        circleDiv.appendChild(hLine);
+        circleDiv.appendChild(vLine);
+      }
+      
+      // Log for debugging
+      console.log('Created circle marker centered on coordinate');
+      
+      return { content: circleDiv };
     }
   }
     

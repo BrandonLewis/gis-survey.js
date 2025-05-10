@@ -74,7 +74,7 @@ export class FeatureBase extends EventEmitter {
      * @param {Object} [options] - Tolerance and other options
      * @returns {boolean} - True if the feature contains the coordinate
      */
-  contains(coordinate, options = {}) {
+  contains(_coordinate, _options = {}) {
     throw new Error('Method \'contains()\' must be implemented.');
   }
     
@@ -83,7 +83,7 @@ export class FeatureBase extends EventEmitter {
      * @param {Coordinate} coordinate - The reference coordinate
      * @returns {Object} - Object with the nearest point and distance
      */
-  nearest(coordinate) {
+  nearest(_coordinate) {
     throw new Error('Method \'nearest()\' must be implemented.');
   }
     
@@ -92,7 +92,7 @@ export class FeatureBase extends EventEmitter {
      * @param {Object} [options] - Export options
      * @returns {Object} - GeoJSON representation of the feature
      */
-  toGeoJSON(options = {}) {
+  toGeoJSON(_options = {}) {
     throw new Error('Method \'toGeoJSON()\' must be implemented.');
   }
     
@@ -102,7 +102,7 @@ export class FeatureBase extends EventEmitter {
      * @param {Object} [options] - Import options
      * @returns {boolean} - Success status
      */
-  fromGeoJSON(geojson, options = {}) {
+  fromGeoJSON(_geojson, _options = {}) {
     throw new Error('Method \'fromGeoJSON()\' must be implemented.');
   }
     

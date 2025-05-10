@@ -24,7 +24,7 @@ export class RenderingStrategy {
      * @param {Object} options - Rendering options
      * @returns {Promise<Object>} - Promise that resolves with the rendered feature object
      */
-  async renderPoint(feature, options = {}) {
+  async renderPoint(_feature, _options = {}) {
     throw new Error('Method \'renderPoint()\' must be implemented.');
   }
     
@@ -35,7 +35,7 @@ export class RenderingStrategy {
      * @param {Object} options - Rendering options
      * @returns {Promise<Object>} - Promise that resolves with the rendered feature object
      */
-  async renderLine(feature, options = {}) {
+  async renderLine(_feature, _options = {}) {
     throw new Error('Method \'renderLine()\' must be implemented.');
   }
     
@@ -47,7 +47,7 @@ export class RenderingStrategy {
      * @param {Object} options - Rendering options
      * @returns {Promise<Object>} - Promise that resolves with the rendered feature object
      */
-  async renderPolygon(feature, options = {}) {
+  async renderPolygon(_feature, _options = {}) {
     throw new Error('Method \'renderPolygon()\' must be implemented.');
   }
     
@@ -56,7 +56,7 @@ export class RenderingStrategy {
      * @param {Object} renderedFeature - The rendered feature to remove
      * @returns {Promise<void>} - Promise that resolves when the feature is removed
      */
-  async removeFeature(renderedFeature) {
+  async removeFeature(_renderedFeature) {
     throw new Error('Method \'removeFeature()\' must be implemented.');
   }
     
@@ -67,7 +67,7 @@ export class RenderingStrategy {
      * @param {Object} options - Rendering options
      * @returns {Promise<Object>} - Promise that resolves with the updated rendered feature
      */
-  async updateFeature(renderedFeature, updatedFeature, options = {}) {
+  async updateFeature(_renderedFeature, _updatedFeature, _options = {}) {
     throw new Error('Method \'updateFeature()\' must be implemented.');
   }
     
@@ -77,7 +77,7 @@ export class RenderingStrategy {
      * @param {Object} options - Highlight options
      * @returns {Promise<void>} - Promise that resolves when the feature is highlighted
      */
-  async highlightFeature(renderedFeature, options = {}) {
+  async highlightFeature(_renderedFeature, _options = {}) {
     throw new Error('Method \'highlightFeature()\' must be implemented.');
   }
     
@@ -86,7 +86,7 @@ export class RenderingStrategy {
      * @param {Object} renderedFeature - The rendered feature to unhighlight
      * @returns {Promise<void>} - Promise that resolves when the highlight is removed
      */
-  async unhighlightFeature(renderedFeature) {
+  async unhighlightFeature(_renderedFeature) {
     throw new Error('Method \'unhighlightFeature()\' must be implemented.');
   }
 }

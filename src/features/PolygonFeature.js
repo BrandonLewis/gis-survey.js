@@ -390,7 +390,7 @@ export class PolygonFeature extends FeatureBase {
      * @param {Object} [options] - Tolerance and other options
      * @returns {boolean} - True if the polygon contains the coordinate
      */
-  contains(coordinate, options = {}) {
+  contains(coordinate, _options = {}) {
     if (!(coordinate instanceof Coordinate)) {
       throw new Error('Coordinate must be an instance of Coordinate class');
     }
@@ -543,7 +543,7 @@ export class PolygonFeature extends FeatureBase {
      * @param {Object} [options] - Import options
      * @returns {boolean} - Success status
      */
-  fromGeoJSON(geojson, options = {}) {
+  fromGeoJSON(geojson, _options = {}) {
     if (!geojson || geojson.type !== 'Feature' || !geojson.geometry || 
             geojson.geometry.type !== 'Polygon' || !Array.isArray(geojson.geometry.coordinates)) {
       return false;
