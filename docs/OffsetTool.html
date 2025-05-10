@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> OffsetTool</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-gnss_survey_features.html">gnss/survey/features</a></li><li><a href="module-gnss_survey_features_FeatureBase.html">gnss/survey/features/FeatureBase</a></li><li><a href="module-gnss_survey_features_FeatureCollection.html">gnss/survey/features/FeatureCollection</a></li><li><a href="module-gnss_survey_features_LineFeature.html">gnss/survey/features/LineFeature</a></li><li><a href="module-gnss_survey_features_PointFeature.html">gnss/survey/features/PointFeature</a></li><li><a href="module-gnss_survey_features_PolygonFeature.html">gnss/survey/features/PolygonFeature</a></li><li><a href="module-gnss_survey_map.html">gnss/survey/map</a></li><li><a href="module-gnss_survey_map_ElevationService.html">gnss/survey/map/ElevationService</a></li><li><a href="module-gnss_survey_map_GoogleMapsAdapter.html">gnss/survey/map/GoogleMapsAdapter</a></li><li><a href="module-gnss_survey_map_GoogleMapsElevationService.html">gnss/survey/map/GoogleMapsElevationService</a></li><li><a href="module-gnss_survey_map_LayerManager.html">gnss/survey/map/LayerManager</a></li><li><a href="module-gnss_survey_map_LeafletAdapter.html">gnss/survey/map/LeafletAdapter</a></li><li><a href="module-gnss_survey_map_Map3DInterface.html">gnss/survey/map/Map3DInterface</a></li><li><a href="module-gnss_survey_map_MapFactory.html">gnss/survey/map/MapFactory</a></li><li><a href="module-gnss_survey_map_MapInterface.html">gnss/survey/map/MapInterface</a></li><li><a href="module-gnss_survey_map_rendering.html">gnss/survey/map/rendering</a></li><li><a href="module-gnss_survey_map_rendering_GoogleMapsRenderingStrategy.html">gnss/survey/map/rendering/GoogleMapsRenderingStrategy</a></li><li><a href="module-gnss_survey_map_rendering_RenderingStrategy.html">gnss/survey/map/rendering/RenderingStrategy</a></li></ul><h3>Classes</h3><ul><li><a href="Coordinate.html">Coordinate</a></li><li><a href="CoordinateTransformer.html">CoordinateTransformer</a></li><li><a href="DrawingTool.html">DrawingTool</a></li><li><a href="EditingTool.html">EditingTool</a></li><li><a href="EventEmitter.html">EventEmitter</a></li><li><a href="GeoidModel.html">GeoidModel</a></li><li><a href="GeometryEngine.html">GeometryEngine</a></li><li><a href="GnssAdapter.html">GnssAdapter</a></li><li><a href="MeasurementTool.html">MeasurementTool</a></li><li><a href="OffsetTool.html">OffsetTool</a></li><li><a href="SimpleWGS84Transformer.html">SimpleWGS84Transformer</a></li><li><a href="SimplifiedDrawingTool.html">SimplifiedDrawingTool</a></li><li><a href="SnappingManager.html">SnappingManager</a></li><li><a href="SurveyManager.html">SurveyManager</a></li><li><a href="ToolBase.html">ToolBase</a></li><li><a href="TransformerFactory.html">TransformerFactory</a></li><li><a href="module-gnss_survey_features_FeatureBase.FeatureBase.html">FeatureBase</a></li><li><a href="module-gnss_survey_features_FeatureCollection.FeatureCollection.html">FeatureCollection</a></li><li><a href="module-gnss_survey_features_LineFeature.LineFeature.html">LineFeature</a></li><li><a href="module-gnss_survey_features_PointFeature.PointFeature.html">PointFeature</a></li><li><a href="module-gnss_survey_features_PolygonFeature.PolygonFeature.html">PolygonFeature</a></li><li><a href="module-gnss_survey_map_ElevationService.ElevationService.html">ElevationService</a></li><li><a href="module-gnss_survey_map_GoogleMapsAdapter.GoogleMapsAdapter.html">GoogleMapsAdapter</a></li><li><a href="module-gnss_survey_map_GoogleMapsElevationService.GoogleMapsElevationService.html">GoogleMapsElevationService</a></li><li><a href="module-gnss_survey_map_LayerManager.LayerManager.html">LayerManager</a></li><li><a href="module-gnss_survey_map_LeafletAdapter.LeafletAdapter.html">LeafletAdapter</a></li><li><a href="module-gnss_survey_map_Map3DInterface.Map3DInterface.html">Map3DInterface</a></li><li><a href="module-gnss_survey_map_MapInterface.MapInterface.html">MapInterface</a></li><li><a href="module-gnss_survey_map_rendering_GoogleMapsRenderingStrategy.GoogleMapsRenderingStrategy.html">GoogleMapsRenderingStrategy</a></li><li><a href="module-gnss_survey_map_rendering_RenderingStrategy.RenderingStrategy.html">RenderingStrategy</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CoordinateUtils">CoordinateUtils</a></li><li><a href="global.html#coordinateToGeoJSON">coordinateToGeoJSON</a></li><li><a href="global.html#coordinatesToGeoJSON">coordinatesToGeoJSON</a></li><li><a href="global.html#createCoordinate">createCoordinate</a></li><li><a href="global.html#createSurvey">createSurvey</a></li><li><a href="global.html#getSupportedProjections">getSupportedProjections</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#initializeCore">initializeCore</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Class</p>
+                    <h1>OffsetTool</h1>
+                </header>
+                
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>OffsetTool<span class="signature">(options)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description"><p>Tool for creating offset features
+Supports point-based, line-based, and perpendicular offsets</p></div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class='vertical-section'>
+                <div class="members">
+                    <div class="member">
+                        <div class=name>
+                            <span class="tag">Constructor</span>
+                        </div>
+                        
+
+
+    
+    <h4 class="name" id="OffsetTool">
+        <a class="href-link" href="#OffsetTool">#</a>
+        
+        <span class="code-name">
+            
+                new OffsetTool<span class="signature">(options)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Create a new OffsetTool instance</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Tool configuration options</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="tools_OffsetTool.js.html" class="button">View Source</a>
+            <span>
+                <a href="tools_OffsetTool.js.html">tools/OffsetTool.js</a>, <a href="tools_OffsetTool.js.html#line29">line 29</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+        <h3 class="subsection-title">Classes</h3>
+
+        <dl>
+            <dt><a href="OffsetTool.html">OffsetTool</a></dt>
+            <dd></dd>
+        </dl>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h1>Methods</h1>
+            <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_activate">
+        <a class="href-link" href="#_activate">#</a>
+        
+            
+                <span class='tag'>protected</span>
+            
+        
+        <span class="code-name">
+            
+                _activate<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Tool-specific activation logic</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="tools_OffsetTool.js.html" class="button">View Source</a>
+            <span>
+                <a href="tools_OffsetTool.js.html">tools/OffsetTool.js</a>, <a href="tools_OffsetTool.js.html#line106">line 106</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_deactivate">
+        <a class="href-link" href="#_deactivate">#</a>
+        
+            
+                <span class='tag'>protected</span>
+            
+        
+        <span class="code-name">
+            
+                _deactivate<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Tool-specific deactivation logic</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="tools_OffsetTool.js.html" class="button">View Source</a>
+            <span>
+                <a href="tools_OffsetTool.js.html">tools/OffsetTool.js</a>, <a href="tools_OffsetTool.js.html#line135">line 135</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_reset">
+        <a class="href-link" href="#_reset">#</a>
+        
+            
+                <span class='tag'>protected</span>
+            
+        
+        <span class="code-name">
+            
+                _reset<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Tool-specific reset logic</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="tools_OffsetTool.js.html" class="button">View Source</a>
+            <span>
+                <a href="tools_OffsetTool.js.html">tools/OffsetTool.js</a>, <a href="tools_OffsetTool.js.html#line166">line 166</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_setupEventListeners">
+        <a class="href-link" href="#_setupEventListeners">#</a>
+        
+            
+                <span class='tag'>protected</span>
+            
+        
+        <span class="code-name">
+            
+                _setupEventListeners<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Set up tool-specific event listeners</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="tools_OffsetTool.js.html" class="button">View Source</a>
+            <span>
+                <a href="tools_OffsetTool.js.html">tools/OffsetTool.js</a>, <a href="tools_OffsetTool.js.html#line96">line 96</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="adjustOffsetBearing">
+        <a class="href-link" href="#adjustOffsetBearing">#</a>
+        
+        <span class="code-name">
+            
+                adjustOffsetBearing<span class="signature">(amount)</span><span class="type-signature"> &rarr; {number}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Adjust the offset bearing by the specified amount</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>amount</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">number</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>The amount to adjust the bearing by (in degrees)</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="tools_OffsetTool.js.html" class="button">View Source</a>
+            <span>
+                <a href="tools_OffsetTool.js.html">tools/OffsetTool.js</a>, <a href="tools_OffsetTool.js.html#line1015">line 1015</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>The updated bearing</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">number</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="adjustOffsetDistance">
+        <a class="href-link" href="#adjustOffsetDistance">#</a>
+        
+        <span class="code-name">
+            
+                adjustOffsetDistance<span class="signature">(amount)</span><span class="type-signature"> &rarr; {number}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Adjust the offset distance by the specified amount</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>amount</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">number</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>The amount to adjust the distance by</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="tools_OffsetTool.js.html" class="button">View Source</a>
+            <span>
+                <a href="tools_OffsetTool.js.html">tools/OffsetTool.js</a>, <a href="tools_OffsetTool.js.html#line1000">line 1000</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>The updated distance</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">number</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getSettings">
+        <a class="href-link" href="#getSettings">#</a>
+        
+        <span class="code-name">
+            
+                getSettings<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Get the current offset settings</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="tools_OffsetTool.js.html" class="button">View Source</a>
+            <span>
+                <a href="tools_OffsetTool.js.html">tools/OffsetTool.js</a>, <a href="tools_OffsetTool.js.html#line1063">line 1063</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Current offset settings</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">Object</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="setMode">
+        <a class="href-link" href="#setMode">#</a>
+        
+        <span class="code-name">
+            
+                setMode<span class="signature">(mode)</span><span class="type-signature"> &rarr; {boolean}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Set the offset mode</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>mode</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>The offset mode (point, line, perpendicular)</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="tools_OffsetTool.js.html" class="button">View Source</a>
+            <span>
+                <a href="tools_OffsetTool.js.html">tools/OffsetTool.js</a>, <a href="tools_OffsetTool.js.html#line1047">line 1047</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Success of mode change</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">boolean</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="setOffsetBearing">
+        <a class="href-link" href="#setOffsetBearing">#</a>
+        
+        <span class="code-name">
+            
+                setOffsetBearing<span class="signature">(bearing)</span><span class="type-signature"> &rarr; {number}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Set the offset bearing (for point mode)</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>bearing</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">number</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>The offset bearing in degrees</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="tools_OffsetTool.js.html" class="button">View Source</a>
+            <span>
+                <a href="tools_OffsetTool.js.html">tools/OffsetTool.js</a>, <a href="tools_OffsetTool.js.html#line969">line 969</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>The updated bearing</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">number</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="setOffsetDistance">
+        <a class="href-link" href="#setOffsetDistance">#</a>
+        
+        <span class="code-name">
+            
+                setOffsetDistance<span class="signature">(distance)</span><span class="type-signature"> &rarr; {number}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Set the offset distance</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>distance</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">number</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>The offset distance</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="tools_OffsetTool.js.html" class="button">View Source</a>
+            <span>
+                <a href="tools_OffsetTool.js.html">tools/OffsetTool.js</a>, <a href="tools_OffsetTool.js.html#line937">line 937</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>The updated distance</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">number</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="toggleSnap">
+        <a class="href-link" href="#toggleSnap">#</a>
+        
+        <span class="code-name">
+            
+                toggleSnap<span class="signature">(enable<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {boolean}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Toggle snapping functionality</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>enable</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">boolean</code>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+          &lt;optional><br>
+      
+
+      
+
+      
+      </td>
+  
+
+  
+
+  <td class="description last"><p>Whether to enable snapping</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="tools_OffsetTool.js.html" class="button">View Source</a>
+            <span>
+                <a href="tools_OffsetTool.js.html">tools/OffsetTool.js</a>, <a href="tools_OffsetTool.js.html#line1027">line 1027</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>The updated snap state</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">boolean</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>

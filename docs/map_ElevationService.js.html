@@ -1,0 +1,160 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> map/ElevationService.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-gnss_survey_features.html">gnss/survey/features</a></li><li><a href="module-gnss_survey_features_FeatureBase.html">gnss/survey/features/FeatureBase</a></li><li><a href="module-gnss_survey_features_FeatureCollection.html">gnss/survey/features/FeatureCollection</a></li><li><a href="module-gnss_survey_features_LineFeature.html">gnss/survey/features/LineFeature</a></li><li><a href="module-gnss_survey_features_PointFeature.html">gnss/survey/features/PointFeature</a></li><li><a href="module-gnss_survey_features_PolygonFeature.html">gnss/survey/features/PolygonFeature</a></li><li><a href="module-gnss_survey_map.html">gnss/survey/map</a></li><li><a href="module-gnss_survey_map_ElevationService.html">gnss/survey/map/ElevationService</a></li><li><a href="module-gnss_survey_map_GoogleMapsAdapter.html">gnss/survey/map/GoogleMapsAdapter</a></li><li><a href="module-gnss_survey_map_GoogleMapsElevationService.html">gnss/survey/map/GoogleMapsElevationService</a></li><li><a href="module-gnss_survey_map_LayerManager.html">gnss/survey/map/LayerManager</a></li><li><a href="module-gnss_survey_map_LeafletAdapter.html">gnss/survey/map/LeafletAdapter</a></li><li><a href="module-gnss_survey_map_Map3DInterface.html">gnss/survey/map/Map3DInterface</a></li><li><a href="module-gnss_survey_map_MapFactory.html">gnss/survey/map/MapFactory</a></li><li><a href="module-gnss_survey_map_MapInterface.html">gnss/survey/map/MapInterface</a></li><li><a href="module-gnss_survey_map_rendering.html">gnss/survey/map/rendering</a></li><li><a href="module-gnss_survey_map_rendering_GoogleMapsRenderingStrategy.html">gnss/survey/map/rendering/GoogleMapsRenderingStrategy</a></li><li><a href="module-gnss_survey_map_rendering_RenderingStrategy.html">gnss/survey/map/rendering/RenderingStrategy</a></li></ul><h3>Classes</h3><ul><li><a href="Coordinate.html">Coordinate</a></li><li><a href="CoordinateTransformer.html">CoordinateTransformer</a></li><li><a href="DrawingTool.html">DrawingTool</a></li><li><a href="EditingTool.html">EditingTool</a></li><li><a href="EventEmitter.html">EventEmitter</a></li><li><a href="GeoidModel.html">GeoidModel</a></li><li><a href="GeometryEngine.html">GeometryEngine</a></li><li><a href="GnssAdapter.html">GnssAdapter</a></li><li><a href="MeasurementTool.html">MeasurementTool</a></li><li><a href="OffsetTool.html">OffsetTool</a></li><li><a href="SimpleWGS84Transformer.html">SimpleWGS84Transformer</a></li><li><a href="SimplifiedDrawingTool.html">SimplifiedDrawingTool</a></li><li><a href="SnappingManager.html">SnappingManager</a></li><li><a href="SurveyManager.html">SurveyManager</a></li><li><a href="ToolBase.html">ToolBase</a></li><li><a href="TransformerFactory.html">TransformerFactory</a></li><li><a href="module-gnss_survey_features_FeatureBase.FeatureBase.html">FeatureBase</a></li><li><a href="module-gnss_survey_features_FeatureCollection.FeatureCollection.html">FeatureCollection</a></li><li><a href="module-gnss_survey_features_LineFeature.LineFeature.html">LineFeature</a></li><li><a href="module-gnss_survey_features_PointFeature.PointFeature.html">PointFeature</a></li><li><a href="module-gnss_survey_features_PolygonFeature.PolygonFeature.html">PolygonFeature</a></li><li><a href="module-gnss_survey_map_ElevationService.ElevationService.html">ElevationService</a></li><li><a href="module-gnss_survey_map_GoogleMapsAdapter.GoogleMapsAdapter.html">GoogleMapsAdapter</a></li><li><a href="module-gnss_survey_map_GoogleMapsElevationService.GoogleMapsElevationService.html">GoogleMapsElevationService</a></li><li><a href="module-gnss_survey_map_LayerManager.LayerManager.html">LayerManager</a></li><li><a href="module-gnss_survey_map_LeafletAdapter.LeafletAdapter.html">LeafletAdapter</a></li><li><a href="module-gnss_survey_map_Map3DInterface.Map3DInterface.html">Map3DInterface</a></li><li><a href="module-gnss_survey_map_MapInterface.MapInterface.html">MapInterface</a></li><li><a href="module-gnss_survey_map_rendering_GoogleMapsRenderingStrategy.GoogleMapsRenderingStrategy.html">GoogleMapsRenderingStrategy</a></li><li><a href="module-gnss_survey_map_rendering_RenderingStrategy.RenderingStrategy.html">RenderingStrategy</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CoordinateUtils">CoordinateUtils</a></li><li><a href="global.html#coordinateToGeoJSON">coordinateToGeoJSON</a></li><li><a href="global.html#coordinatesToGeoJSON">coordinatesToGeoJSON</a></li><li><a href="global.html#createCoordinate">createCoordinate</a></li><li><a href="global.html#createSurvey">createSurvey</a></li><li><a href="global.html#getSupportedProjections">getSupportedProjections</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#initializeCore">initializeCore</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>map/ElevationService.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Abstract Elevation Service Interface
+ * @module gnss/survey/map/ElevationService
+ */
+export class ElevationService {
+  /**
+     * Initialize the elevation service
+     * @param {Object} options - Configuration options for the elevation service
+     */
+  constructor(options = {}) {
+    if (this.constructor === ElevationService) {
+      throw new Error('Abstract class \'ElevationService\' cannot be instantiated directly.');
+    }
+        
+    this.options = options;
+  }
+    
+  /**
+     * Get the elevation at a specific coordinate
+     * @param {Coordinate} coordinate - The coordinate to get elevation for
+     * @returns {Promise&lt;number>} - Promise that resolves with the elevation in meters
+     */
+  async getElevation(_coordinate) {
+    throw new Error('Method \'getElevation()\' must be implemented.');
+  }
+    
+  /**
+     * Get elevations for a path of coordinates
+     * @param {Array&lt;Coordinate>} coordinates - Array of coordinates for the path
+     * @returns {Promise&lt;Array&lt;number>>} - Promise that resolves with array of elevations in meters
+     */
+  async getElevationsForPath(_coordinates) {
+    throw new Error('Method \'getElevationsForPath()\' must be implemented.');
+  }
+    
+  /**
+     * Get elevations for an array of coordinates
+     * @param {Array&lt;Coordinate>} coordinates - Array of coordinates to get elevations for
+     * @returns {Promise&lt;Array&lt;number>>} - Promise that resolves with array of elevations in meters
+     */
+  async getElevationsForLocations(_coordinates) {
+    throw new Error('Method \'getElevationsForLocations()\' must be implemented.');
+  }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>

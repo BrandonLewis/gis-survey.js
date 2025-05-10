@@ -1,0 +1,300 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> map/MapInterface.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-gnss_survey_features.html">gnss/survey/features</a></li><li><a href="module-gnss_survey_features_FeatureBase.html">gnss/survey/features/FeatureBase</a></li><li><a href="module-gnss_survey_features_FeatureCollection.html">gnss/survey/features/FeatureCollection</a></li><li><a href="module-gnss_survey_features_LineFeature.html">gnss/survey/features/LineFeature</a></li><li><a href="module-gnss_survey_features_PointFeature.html">gnss/survey/features/PointFeature</a></li><li><a href="module-gnss_survey_features_PolygonFeature.html">gnss/survey/features/PolygonFeature</a></li><li><a href="module-gnss_survey_map.html">gnss/survey/map</a></li><li><a href="module-gnss_survey_map_ElevationService.html">gnss/survey/map/ElevationService</a></li><li><a href="module-gnss_survey_map_GoogleMapsAdapter.html">gnss/survey/map/GoogleMapsAdapter</a></li><li><a href="module-gnss_survey_map_GoogleMapsElevationService.html">gnss/survey/map/GoogleMapsElevationService</a></li><li><a href="module-gnss_survey_map_LayerManager.html">gnss/survey/map/LayerManager</a></li><li><a href="module-gnss_survey_map_LeafletAdapter.html">gnss/survey/map/LeafletAdapter</a></li><li><a href="module-gnss_survey_map_Map3DInterface.html">gnss/survey/map/Map3DInterface</a></li><li><a href="module-gnss_survey_map_MapFactory.html">gnss/survey/map/MapFactory</a></li><li><a href="module-gnss_survey_map_MapInterface.html">gnss/survey/map/MapInterface</a></li><li><a href="module-gnss_survey_map_rendering.html">gnss/survey/map/rendering</a></li><li><a href="module-gnss_survey_map_rendering_GoogleMapsRenderingStrategy.html">gnss/survey/map/rendering/GoogleMapsRenderingStrategy</a></li><li><a href="module-gnss_survey_map_rendering_RenderingStrategy.html">gnss/survey/map/rendering/RenderingStrategy</a></li></ul><h3>Classes</h3><ul><li><a href="Coordinate.html">Coordinate</a></li><li><a href="CoordinateTransformer.html">CoordinateTransformer</a></li><li><a href="DrawingTool.html">DrawingTool</a></li><li><a href="EditingTool.html">EditingTool</a></li><li><a href="EventEmitter.html">EventEmitter</a></li><li><a href="GeoidModel.html">GeoidModel</a></li><li><a href="GeometryEngine.html">GeometryEngine</a></li><li><a href="GnssAdapter.html">GnssAdapter</a></li><li><a href="MeasurementTool.html">MeasurementTool</a></li><li><a href="OffsetTool.html">OffsetTool</a></li><li><a href="SimpleWGS84Transformer.html">SimpleWGS84Transformer</a></li><li><a href="SimplifiedDrawingTool.html">SimplifiedDrawingTool</a></li><li><a href="SnappingManager.html">SnappingManager</a></li><li><a href="SurveyManager.html">SurveyManager</a></li><li><a href="ToolBase.html">ToolBase</a></li><li><a href="TransformerFactory.html">TransformerFactory</a></li><li><a href="module-gnss_survey_features_FeatureBase.FeatureBase.html">FeatureBase</a></li><li><a href="module-gnss_survey_features_FeatureCollection.FeatureCollection.html">FeatureCollection</a></li><li><a href="module-gnss_survey_features_LineFeature.LineFeature.html">LineFeature</a></li><li><a href="module-gnss_survey_features_PointFeature.PointFeature.html">PointFeature</a></li><li><a href="module-gnss_survey_features_PolygonFeature.PolygonFeature.html">PolygonFeature</a></li><li><a href="module-gnss_survey_map_ElevationService.ElevationService.html">ElevationService</a></li><li><a href="module-gnss_survey_map_GoogleMapsAdapter.GoogleMapsAdapter.html">GoogleMapsAdapter</a></li><li><a href="module-gnss_survey_map_GoogleMapsElevationService.GoogleMapsElevationService.html">GoogleMapsElevationService</a></li><li><a href="module-gnss_survey_map_LayerManager.LayerManager.html">LayerManager</a></li><li><a href="module-gnss_survey_map_LeafletAdapter.LeafletAdapter.html">LeafletAdapter</a></li><li><a href="module-gnss_survey_map_Map3DInterface.Map3DInterface.html">Map3DInterface</a></li><li><a href="module-gnss_survey_map_MapInterface.MapInterface.html">MapInterface</a></li><li><a href="module-gnss_survey_map_rendering_GoogleMapsRenderingStrategy.GoogleMapsRenderingStrategy.html">GoogleMapsRenderingStrategy</a></li><li><a href="module-gnss_survey_map_rendering_RenderingStrategy.RenderingStrategy.html">RenderingStrategy</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CoordinateUtils">CoordinateUtils</a></li><li><a href="global.html#coordinateToGeoJSON">coordinateToGeoJSON</a></li><li><a href="global.html#coordinatesToGeoJSON">coordinatesToGeoJSON</a></li><li><a href="global.html#createCoordinate">createCoordinate</a></li><li><a href="global.html#createSurvey">createSurvey</a></li><li><a href="global.html#getSupportedProjections">getSupportedProjections</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#initializeCore">initializeCore</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>map/MapInterface.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Abstract Map Interface - Base class for all map providers
+ * @module gnss/survey/map/MapInterface
+ */
+export class MapInterface {
+  /**
+     * Initialize the map interface
+     * @param {Object} options - Configuration options for the map
+     */
+  constructor(options = {}) {
+    if (this.constructor === MapInterface) {
+      throw new Error('Abstract class \'MapInterface\' cannot be instantiated directly.');
+    }
+        
+    this.options = options;
+  }
+    
+  /**
+     * Set the cursor style for the map
+     * @param {string} cursorType - CSS cursor value (e.g., 'default', 'pointer', 'crosshair')
+     * @returns {void}
+     */
+  setCursor(_cursorType) {
+    throw new Error('Method \'setCursor()\' must be implemented.');
+  }
+    
+  /**
+     * Initialize the map with the specified container
+     * @param {string|HTMLElement} container - The HTML element or element ID to contain the map
+     * @returns {Promise&lt;void>} - Promise that resolves when the map is initialized
+     */
+  async initialize(_container) {
+    throw new Error('Method \'initialize()\' must be implemented.');
+  }
+    
+  /**
+     * Set the center of the map to the specified coordinate
+     * @param {Coordinate} coordinate - The coordinate to center the map on
+     * @returns {Promise&lt;void>} - Promise that resolves when the map is centered
+     */
+  async setCenter(_coordinate) {
+    throw new Error('Method \'setCenter()\' must be implemented.');
+  }
+    
+  /**
+     * Set the zoom level of the map
+     * @param {number} zoomLevel - The zoom level to set
+     * @returns {Promise&lt;void>} - Promise that resolves when the zoom is set
+     */
+  async setZoom(_zoomLevel) {
+    throw new Error('Method \'setZoom()\' must be implemented.');
+  }
+    
+  /**
+     * Add a marker to the map
+     * @param {Coordinate} coordinate - The coordinate to place the marker
+     * @param {Object} options - Configuration options for the marker
+     * @returns {Promise&lt;Object>} - Promise that resolves with the created marker instance
+     */
+  async addMarker(_coordinate, _options = {}) {
+    throw new Error('Method \'addMarker()\' must be implemented.');
+  }
+    
+  /**
+     * Remove a marker from the map
+     * @param {Object} marker - The marker instance to remove
+     * @returns {Promise&lt;void>} - Promise that resolves when the marker is removed
+     */
+  async removeMarker(_marker) {
+    throw new Error('Method \'removeMarker()\' must be implemented.');
+  }
+    
+  /**
+     * Add a polyline to the map
+     * @param {Array&lt;Coordinate>} coordinates - Array of coordinates for the polyline
+     * @param {Object} options - Configuration options for the polyline
+     * @returns {Promise&lt;Object>} - Promise that resolves with the created polyline instance
+     */
+  async addPolyline(_coordinates, _options = {}) {
+    throw new Error('Method \'addPolyline()\' must be implemented.');
+  }
+    
+  /**
+     * Remove a polyline from the map
+     * @param {Object} polyline - The polyline instance to remove
+     * @returns {Promise&lt;void>} - Promise that resolves when the polyline is removed
+     */
+  async removePolyline(_polyline) {
+    throw new Error('Method \'removePolyline()\' must be implemented.');
+  }
+    
+  /**
+     * Add a polygon to the map
+     * @param {Array&lt;Coordinate>} coordinates - Array of coordinates for the polygon
+     * @param {Object} options - Configuration options for the polygon
+     * @returns {Promise&lt;Object>} - Promise that resolves with the created polygon instance
+     */
+  async addPolygon(_coordinates, _options = {}) {
+    throw new Error('Method \'addPolygon()\' must be implemented.');
+  }
+    
+  /**
+     * Remove a polygon from the map
+     * @param {Object} polygon - The polygon instance to remove
+     * @returns {Promise&lt;void>} - Promise that resolves when the polygon is removed
+     */
+  async removePolygon(_polygon) {
+    throw new Error('Method \'removePolygon()\' must be implemented.');
+  }
+    
+  /**
+     * Get the current visible bounds of the map
+     * @returns {Promise&lt;Object>} - Promise that resolves with the bounds object
+     */
+  async getBounds() {
+    throw new Error('Method \'getBounds()\' must be implemented.');
+  }
+    
+  /**
+     * Fit the map view to the specified bounds
+     * @param {Object} bounds - The bounds to fit the map to
+     * @param {Object} options - Configuration options for fitting
+     * @returns {Promise&lt;void>} - Promise that resolves when the map is fitted to bounds
+     */
+  async fitBounds(_bounds, _options = {}) {
+    throw new Error('Method \'fitBounds()\' must be implemented.');
+  }
+    
+  /**
+     * Register an event listener on the map
+     * @param {string} eventType - The type of event to listen for
+     * @param {Function} listener - The callback function to execute when the event occurs
+     * @returns {Promise&lt;Object>} - Promise that resolves with the listener handle
+     */
+  async addEventListener(_eventType, _listener) {
+    throw new Error('Method \'addEventListener()\' must be implemented.');
+  }
+    
+  /**
+     * Remove an event listener from the map
+     * @param {string} eventType - The type of event
+     * @param {Object} listenerHandle - The listener handle to remove
+     * @returns {Promise&lt;void>} - Promise that resolves when the listener is removed
+     */
+  async removeEventListener(_eventType, _listenerHandle) {
+    throw new Error('Method \'removeEventListener()\' must be implemented.');
+  }
+    
+  /**
+     * Get the elevation at a specific coordinate
+     * @param {Coordinate} coordinate - The coordinate to get elevation for
+     * @returns {Promise&lt;number>} - Promise that resolves with the elevation in meters
+     */
+  async getElevation(_coordinate) {
+    throw new Error('Method \'getElevation()\' must be implemented.');
+  }
+    
+  /**
+     * Get elevations for a path of coordinates
+     * @param {Array&lt;Coordinate>} coordinates - Array of coordinates for the path
+     * @returns {Promise&lt;Array&lt;number>>} - Promise that resolves with array of elevations in meters
+     */
+  async getElevationsForPath(_coordinates) {
+    throw new Error('Method \'getElevationsForPath()\' must be implemented.');
+  }
+    
+  /**
+     * Convert a geographic coordinate to pixel coordinates on the map
+     * @param {Coordinate} coordinate - The geographic coordinate to convert
+     * @returns {Array&lt;number>} - [x, y] pixel coordinates
+     */
+  coordinateToPixel(_coordinate) {
+    throw new Error('Method \'coordinateToPixel()\' must be implemented.');
+  }
+    
+  /**
+     * Convert pixel coordinates to a geographic coordinate
+     * @param {Array&lt;number>} pixel - [x, y] pixel coordinates
+     * @returns {Coordinate} - The geographic coordinate
+     */
+  pixelToCoordinate(_pixel) {
+    throw new Error('Method \'pixelToCoordinate()\' must be implemented.');
+  }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>

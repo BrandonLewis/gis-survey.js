@@ -1,0 +1,413 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> features/FeatureBase.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-gnss_survey_features.html">gnss/survey/features</a></li><li><a href="module-gnss_survey_features_FeatureBase.html">gnss/survey/features/FeatureBase</a></li><li><a href="module-gnss_survey_features_FeatureCollection.html">gnss/survey/features/FeatureCollection</a></li><li><a href="module-gnss_survey_features_LineFeature.html">gnss/survey/features/LineFeature</a></li><li><a href="module-gnss_survey_features_PointFeature.html">gnss/survey/features/PointFeature</a></li><li><a href="module-gnss_survey_features_PolygonFeature.html">gnss/survey/features/PolygonFeature</a></li><li><a href="module-gnss_survey_map.html">gnss/survey/map</a></li><li><a href="module-gnss_survey_map_ElevationService.html">gnss/survey/map/ElevationService</a></li><li><a href="module-gnss_survey_map_GoogleMapsAdapter.html">gnss/survey/map/GoogleMapsAdapter</a></li><li><a href="module-gnss_survey_map_GoogleMapsElevationService.html">gnss/survey/map/GoogleMapsElevationService</a></li><li><a href="module-gnss_survey_map_LayerManager.html">gnss/survey/map/LayerManager</a></li><li><a href="module-gnss_survey_map_LeafletAdapter.html">gnss/survey/map/LeafletAdapter</a></li><li><a href="module-gnss_survey_map_Map3DInterface.html">gnss/survey/map/Map3DInterface</a></li><li><a href="module-gnss_survey_map_MapFactory.html">gnss/survey/map/MapFactory</a></li><li><a href="module-gnss_survey_map_MapInterface.html">gnss/survey/map/MapInterface</a></li><li><a href="module-gnss_survey_map_rendering.html">gnss/survey/map/rendering</a></li><li><a href="module-gnss_survey_map_rendering_GoogleMapsRenderingStrategy.html">gnss/survey/map/rendering/GoogleMapsRenderingStrategy</a></li><li><a href="module-gnss_survey_map_rendering_RenderingStrategy.html">gnss/survey/map/rendering/RenderingStrategy</a></li></ul><h3>Classes</h3><ul><li><a href="Coordinate.html">Coordinate</a></li><li><a href="CoordinateTransformer.html">CoordinateTransformer</a></li><li><a href="DrawingTool.html">DrawingTool</a></li><li><a href="EditingTool.html">EditingTool</a></li><li><a href="EventEmitter.html">EventEmitter</a></li><li><a href="GeoidModel.html">GeoidModel</a></li><li><a href="GeometryEngine.html">GeometryEngine</a></li><li><a href="GnssAdapter.html">GnssAdapter</a></li><li><a href="MeasurementTool.html">MeasurementTool</a></li><li><a href="OffsetTool.html">OffsetTool</a></li><li><a href="SimpleWGS84Transformer.html">SimpleWGS84Transformer</a></li><li><a href="SimplifiedDrawingTool.html">SimplifiedDrawingTool</a></li><li><a href="SnappingManager.html">SnappingManager</a></li><li><a href="SurveyManager.html">SurveyManager</a></li><li><a href="ToolBase.html">ToolBase</a></li><li><a href="TransformerFactory.html">TransformerFactory</a></li><li><a href="module-gnss_survey_features_FeatureBase.FeatureBase.html">FeatureBase</a></li><li><a href="module-gnss_survey_features_FeatureCollection.FeatureCollection.html">FeatureCollection</a></li><li><a href="module-gnss_survey_features_LineFeature.LineFeature.html">LineFeature</a></li><li><a href="module-gnss_survey_features_PointFeature.PointFeature.html">PointFeature</a></li><li><a href="module-gnss_survey_features_PolygonFeature.PolygonFeature.html">PolygonFeature</a></li><li><a href="module-gnss_survey_map_ElevationService.ElevationService.html">ElevationService</a></li><li><a href="module-gnss_survey_map_GoogleMapsAdapter.GoogleMapsAdapter.html">GoogleMapsAdapter</a></li><li><a href="module-gnss_survey_map_GoogleMapsElevationService.GoogleMapsElevationService.html">GoogleMapsElevationService</a></li><li><a href="module-gnss_survey_map_LayerManager.LayerManager.html">LayerManager</a></li><li><a href="module-gnss_survey_map_LeafletAdapter.LeafletAdapter.html">LeafletAdapter</a></li><li><a href="module-gnss_survey_map_Map3DInterface.Map3DInterface.html">Map3DInterface</a></li><li><a href="module-gnss_survey_map_MapInterface.MapInterface.html">MapInterface</a></li><li><a href="module-gnss_survey_map_rendering_GoogleMapsRenderingStrategy.GoogleMapsRenderingStrategy.html">GoogleMapsRenderingStrategy</a></li><li><a href="module-gnss_survey_map_rendering_RenderingStrategy.RenderingStrategy.html">RenderingStrategy</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CoordinateUtils">CoordinateUtils</a></li><li><a href="global.html#coordinateToGeoJSON">coordinateToGeoJSON</a></li><li><a href="global.html#coordinatesToGeoJSON">coordinatesToGeoJSON</a></li><li><a href="global.html#createCoordinate">createCoordinate</a></li><li><a href="global.html#createSurvey">createSurvey</a></li><li><a href="global.html#getSupportedProjections">getSupportedProjections</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#initializeCore">initializeCore</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>features/FeatureBase.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Base abstract class for all survey features
+ * @module gnss/survey/features/FeatureBase
+ */
+import { EventEmitter } from '../core/event-emitter.js';
+
+export class FeatureBase extends EventEmitter {
+  /**
+     * Initialize a feature
+     * @param {Object} options - Configuration options for the feature
+     * @param {string} [options.id] - Unique identifier for the feature
+     * @param {string} [options.name] - Human-readable name for the feature
+     * @param {Object} [options.style] - Style properties for the feature
+     * @param {Object} [options.properties] - Custom properties for the feature
+     * @param {Object} [options.metadata] - Metadata related to the feature
+     */
+  constructor(options = {}) {
+    super();
+        
+    if (this.constructor === FeatureBase) {
+      throw new Error('Abstract class \'FeatureBase\' cannot be instantiated directly.');
+    }
+        
+    this.id = options.id || `feature_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+    this.name = options.name || `Feature ${this.id.substr(-4)}`;
+    this.type = 'feature';
+    this.style = options.style || {};
+    this.properties = options.properties || {};
+    this.metadata = options.metadata || {};
+    this.selected = false;
+    this.visible = options.visible !== false;
+    this.editable = options.editable !== false;
+    this.interactive = options.interactive !== false;
+    this.rendered = null;
+    this.timestamp = options.timestamp || Date.now();
+    this.sourceData = options.sourceData || null;
+  }
+    
+  /**
+     * Get the feature type string
+     * @returns {string} - The feature type
+     */
+  getType() {
+    return this.type;
+  }
+    
+  /**
+     * Get the feature's bounds
+     * @returns {Object} - The bounds object with northEast and southWest coordinates
+     */
+  getBounds() {
+    throw new Error('Method \'getBounds()\' must be implemented.');
+  }
+    
+  /**
+     * Get the feature's center coordinate
+     * @returns {Coordinate} - The center coordinate
+     */
+  getCenter() {
+    throw new Error('Method \'getCenter()\' must be implemented.');
+  }
+    
+  /**
+     * Get the elevation range of the feature
+     * @returns {Object} - Object with min and max elevations
+     */
+  getElevationRange() {
+    throw new Error('Method \'getElevationRange()\' must be implemented.');
+  }
+    
+  /**
+     * Check if the feature contains a coordinate
+     * @param {Coordinate} coordinate - The coordinate to check
+     * @param {Object} [options] - Tolerance and other options
+     * @returns {boolean} - True if the feature contains the coordinate
+     */
+  contains(_coordinate, _options = {}) {
+    throw new Error('Method \'contains()\' must be implemented.');
+  }
+    
+  /**
+     * Find the nearest point on the feature to a given coordinate
+     * @param {Coordinate} coordinate - The reference coordinate
+     * @returns {Object} - Object with the nearest point and distance
+     */
+  nearest(_coordinate) {
+    throw new Error('Method \'nearest()\' must be implemented.');
+  }
+    
+  /**
+     * Export the feature to GeoJSON
+     * @param {Object} [options] - Export options
+     * @returns {Object} - GeoJSON representation of the feature
+     */
+  toGeoJSON(_options = {}) {
+    throw new Error('Method \'toGeoJSON()\' must be implemented.');
+  }
+    
+  /**
+     * Import feature from GeoJSON
+     * @param {Object} geojson - GeoJSON object to import
+     * @param {Object} [options] - Import options
+     * @returns {boolean} - Success status
+     */
+  fromGeoJSON(_geojson, _options = {}) {
+    throw new Error('Method \'fromGeoJSON()\' must be implemented.');
+  }
+    
+  /**
+     * Clone this feature
+     * @returns {FeatureBase} - A new feature instance that is a copy of this one
+     */
+  clone() {
+    throw new Error('Method \'clone()\' must be implemented.');
+  }
+    
+  /**
+     * Set the feature's style
+     * @param {Object} style - Style properties
+     * @param {Object} [options] - Options for style application
+     */
+  setStyle(style, options = {}) {
+    this.style = { ...this.style, ...style };
+    this.emit('style-changed', { feature: this, style: this.style, options });
+  }
+    
+  /**
+     * Get the feature's style
+     * @returns {Object} - Style properties
+     */
+  getStyle() {
+    return { ...this.style };
+  }
+    
+  /**
+     * Set the feature's properties
+     * @param {Object} properties - Custom properties
+     */
+  setProperties(properties) {
+    this.properties = { ...this.properties, ...properties };
+    this.emit('properties-changed', { feature: this, properties: this.properties });
+  }
+    
+  /**
+     * Get the feature's properties
+     * @returns {Object} - Custom properties
+     */
+  getProperties() {
+    return { ...this.properties };
+  }
+    
+  /**
+     * Get a specific property
+     * @param {string} name - Property name
+     * @returns {*} - Property value
+     */
+  getProperty(name) {
+    return this.properties[name];
+  }
+    
+  /**
+     * Set a specific property
+     * @param {string} name - Property name
+     * @param {*} value - Property value
+     */
+  setProperty(name, value) {
+    this.properties[name] = value;
+    this.emit('property-changed', { feature: this, name, value });
+  }
+    
+  /**
+     * Set the feature's name
+     * @param {string} name - The new name for the feature
+     */
+  setName(name) {
+    this.name = name;
+    this.emit('name-changed', { feature: this, name });
+  }
+    
+  /**
+     * Get the feature's name
+     * @returns {string} - The feature's name
+     */
+  getName() {
+    return this.name;
+  }
+    
+  /**
+     * Select the feature
+     * @param {Object} [options] - Options for selection
+     */
+  select(options = {}) {
+    if (!this.selected) {
+      this.selected = true;
+      this.emit('selected', { feature: this, options });
+    }
+  }
+    
+  /**
+     * Deselect the feature
+     * @param {Object} [options] - Options for deselection
+     */
+  deselect(options = {}) {
+    if (this.selected) {
+      this.selected = false;
+      this.emit('deselected', { feature: this, options });
+    }
+  }
+    
+  /**
+     * Toggle the feature's selection state
+     * @param {Object} [options] - Options for selection toggling
+     * @returns {boolean} - The new selection state
+     */
+  toggleSelection(options = {}) {
+    if (this.selected) {
+      this.deselect(options);
+    } else {
+      this.select(options);
+    }
+    return this.selected;
+  }
+    
+  /**
+     * Show the feature
+     */
+  show() {
+    if (!this.visible) {
+      this.visible = true;
+      this.emit('visibility-changed', { feature: this, visible: true });
+    }
+  }
+    
+  /**
+     * Hide the feature
+     */
+  hide() {
+    if (this.visible) {
+      this.visible = false;
+      this.emit('visibility-changed', { feature: this, visible: false });
+    }
+  }
+    
+  /**
+     * Toggle the feature's visibility
+     * @returns {boolean} - The new visibility state
+     */
+  toggleVisibility() {
+    this.visible = !this.visible;
+    this.emit('visibility-changed', { feature: this, visible: this.visible });
+    return this.visible;
+  }
+    
+  /**
+     * Make the feature editable
+     */
+  enableEditing() {
+    if (!this.editable) {
+      this.editable = true;
+      this.emit('editable-changed', { feature: this, editable: true });
+    }
+  }
+    
+  /**
+     * Make the feature non-editable
+     */
+  disableEditing() {
+    if (this.editable) {
+      this.editable = false;
+      this.emit('editable-changed', { feature: this, editable: false });
+    }
+  }
+    
+  /**
+     * Register a rendered object with this feature
+     * @param {Object} renderedObject - The rendered object
+     */
+  setRendered(renderedObject) {
+    this.rendered = renderedObject;
+  }
+    
+  /**
+     * Get the rendered object for this feature
+     * @returns {Object|null} - The rendered object or null
+     */
+  getRendered() {
+    return this.rendered;
+  }
+    
+  /**
+     * Check if the feature has a valid rendered object
+     * @returns {boolean} - True if the feature has a rendered object
+     */
+  isRendered() {
+    return this.rendered !== null;
+  }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>
