@@ -33,7 +33,7 @@ jobs:
         run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
           echo "access=public" >> .npmrc
-          npx semantic-release
+          npx semantic-release --message "chore(release): \${nextRelease.version} [skip ci]"
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

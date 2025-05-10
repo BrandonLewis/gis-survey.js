@@ -1,8 +1,10 @@
 name: Release
+# This workflow is currently disabled to avoid conflicts with semantic-release.yml
+# Uncomment to re-enable if you want to use standard-version instead of semantic-release
 
 on:
-  push:
-    branches: [ master ]
+  workflow_dispatch:
+    # Manual trigger only
 
 permissions:
   contents: write
@@ -32,7 +34,7 @@ jobs:
       - name: Build
         run: npm run build
       - name: Release
-        run: npx standard-version
+        run: npx standard-version --message "chore(release): %s [skip ci]"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
