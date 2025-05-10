@@ -4,6 +4,9 @@
   "description": "Mapping and surveying tools module for GIS and RTK surveying",
   "main": "dist/gis-survey.js",
   "module": "dist/gis-survey.esm.js",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "files": [
     "dist",
     "src"
