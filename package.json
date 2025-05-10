@@ -5,7 +5,8 @@
   "main": "dist/gis-survey.js",
   "module": "dist/gis-survey.esm.js",
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "publish": [
     {
