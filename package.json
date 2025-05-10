@@ -7,6 +7,14 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
+  "publish": [
+    {
+      "path": "@semantic-release/npm",
+      "npmPublish": true,
+      "pkgRoot": "./",
+      "access": "public"
+    }
+  ],
   "files": [
     "dist",
     "src"
