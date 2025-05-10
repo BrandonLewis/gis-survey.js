@@ -1,0 +1,222 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> core/GeoidModel.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-gnss_survey_features.html">gnss/survey/features</a></li><li><a href="module-gnss_survey_features_FeatureBase.html">gnss/survey/features/FeatureBase</a></li><li><a href="module-gnss_survey_features_FeatureCollection.html">gnss/survey/features/FeatureCollection</a></li><li><a href="module-gnss_survey_features_LineFeature.html">gnss/survey/features/LineFeature</a></li><li><a href="module-gnss_survey_features_PointFeature.html">gnss/survey/features/PointFeature</a></li><li><a href="module-gnss_survey_features_PolygonFeature.html">gnss/survey/features/PolygonFeature</a></li><li><a href="module-gnss_survey_map.html">gnss/survey/map</a></li><li><a href="module-gnss_survey_map_ElevationService.html">gnss/survey/map/ElevationService</a></li><li><a href="module-gnss_survey_map_GoogleMapsAdapter.html">gnss/survey/map/GoogleMapsAdapter</a></li><li><a href="module-gnss_survey_map_GoogleMapsElevationService.html">gnss/survey/map/GoogleMapsElevationService</a></li><li><a href="module-gnss_survey_map_LayerManager.html">gnss/survey/map/LayerManager</a></li><li><a href="module-gnss_survey_map_LeafletAdapter.html">gnss/survey/map/LeafletAdapter</a></li><li><a href="module-gnss_survey_map_Map3DInterface.html">gnss/survey/map/Map3DInterface</a></li><li><a href="module-gnss_survey_map_MapFactory.html">gnss/survey/map/MapFactory</a></li><li><a href="module-gnss_survey_map_MapInterface.html">gnss/survey/map/MapInterface</a></li><li><a href="module-gnss_survey_map_rendering.html">gnss/survey/map/rendering</a></li><li><a href="module-gnss_survey_map_rendering_GoogleMapsRenderingStrategy.html">gnss/survey/map/rendering/GoogleMapsRenderingStrategy</a></li><li><a href="module-gnss_survey_map_rendering_RenderingStrategy.html">gnss/survey/map/rendering/RenderingStrategy</a></li></ul><h3>Classes</h3><ul><li><a href="Coordinate.html">Coordinate</a></li><li><a href="CoordinateTransformer.html">CoordinateTransformer</a></li><li><a href="DrawingTool.html">DrawingTool</a></li><li><a href="EditingTool.html">EditingTool</a></li><li><a href="EventEmitter.html">EventEmitter</a></li><li><a href="GeoidModel.html">GeoidModel</a></li><li><a href="GeometryEngine.html">GeometryEngine</a></li><li><a href="GnssAdapter.html">GnssAdapter</a></li><li><a href="MeasurementTool.html">MeasurementTool</a></li><li><a href="OffsetTool.html">OffsetTool</a></li><li><a href="SimpleWGS84Transformer.html">SimpleWGS84Transformer</a></li><li><a href="SimplifiedDrawingTool.html">SimplifiedDrawingTool</a></li><li><a href="SnappingManager.html">SnappingManager</a></li><li><a href="SurveyManager.html">SurveyManager</a></li><li><a href="ToolBase.html">ToolBase</a></li><li><a href="TransformerFactory.html">TransformerFactory</a></li><li><a href="module-gnss_survey_features_FeatureBase.FeatureBase.html">FeatureBase</a></li><li><a href="module-gnss_survey_features_FeatureCollection.FeatureCollection.html">FeatureCollection</a></li><li><a href="module-gnss_survey_features_LineFeature.LineFeature.html">LineFeature</a></li><li><a href="module-gnss_survey_features_PointFeature.PointFeature.html">PointFeature</a></li><li><a href="module-gnss_survey_features_PolygonFeature.PolygonFeature.html">PolygonFeature</a></li><li><a href="module-gnss_survey_map_ElevationService.ElevationService.html">ElevationService</a></li><li><a href="module-gnss_survey_map_GoogleMapsAdapter.GoogleMapsAdapter.html">GoogleMapsAdapter</a></li><li><a href="module-gnss_survey_map_GoogleMapsElevationService.GoogleMapsElevationService.html">GoogleMapsElevationService</a></li><li><a href="module-gnss_survey_map_LayerManager.LayerManager.html">LayerManager</a></li><li><a href="module-gnss_survey_map_LeafletAdapter.LeafletAdapter.html">LeafletAdapter</a></li><li><a href="module-gnss_survey_map_Map3DInterface.Map3DInterface.html">Map3DInterface</a></li><li><a href="module-gnss_survey_map_MapInterface.MapInterface.html">MapInterface</a></li><li><a href="module-gnss_survey_map_rendering_GoogleMapsRenderingStrategy.GoogleMapsRenderingStrategy.html">GoogleMapsRenderingStrategy</a></li><li><a href="module-gnss_survey_map_rendering_RenderingStrategy.RenderingStrategy.html">RenderingStrategy</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CoordinateUtils">CoordinateUtils</a></li><li><a href="global.html#coordinateToGeoJSON">coordinateToGeoJSON</a></li><li><a href="global.html#coordinatesToGeoJSON">coordinatesToGeoJSON</a></li><li><a href="global.html#createCoordinate">createCoordinate</a></li><li><a href="global.html#createSurvey">createSurvey</a></li><li><a href="global.html#getSupportedProjections">getSupportedProjections</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#initializeCore">initializeCore</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>core/GeoidModel.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * GeoidModel.js - Model for converting between height reference systems
+ * 
+ * Provides geoid height (separation between ellipsoid and orthometric height)
+ * calculations for converting between ellipsoidal heights (GPS) and
+ * orthometric heights (mean sea level).
+ */
+
+/**
+ * Static class that provides geoid height information.
+ * 
+ * In a full implementation, this would load and interpolate from a geoid model
+ * grid file (like GEOID18 for the USA). For this implementation, we'll use a
+ * simplified, approximate model for demonstration purposes.
+ */
+export class GeoidModel {
+  /**
+   * Get the geoid height (separation between ellipsoid and geoid) at a location.
+   * Positive value means the geoid is above the ellipsoid.
+   * 
+   * @param {number} lat - Latitude in decimal degrees
+   * @param {number} lng - Longitude in decimal degrees
+   * @returns {number} Geoid height in meters
+   */
+  static getHeight(lat, lng) {
+    // This is a simplified model for demonstration
+    // In a real application, this would load and interpolate from a grid file
+    // like GEOID18, EGM2008, etc.
+    
+    // For North America, a very simplified approximation
+    // Values generally range from -8m to -40m in North America
+    
+    // Check bounds
+    if (lat &lt; -90 || lat > 90 || lng &lt; -180 || lng > 180) {
+      throw new Error(`Invalid coordinates: ${lat}, ${lng}`);
+    }
+    
+    // For areas in the continental US, use a simple bilinear approximation
+    if (lat >= 24 &amp;&amp; lat &lt;= 50 &amp;&amp; lng >= -125 &amp;&amp; lng &lt;= -66) {
+      return this._approximateUSGeoidHeight(lat, lng);
+    }
+    
+    // Basic approximation with latitude as the primary driver
+    let height = 0;
+    
+    // Higher values in the south (more separation)
+    // Lower values in the north (less separation)
+    // Based on EGM2008 very generalized trends
+    if (lat >= 0 &amp;&amp; lat &lt;= 90) { // Northern hemisphere
+      height = -30 + (lat / 90) * 15; // Range from ~ -30 to -15 meters
+    } else { // Southern hemisphere
+      height = -30 + (lat / -90) * 15; // Range from ~ -30 to -15 meters
+    }
+    
+    // Add some longitude influence (rough approximation)
+    const lngFactor = Math.sin((lng + 100) * Math.PI / 180) * 5; // ±5m variation
+    height += lngFactor;
+    
+    return height;
+  }
+  
+  /**
+   * More detailed approximation for the continental United States.
+   * @param {number} lat - Latitude in decimal degrees
+   * @param {number} lng - Longitude in decimal degrees
+   * @returns {number} Approximate geoid height in meters
+   * @private
+   */
+  static _approximateUSGeoidHeight(lat, lng) {
+    // These would be replaced with proper grid interpolation in a real implementation
+    // Corners of a simplified geoid model for the continental US
+    const corners = [
+      { lat: 24, lng: -125, height: -32.5 }, // Southwest
+      { lat: 24, lng: -66, height: -29.5 },  // Southeast
+      { lat: 50, lng: -125, height: -22.5 }, // Northwest
+      { lat: 50, lng: -66, height: -34.0 },   // Northeast
+    ];
+    
+    // Normalize coordinates to 0-1 range within the grid
+    const normalizedLat = (lat - 24) / (50 - 24);
+    const normalizedLng = (lng - (-125)) / ((-66) - (-125));
+    
+    // Bilinear interpolation
+    const h1 = corners[0].height * (1 - normalizedLng) + corners[1].height * normalizedLng;
+    const h2 = corners[2].height * (1 - normalizedLng) + corners[3].height * normalizedLng;
+    
+    const geoidHeight = h1 * (1 - normalizedLat) + h2 * normalizedLat;
+    
+    // Add some local variation (simplified)
+    const localVariation = Math.sin(lat * 8) * Math.sin(lng * 6) * 2.5;
+    
+    return geoidHeight + localVariation;
+  }
+  
+  /**
+   * Load a geoid model grid file.
+   * This would be implemented in a full version of the library.
+   * 
+   * @param {string} modelName - Name of the geoid model to load
+   * @returns {Promise&lt;boolean>} Promise that resolves when the model is loaded
+   */
+  static async loadModel(modelName) {
+    console.warn(`GeoidModel.loadModel: ${modelName} not implemented. Using approximation.`);
+    return Promise.resolve(false);
+  }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>

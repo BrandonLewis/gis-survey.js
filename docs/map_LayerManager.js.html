@@ -1,0 +1,537 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> map/LayerManager.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-gnss_survey_features.html">gnss/survey/features</a></li><li><a href="module-gnss_survey_features_FeatureBase.html">gnss/survey/features/FeatureBase</a></li><li><a href="module-gnss_survey_features_FeatureCollection.html">gnss/survey/features/FeatureCollection</a></li><li><a href="module-gnss_survey_features_LineFeature.html">gnss/survey/features/LineFeature</a></li><li><a href="module-gnss_survey_features_PointFeature.html">gnss/survey/features/PointFeature</a></li><li><a href="module-gnss_survey_features_PolygonFeature.html">gnss/survey/features/PolygonFeature</a></li><li><a href="module-gnss_survey_map.html">gnss/survey/map</a></li><li><a href="module-gnss_survey_map_ElevationService.html">gnss/survey/map/ElevationService</a></li><li><a href="module-gnss_survey_map_GoogleMapsAdapter.html">gnss/survey/map/GoogleMapsAdapter</a></li><li><a href="module-gnss_survey_map_GoogleMapsElevationService.html">gnss/survey/map/GoogleMapsElevationService</a></li><li><a href="module-gnss_survey_map_LayerManager.html">gnss/survey/map/LayerManager</a></li><li><a href="module-gnss_survey_map_LeafletAdapter.html">gnss/survey/map/LeafletAdapter</a></li><li><a href="module-gnss_survey_map_Map3DInterface.html">gnss/survey/map/Map3DInterface</a></li><li><a href="module-gnss_survey_map_MapFactory.html">gnss/survey/map/MapFactory</a></li><li><a href="module-gnss_survey_map_MapInterface.html">gnss/survey/map/MapInterface</a></li><li><a href="module-gnss_survey_map_rendering.html">gnss/survey/map/rendering</a></li><li><a href="module-gnss_survey_map_rendering_GoogleMapsRenderingStrategy.html">gnss/survey/map/rendering/GoogleMapsRenderingStrategy</a></li><li><a href="module-gnss_survey_map_rendering_RenderingStrategy.html">gnss/survey/map/rendering/RenderingStrategy</a></li></ul><h3>Classes</h3><ul><li><a href="Coordinate.html">Coordinate</a></li><li><a href="CoordinateTransformer.html">CoordinateTransformer</a></li><li><a href="DrawingTool.html">DrawingTool</a></li><li><a href="EditingTool.html">EditingTool</a></li><li><a href="EventEmitter.html">EventEmitter</a></li><li><a href="GeoidModel.html">GeoidModel</a></li><li><a href="GeometryEngine.html">GeometryEngine</a></li><li><a href="GnssAdapter.html">GnssAdapter</a></li><li><a href="MeasurementTool.html">MeasurementTool</a></li><li><a href="OffsetTool.html">OffsetTool</a></li><li><a href="SimpleWGS84Transformer.html">SimpleWGS84Transformer</a></li><li><a href="SimplifiedDrawingTool.html">SimplifiedDrawingTool</a></li><li><a href="SnappingManager.html">SnappingManager</a></li><li><a href="SurveyManager.html">SurveyManager</a></li><li><a href="ToolBase.html">ToolBase</a></li><li><a href="TransformerFactory.html">TransformerFactory</a></li><li><a href="module-gnss_survey_features_FeatureBase.FeatureBase.html">FeatureBase</a></li><li><a href="module-gnss_survey_features_FeatureCollection.FeatureCollection.html">FeatureCollection</a></li><li><a href="module-gnss_survey_features_LineFeature.LineFeature.html">LineFeature</a></li><li><a href="module-gnss_survey_features_PointFeature.PointFeature.html">PointFeature</a></li><li><a href="module-gnss_survey_features_PolygonFeature.PolygonFeature.html">PolygonFeature</a></li><li><a href="module-gnss_survey_map_ElevationService.ElevationService.html">ElevationService</a></li><li><a href="module-gnss_survey_map_GoogleMapsAdapter.GoogleMapsAdapter.html">GoogleMapsAdapter</a></li><li><a href="module-gnss_survey_map_GoogleMapsElevationService.GoogleMapsElevationService.html">GoogleMapsElevationService</a></li><li><a href="module-gnss_survey_map_LayerManager.LayerManager.html">LayerManager</a></li><li><a href="module-gnss_survey_map_LeafletAdapter.LeafletAdapter.html">LeafletAdapter</a></li><li><a href="module-gnss_survey_map_Map3DInterface.Map3DInterface.html">Map3DInterface</a></li><li><a href="module-gnss_survey_map_MapInterface.MapInterface.html">MapInterface</a></li><li><a href="module-gnss_survey_map_rendering_GoogleMapsRenderingStrategy.GoogleMapsRenderingStrategy.html">GoogleMapsRenderingStrategy</a></li><li><a href="module-gnss_survey_map_rendering_RenderingStrategy.RenderingStrategy.html">RenderingStrategy</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CoordinateUtils">CoordinateUtils</a></li><li><a href="global.html#coordinateToGeoJSON">coordinateToGeoJSON</a></li><li><a href="global.html#coordinatesToGeoJSON">coordinatesToGeoJSON</a></li><li><a href="global.html#createCoordinate">createCoordinate</a></li><li><a href="global.html#createSurvey">createSurvey</a></li><li><a href="global.html#getSupportedProjections">getSupportedProjections</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#initializeCore">initializeCore</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>map/LayerManager.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Layer Management for organizing map features
+ * @module gnss/survey/map/LayerManager
+ */
+export class LayerManager {
+  /**
+     * Initialize the layer manager
+     * @param {MapInterface} map - The map interface to manage layers for
+     * @param {RenderingStrategy} renderingStrategy - The strategy for rendering features
+     * @param {Object} options - Configuration options
+     */
+  constructor(map, renderingStrategy, options = {}) {
+    this.map = map;
+    this.renderingStrategy = renderingStrategy;
+    this.options = options;
+        
+    // Layers storage - each layer contains features
+    this.layers = new Map();
+        
+    // Selection tracking
+    this.selectedFeatures = new Map();
+        
+    // Create default layer if specified
+    if (options.defaultLayer) {
+      this.createLayer(options.defaultLayer);
+    }
+  }
+    
+  /**
+     * Set up event listeners for a feature
+     * This ensures selection/deselection events are properly handled
+     * @param {Object} feature - The feature to set up listeners for
+     * @param {Object} renderedFeature - The rendered feature object
+     * @private
+     */
+  _setupFeatureEventListeners(feature, renderedFeature) {
+    if (!feature || !feature.on || typeof feature.on !== 'function') {
+      console.warn('Cannot set up event listeners: feature has no event emitter');
+      return;
+    }
+        
+    // Listen for selection events
+    feature.on('selected', () => {
+      console.log(`Feature ${feature.id} selected event received`);
+      this.selectedFeatures.set(feature.id, renderedFeature);
+      this.renderingStrategy.highlightFeature(renderedFeature).catch(error => {
+        console.error(`Error highlighting feature ${feature.id}:`, error);
+      });
+    });
+        
+    // Listen for deselection events
+    feature.on('deselected', () => {
+      console.log(`Feature ${feature.id} deselected event received`);
+      this.selectedFeatures.delete(feature.id);
+      this.renderingStrategy.unhighlightFeature(renderedFeature).catch(error => {
+        console.error(`Error unhighlighting feature ${feature.id}:`, error);
+      });
+    });
+  }
+    
+  /**
+     * Create a new layer
+     * @param {string} layerId - The unique identifier for the layer
+     * @param {Object} options - Layer options
+     * @returns {Object} - The created layer
+     */
+  createLayer(layerId, options = {}) {
+    if (this.layers.has(layerId)) {
+      throw new Error(`Layer with ID '${layerId}' already exists`);
+    }
+        
+    const layer = {
+      id: layerId,
+      options,
+      features: new Map(),
+      visible: options.visible !== false,
+      selectable: options.selectable !== false,
+      editable: options.editable !== false,
+    };
+        
+    this.layers.set(layerId, layer);
+    return layer;
+  }
+    
+  /**
+     * Remove a layer and all its features
+     * @param {string} layerId - The ID of the layer to remove
+     * @returns {Promise&lt;void>} - Promise that resolves when the layer is removed
+     */
+  async removeLayer(layerId) {
+    if (!this.layers.has(layerId)) {
+      return Promise.resolve();
+    }
+        
+    const layer = this.layers.get(layerId);
+        
+    // Remove all features from the map
+    const removePromises = [];
+    for (const feature of layer.features.values()) {
+      removePromises.push(this.renderingStrategy.removeFeature(feature));
+    }
+        
+    await Promise.all(removePromises);
+        
+    // Remove the layer
+    this.layers.delete(layerId);
+        
+    return Promise.resolve();
+  }
+    
+  /**
+     * Set layer visibility
+     * @param {string} layerId - The ID of the layer
+     * @param {boolean} visible - Whether the layer should be visible
+     * @returns {Promise&lt;void>} - Promise that resolves when visibility is set
+     */
+  async setLayerVisibility(layerId, visible) {
+    if (!this.layers.has(layerId)) {
+      throw new Error(`Layer with ID '${layerId}' does not exist`);
+    }
+        
+    const layer = this.layers.get(layerId);
+        
+    // If visibility is already set correctly, do nothing
+    if (layer.visible === visible) {
+      return Promise.resolve();
+    }
+        
+    layer.visible = visible;
+        
+    // Hide or show all features in the layer
+    const promises = [];
+    for (const feature of layer.features.values()) {
+      if (visible) {
+        // Re-render the feature if it was hidden
+        promises.push(
+          this.renderingStrategy.renderFeatureByType(
+            feature.originalFeature,
+            feature.type,
+          ),
+        );
+      } else {
+        // Remove the feature from the map
+        promises.push(this.renderingStrategy.removeFeature(feature));
+      }
+    }
+        
+    await Promise.all(promises);
+        
+    return Promise.resolve();
+  }
+    
+  /**
+     * Add a feature to a layer
+     * @param {string} layerId - The ID of the layer to add to
+     * @param {Object} feature - The feature to add
+     * @param {string} featureType - The type of feature ('point', 'line', 'polygon')
+     * @param {Object} options - Rendering options
+     * @returns {Promise&lt;Object>} - Promise that resolves with the rendered feature
+     */
+  async addFeature(layerId, feature, featureType, options = {}) {
+    if (!this.layers.has(layerId)) {
+      throw new Error(`Layer with ID '${layerId}' does not exist`);
+    }
+        
+    const layer = this.layers.get(layerId);
+        
+    // Only render if the layer is visible
+    let renderedFeature = null;
+        
+    if (layer.visible) {
+      switch (featureType) {
+      case 'point':
+        renderedFeature = await this.renderingStrategy.renderPoint(feature, options);
+        break;
+                    
+      case 'line':
+        renderedFeature = await this.renderingStrategy.renderLine(feature, options);
+        break;
+                    
+      case 'polygon':
+        renderedFeature = await this.renderingStrategy.renderPolygon(feature, options);
+        break;
+                    
+      default:
+        throw new Error(`Unsupported feature type: ${featureType}`);
+      }
+    } else {
+      // If layer is not visible, create a placeholder with the feature data
+      const id = feature.id || `feature_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+      renderedFeature = {
+        id,
+        originalFeature: feature,
+        renderedObject: null,
+        type: featureType,
+        highlighted: false,
+      };
+    }
+        
+    // Store the feature in the layer
+    layer.features.set(renderedFeature.id, renderedFeature);
+        
+    // Set up event listeners for selection/deselection
+    this._setupFeatureEventListeners(feature, renderedFeature);
+        
+    // If the feature is already selected, apply highlighting immediately
+    if (feature.selected) {
+      console.log(`Feature ${feature.id} added while already selected, applying highlight`);
+      this.selectedFeatures.set(feature.id, renderedFeature);
+      if (renderedFeature.renderedObject) {
+        this.renderingStrategy.highlightFeature(renderedFeature).catch(error => {
+          console.error(`Error highlighting feature ${feature.id}:`, error);
+        });
+      }
+    }
+        
+    return renderedFeature;
+  }
+    
+  /**
+     * Remove a feature from a layer
+     * @param {string} layerId - The ID of the layer
+     * @param {string} featureId - The ID of the feature to remove
+     * @returns {Promise&lt;void>} - Promise that resolves when the feature is removed
+     */
+  async removeFeature(layerId, featureId) {
+    if (!this.layers.has(layerId)) {
+      throw new Error(`Layer with ID '${layerId}' does not exist`);
+    }
+        
+    const layer = this.layers.get(layerId);
+        
+    if (!layer.features.has(featureId)) {
+      return Promise.resolve();
+    }
+        
+    const renderedFeature = layer.features.get(featureId);
+    const originalFeature = renderedFeature.originalFeature;
+        
+    // If this is a selected feature, remove it from selection tracking
+    if (this.selectedFeatures.has(featureId)) {
+      console.log(`Removing selected feature ${featureId} from selection tracking`);
+      this.selectedFeatures.delete(featureId);
+    }
+        
+    // Remove event listeners from original feature if possible
+    if (originalFeature &amp;&amp; typeof originalFeature.off === 'function') {
+      console.log(`Removing event listeners from feature ${featureId}`);
+      originalFeature.off('selected');
+      originalFeature.off('deselected');
+    }
+        
+    // Remove from map if it was rendered
+    if (renderedFeature.renderedObject) {
+      // Ensure it's unhighlighted before removal
+      if (renderedFeature.renderedObject.originalStyles) {
+        try {
+          await this.renderingStrategy.unhighlightFeature(renderedFeature);
+        } catch (error) {
+          console.error(`Error unhighlighting feature before removal: ${error.message}`);
+        }
+      }
+            
+      await this.renderingStrategy.removeFeature(renderedFeature);
+    }
+        
+    // Remove from layer
+    layer.features.delete(featureId);
+        
+    return Promise.resolve();
+  }
+    
+  /**
+     * Update a feature in a layer
+     * @param {string} layerId - The ID of the layer
+     * @param {string} featureId - The ID of the feature to update
+     * @param {Object} updatedFeature - The updated feature data
+     * @param {Object} options - Rendering options
+     * @returns {Promise&lt;Object>} - Promise that resolves with the updated feature
+     */
+  async updateFeature(layerId, featureId, updatedFeature, options = {}) {
+    if (!this.layers.has(layerId)) {
+      throw new Error(`Layer with ID '${layerId}' does not exist`);
+    }
+        
+    const layer = this.layers.get(layerId);
+        
+    if (!layer.features.has(featureId)) {
+      throw new Error(`Feature with ID '${featureId}' does not exist in layer '${layerId}'`);
+    }
+        
+    const existingFeature = layer.features.get(featureId);
+        
+    // If layer is visible, update the rendered feature
+    let updatedRenderedFeature;
+        
+    if (layer.visible &amp;&amp; existingFeature.renderedObject) {
+      updatedRenderedFeature = await this.renderingStrategy.updateFeature(
+        existingFeature,
+        updatedFeature,
+        options,
+      );
+    } else {
+      // If not visible, just update the data
+      updatedRenderedFeature = {
+        ...existingFeature,
+        originalFeature: updatedFeature,
+      };
+    }
+        
+    // Update in layer
+    layer.features.set(featureId, updatedRenderedFeature);
+        
+    return updatedRenderedFeature;
+  }
+    
+  /**
+     * Get all layers
+     * @returns {Array&lt;Object>} - Array of layer objects
+     */
+  getLayers() {
+    return Array.from(this.layers.values());
+  }
+    
+  /**
+     * Get a specific layer
+     * @param {string} layerId - The ID of the layer to get
+     * @returns {Object|null} - The layer object or null if not found
+     */
+  getLayer(layerId) {
+    return this.layers.get(layerId) || null;
+  }
+    
+  /**
+     * Get all features in a layer
+     * @param {string} layerId - The ID of the layer
+     * @returns {Array&lt;Object>} - Array of feature objects
+     */
+  getLayerFeatures(layerId) {
+    if (!this.layers.has(layerId)) {
+      throw new Error(`Layer with ID '${layerId}' does not exist`);
+    }
+        
+    const layer = this.layers.get(layerId);
+    return Array.from(layer.features.values());
+  }
+    
+  /**
+     * Get a specific feature from a layer
+     * @param {string} layerId - The ID of the layer
+     * @param {string} featureId - The ID of the feature
+     * @returns {Object|null} - The feature object or null if not found
+     */
+  getFeature(layerId, featureId) {
+    if (!this.layers.has(layerId)) {
+      return null;
+    }
+        
+    const layer = this.layers.get(layerId);
+    return layer.features.get(featureId) || null;
+  }
+    
+  /**
+     * Fit the map view to show all features in a layer
+     * @param {string} layerId - The ID of the layer
+     * @param {Object} options - Options for fitting the bounds
+     * @returns {Promise&lt;void>} - Promise that resolves when the map is fitted
+     */
+  async fitLayerToView(layerId, options = {}) {
+    if (!this.layers.has(layerId)) {
+      throw new Error(`Layer with ID '${layerId}' does not exist`);
+    }
+        
+    const layer = this.layers.get(layerId);
+        
+    if (layer.features.size === 0) {
+      return Promise.resolve();
+    }
+        
+    // Collect all coordinates from all features
+    const allCoordinates = [];
+        
+    for (const feature of layer.features.values()) {
+      const featureCoords = this._getFeatureCoordinates(feature);
+      allCoordinates.push(...featureCoords);
+    }
+        
+    if (allCoordinates.length === 0) {
+      return Promise.resolve();
+    }
+        
+    // Fit map to these coordinates
+    await this.map.fitBounds(allCoordinates, options);
+        
+    return Promise.resolve();
+  }
+    
+  /**
+     * Get coordinates from a feature based on its type
+     * @param {Object} feature - The feature to extract coordinates from
+     * @returns {Array&lt;Coordinate>} - Array of coordinates
+     * @private
+     */
+  _getFeatureCoordinates(feature) {
+    if (!feature.originalFeature) {
+      return [];
+    }
+        
+    switch (feature.type) {
+    case 'point':
+      return [feature.originalFeature.coordinate];
+                
+    case 'line':
+    case 'polygon':
+      return feature.originalFeature.coordinates || [];
+                
+    default:
+      return [];
+    }
+  }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>
