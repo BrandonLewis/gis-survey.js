@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.64](https://github.com/BrandonLewis/gis-survey.js/compare/v1.0.63...v1.0.64) (2025-05-10)
+
 ### [1.0.63](https://github.com/BrandonLewis/gis-survey.js/compare/v1.0.62...v1.0.63) (2025-05-10)
 
 ### [1.0.62](https://github.com/BrandonLewis/gis-survey.js/compare/v1.0.61...v1.0.62) (2025-05-10)
