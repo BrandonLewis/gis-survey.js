@@ -1,72 +1,27 @@
-name: CDN Deployment
+name: CDN Deploy
 
 on:
-  push:
-    tags:
-      - 'v*'  # Run on any tag that starts with 'v'
+  release:
+    types: [published]
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        
+      - uses: actions/checkout@v3
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: 22
-          cache: 'npm'
-          
+          node-version: '22.x'
+          registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies
         run: npm ci
-        
       - name: Build
         run: npm run build
-        
-      - name: Generate docs
+      - name: Deploy to CDN
         run: |
-          npm install clean-jsdoc-theme
-          npm run docs
-        
-      - name: Create CDN branch if not exists
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git fetch
-          if ! git ls-remote --heads origin cdn-dist | grep -q 'cdn-dist'; then
-            git checkout --orphan cdn-dist
-            git rm -rf .
-            mkdir -p dist
-            touch dist/.gitkeep
-            git add dist/.gitkeep
-            git commit -m "Initial CDN branch"
-            git push origin cdn-dist
-          else
-            git checkout cdn-dist
-          fi
-        
-      - name: Copy dist and docs files to cdn-dist branch
-        run: |
-          # Save the dist and docs directories
-          mkdir -p /tmp/dist /tmp/docs
-          cp -r dist/* /tmp/dist/
-          cp -r docs/* /tmp/docs/
-          
-          # Clear existing files but keep .git directory
-          find . -mindepth 1 -not -path "./.git*" -delete
-          
-          # Copy dist and docs directories back
-          mkdir -p dist docs
-          cp -r /tmp/dist/* dist/
-          cp -r /tmp/docs/* docs/
-          
-          # Add and commit changes
-          git add dist docs
-          git commit -m "Update CDN files and docs for tag ${{ github.ref_name }}"
-          git push origin cdn-dist
-
-      - name: Update latest tag
-        run: |
-          git tag -f latest
-          git push -f origin latest
+          # Add your CDN deployment script here
+          echo "Deploying to CDN..."
+        env:
+          CDN_API_KEY: ${{ secrets.CDN_API_KEY }}
+          GITHUB_AUTH_TOKEN: ${{ secrets.GH_TOKEN }}
