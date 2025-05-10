@@ -35,7 +35,7 @@ export class CoordinateTransformer {
    * @returns {Coordinate} A new coordinate in the target projection
    * @throws {Error} Must be implemented by subclasses
    */
-  transform(coordinate, fromProjection, toProjection) {
+  transform(_coordinate, _fromProjection, _toProjection) {
     throw new Error('Method transform() must be implemented by subclasses');
   }
   
@@ -54,7 +54,7 @@ export class CoordinateTransformer {
    * @returns {Coordinate} New coordinate with orthometric height
    * @throws {Error} Must be implemented by subclasses
    */
-  convertEllipsoidalToOrthometric(coordinate) {
+  convertEllipsoidalToOrthometric(_coordinate) {
     throw new Error('Method convertEllipsoidalToOrthometric() must be implemented by subclasses');
   }
   
@@ -64,7 +64,7 @@ export class CoordinateTransformer {
    * @returns {Coordinate} New coordinate with ellipsoidal height
    * @throws {Error} Must be implemented by subclasses
    */
-  convertOrthometricToEllipsoidal(coordinate) {
+  convertOrthometricToEllipsoidal(_coordinate) {
     throw new Error('Method convertOrthometricToEllipsoidal() must be implemented by subclasses');
   }
   
@@ -84,10 +84,10 @@ export class CoordinateTransformer {
    * @returns {boolean} True if the transformation crosses the date line
    * @protected
    */
-  _crossesDateLine(coordinate, fromProjection, toProjection) {
+  _crossesDateLine(_coordinate, _fromProjection, _toProjection) {
     // Simplistic date line crossing detection
     // For more complex cases, subclasses should override this method
-    if (Math.abs(coordinate.lng) > 170) {
+    if (Math.abs(_coordinate.lng) > 170) {
       // Near the date line, we might cross during transformation
       return true;
     }

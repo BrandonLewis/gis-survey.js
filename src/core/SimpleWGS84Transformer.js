@@ -427,7 +427,7 @@ export class SimpleWGS84Transformer extends CoordinateTransformer {
    * @returns {Coordinate} Geographic coordinate
    * @private
    */
-  _utmToGeographic(coordinate, params) {
+  _utmToGeographic(_coordinate, _params) {
     // This would be a full implementation of the UTM to geographic conversion
     // For simplicity, we'll provide a stub implementation - in production code
     // this would use the full UTM conversion formulas
@@ -446,7 +446,7 @@ export class SimpleWGS84Transformer extends CoordinateTransformer {
    * @returns {Coordinate} UTM coordinate
    * @private
    */
-  _geographicToUtm(coordinate, params) {
+  _geographicToUtm(_coordinate, _params) {
     // This would be a full implementation of the geographic to UTM conversion
     // For simplicity, we'll provide a stub implementation - in production code
     // this would use the full UTM conversion formulas
@@ -460,7 +460,7 @@ export class SimpleWGS84Transformer extends CoordinateTransformer {
    * @returns {Coordinate} Geographic coordinate
    * @private
    */
-  _statePlaneToGeographic(coordinate) {
+  _statePlaneToGeographic(_coordinate) {
     // This would be a full implementation of the State Plane to geographic conversion
     // For simplicity, we'll provide a stub implementation - in production code
     // this would use the full State Plane conversion formulas for each state zone
@@ -474,7 +474,7 @@ export class SimpleWGS84Transformer extends CoordinateTransformer {
    * @returns {Coordinate} State Plane coordinate
    * @private
    */
-  _geographicToStatePlane(coordinate) {
+  _geographicToStatePlane(_coordinate) {
     // This would be a full implementation of the geographic to State Plane conversion
     // For simplicity, we'll provide a stub implementation - in production code
     // this would use the full State Plane conversion formulas for each state zone

@@ -4,7 +4,7 @@
  */
 import { GoogleMapsAdapter } from './GoogleMapsAdapter.js';
 import { LeafletAdapter } from './LeafletAdapter.js';
-import { MapInterface } from './MapInterface.js';
+import { MapInterface as _MapInterface } from './MapInterface.js';
 
 export class MapFactory {
   /**
@@ -29,9 +29,10 @@ export class MapFactory {
   /**
      * Check if a map provider is available
      * @param {string} providerType - The map provider type ('google', 'leaflet', etc.)
+     * @param {Object} [options={}] - Configuration options with potential API keys
      * @returns {boolean} - True if the provider is available
      */
-  static isProviderAvailable(providerType) {
+  static isProviderAvailable(providerType, options = {}) {
     switch (providerType.toLowerCase()) {
     case 'google':
       return typeof window !== 'undefined' && 

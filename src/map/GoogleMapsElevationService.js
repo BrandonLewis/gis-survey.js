@@ -3,7 +3,7 @@
  * @module gnss/survey/map/GoogleMapsElevationService
  */
 import { ElevationService } from './ElevationService.js';
-import { Coordinate } from '../core/Coordinate.js';
+import { Coordinate as _Coordinate } from '../core/Coordinate.js';
 
 export class GoogleMapsElevationService extends ElevationService {
   /**

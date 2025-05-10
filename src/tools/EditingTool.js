@@ -6,8 +6,8 @@
 
 import { ToolBase } from './ToolBase.js';
 import { PointFeature } from '../features/PointFeature.js';
-import { LineFeature } from '../features/LineFeature.js';
-import { PolygonFeature } from '../features/PolygonFeature.js';
+import { LineFeature as _LineFeature } from '../features/LineFeature.js';
+import { PolygonFeature as _PolygonFeature } from '../features/PolygonFeature.js';
 
 /**
  * @typedef {Object} EditingToolOptions

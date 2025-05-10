@@ -6,10 +6,6 @@
  * calculations, and can optionally integrate with GNSS receivers.
  */
 
-// Import and initialize globals to break circular dependencies
-import { initializeGlobals } from './core/init.js';
-initializeGlobals();
-
 // Import core module functionality
 import { EventEmitter } from './core/event-emitter.js';
 import { Coordinate } from './core/Coordinate.js';
