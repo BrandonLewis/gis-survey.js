@@ -8,14 +8,6 @@
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
-  "publish": [
-    {
-      "path": "@semantic-release/npm",
-      "npmPublish": true,
-      "pkgRoot": "./",
-      "access": "public"
-    }
-  ],
   "files": [
     "dist",
     "src"
@@ -28,7 +20,8 @@
     "docs": "jsdoc -c jsdoc.config.json",
     "prepublishOnly": "npm run lint && npm run build",
     "serve": "node server.js",
-    "release": "standard-version"
+    "release": "standard-version",
+    "publish-public": "npm publish --access public"
   },
   "keywords": [
     "gis",
