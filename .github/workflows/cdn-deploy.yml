@@ -1,8 +1,9 @@
 name: CDN Deploy
+# This workflow is disabled as its functionality is now handled by semantic-release.yml
 
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
+    # Manual trigger only
 
 jobs:
   deploy:

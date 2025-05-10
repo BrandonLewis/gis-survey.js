@@ -16,8 +16,22 @@ A JavaScript module for mapping and surveying tools that works with or without G
 
 ## Installation
 
+### npm
+
 ```bash
-npm install gis-survey.js
+npm install @brandon7lewis/gis-survey.js
+```
+
+### CDN
+
+You can also use the library directly from the CDN:
+
+```html
+<!-- Development version -->
+<script src="https://cdn.jsdelivr.net/gh/BrandonLewis/gis-survey.js@cdn-dist/dist/gis-survey.js"></script>
+
+<!-- Production version -->
+<script src="https://cdn.jsdelivr.net/gh/BrandonLewis/gis-survey.js@cdn-dist/dist/gis-survey.min.js"></script>
 ```
 
 ## Usage
@@ -84,9 +98,19 @@ The build process generates the following outputs:
 ### CI/CD
 
 This repository uses GitHub Actions for:
-- Continuous Integration: Running linting and builds on PRs and pushes to main
-- Automated releases: Using semantic versioning to automatically publish to npm
-- CDN deployment: Automatically deploying builds to a CDN-optimized branch
+- Continuous Integration: Running linting and builds on PRs
+- Automated releases: Using semantic-release to automatically publish to npm
+- CDN deployment: Automatically deploying builds to the cdn-dist branch
+
+### Contributing
+
+We follow conventional commit standards to automate versioning:
+
+- `fix:` prefix for bug fixes (patch version bump)
+- `feat:` prefix for new features (minor version bump)
+- `BREAKING CHANGE:` in the commit body for breaking changes (major version bump)
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for more details on commit conventions and development workflow.
 
 ## API Documentation
 

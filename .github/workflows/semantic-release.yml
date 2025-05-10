@@ -1,8 +1,9 @@
-name: Semantic Release
+name: Build, Release and Deploy
 
 on:
   push:
     branches: [ master ]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -18,22 +19,68 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GH_TOKEN }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '22.x'
           registry-url: 'https://registry.npmjs.org'
+
       - name: Configure Git
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
+
       - name: Install dependencies
         run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Generate docs
+        run: npm run docs
+
       - name: Semantic Release
         run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
           echo "access=public" >> .npmrc
-          npx semantic-release --message "chore(release): \${nextRelease.version} [skip ci]"
+          npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Deploy to cdn-dist branch
+      - name: Deploy to CDN branch
+        run: |
+          # Save the current commit SHA to use in the message
+          COMMIT_SHA=$(git rev-parse --short HEAD)
+
+          # Prepare the cdn-dist branch
+          git checkout --orphan cdn-dist-temp
+          git reset --hard
+
+          # Copy dist and docs folders
+          mkdir -p dist docs
+          cp -r dist/* dist/ || true
+          cp -r docs/* docs/ || true
+
+          # Create structure for CDN files
+          mkdir -p cdn
+          cp -r dist/* cdn/ || true
+
+          # Keep only necessary files
+          find . -mindepth 1 -maxdepth 1 -not -name dist -not -name docs -not -name cdn -not -name .git -exec rm -rf {} \;
+
+          # Add, commit, and push
+          git add dist/ docs/ cdn/
+          git commit -m "chore(cdn): update from ${COMMIT_SHA} [skip ci]" || echo "No changes to commit"
+
+          # Force push to cdn-dist branch
+          git branch -D cdn-dist 2>/dev/null || true
+          git branch -m cdn-dist
+          git push -f origin cdn-dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

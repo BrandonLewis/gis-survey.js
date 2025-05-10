@@ -1,11 +1,8 @@
 name: Continuous Integration
+# This workflow is disabled as its functionality is now handled by semantic-release.yml
+# Only runs on PRs now, not on direct pushes to master
 
 on:
-  push:
-    branches: [ master ]
-    paths-ignore:
-      - 'package.json'
-      - 'CHANGELOG.md'
   pull_request:
     branches: [ master ]
 
